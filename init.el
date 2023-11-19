@@ -213,7 +213,9 @@ If the new path's directories does not exist, create them."
 
 (use-package emacs
   :config
-  (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
+  ;;(load-theme 'modus-vivendi)
+  (load-theme 'modus-operandi)
+  )          ; for light theme, use modus-operandi
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
