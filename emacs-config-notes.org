@@ -1,0 +1,35 @@
+* Notes while migrating to Emacs Bedrock from Prelude
+Original config: https://github.com/jasalt/.emacs.d
+
+# Motivation
+Started using Emacs around 10 years ago and found comfort in Emacs Prelude. While using it every day for org-mode and some simple scripting, I couldn't get it working for programming projects and used VSCode that "just worked" while I didn't really enjoy it for various reasons.
+
+Summer 2023 learned about LSP and tree-sitter which gave new hope for using other editors than VSCode for coding with IDE features. Tried to set those with Emacs Prelude and it did not work out that well.
+
+Migrated to NeoVim (Lazyvim) for a while which supports LSP, DAP and Treesitter quite well out of box, but it seemed hard to understand all different layers and config syntaxes it uses and I found myself using Emacs Magit for git anyways. I don't seem to have interest or time to learn another text editor internals.
+
+Realising that quite a bit changed in Emacs 29 since Prelude came to be, I decided to try Emacs Bedrock out and see if I could rewrite important bits of my existing config on it as it seems to fully leverage Emacs 29 features and keep things minimal enough that I can fully understand it.
+
+Python LSP + Treesitter + Copilot setup took half a Sunday to get going and will update missing keybindings from my original config and improvement ideas here.
+
+* Missing keybindings
+C-c f, find recent files
+
+C-S-=, decrease buffer font
+C-+, increase buffer font
+
+C-c d, duplicate line
+
+M-<num>, change panel, winner mode(?)
+
+C-x D, side panel, neotree(?)
+C-c R, rename file
+
+* Missing defaults / modes
+start with scratch buffer with org-mode
+
+undo tree
+* Improvement ideas
+** evil-mode
+toggle binding
+switch to relative line numbers
