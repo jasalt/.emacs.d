@@ -163,8 +163,8 @@ If the new path's directories does not exist, create them."
 (setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
 
 ;; Enable horizontal scrolling
-(setopt mouse-wheel-tilt-scroll t)
-(setopt mouse-wheel-flip-direction t)
+;;(setopt mouse-wheel-tilt-scroll t)
+;;(setopt mouse-wheel-flip-direction t)
 
 ;; We won't set these, but they're good to know about
 ;;
