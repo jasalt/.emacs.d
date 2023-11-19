@@ -27,7 +27,8 @@
 ;; Default frame configuration: full screen, good-looking title bar on macOS
 (setq frame-resize-pixelwise t)
 (tool-bar-mode -1)                      ; All these tools are in the menu-bar anyway
-(setq default-frame-alist '((fullscreen . maximized)
+
+;;(setq default-frame-alist '(;;(fullscreen . maximized)
 
                             ;; You can turn off scroll bars by uncommenting these lines:
                             ;; (vertical-scroll-bars . nil)
@@ -35,6 +36,6 @@
 
                             ;; Setting the face in here prevents flashes of
                             ;; color as the theme gets activated
-                            (background-color . "#000000")
-                            (ns-appearance . dark)
-                            (ns-transparent-titlebar . t)))
+                            ;;(background-color . "#000000")
+                            ;;(ns-appearance . dark)
+                            ;; (ns-transparent-titlebar . t)))
