@@ -11,6 +11,19 @@
 (setq initial-scratch-message "")
 (setq initial-major-mode 'org-mode)
 
+(defun show-or-create-scratch ()
+  "Shows a scratch buffer or creates another one if visiting one."
+  (interactive)
+  (if (string-match "*scratch*" (buffer-name))
+      (progn
+        (switch-to-buffer (get-buffer-create (concat (buffer-name) "*")))
+        (princ "Created a new scratch buffer."))
+    (progn (switch-to-buffer
+            (get-buffer-create "*scratch*")))))
+
+(global-set-key (kbd "C-c <escape>") 'show-or-create-scratch)
+(global-set-key (kbd "C-c `") 'show-or-create-scratch)  ;; terminal workaround
+
 ;;;;; Programming
 
 ;; Installing tree-sitter language grammars following:
