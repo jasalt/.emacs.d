@@ -1,3 +1,18 @@
+;;;;; General
+
+(menu-bar-mode -1)
+
+(load "server")
+(setq server-name "jarkon-emacs")
+(setq server-socket-dir "~/.emacs.d/server")
+(unless (server-running-p) (server-start))
+
+;; Make scratch-buffer more convenient
+(setq initial-scratch-message "")
+(setq initial-major-mode 'org-mode)
+
+;;;;; Programming
+
 ;; Installing tree-sitter language grammars following:
 
 ;; https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
