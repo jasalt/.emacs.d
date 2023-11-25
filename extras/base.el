@@ -156,8 +156,8 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package eshell
-  :bind (("C-r" . consult-history)))
+;; (use-package eshell
+;;   :bind (("C-r" . consult-history)))
 
 ;; Orderless: powerful completion style
 (use-package orderless
