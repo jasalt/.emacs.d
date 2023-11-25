@@ -363,6 +363,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	    ;; (git-gutter:linum-setup) ; not for line-number-mode?
 	    (setq git-gutter:ask-p nil)
 	    (diminish 'git-gutter-mode)
+	    
+	    (setq git-gutter:update-interval 3)
 
 	    (set-face-background 'git-gutter:modified "orange")
 	    (set-face-foreground 'git-gutter:modified "white")
