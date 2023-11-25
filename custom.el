@@ -1,6 +1,9 @@
 ;;;;; General
 
 (menu-bar-mode -1)
+(size-indication-mode t)
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (recentf-mode)
 
@@ -87,29 +90,48 @@
 	  ("M-8" . winum-select-window-8)
 	  ("M-9" . winum-select-window-9)))
 
+(use-package move-text :ensure t
+  :bind (
+	 ("C-S-<up>" . move-text-up)
+	 ("C-S-<down>" . move-text-down))
+  )
 
 (use-package crux :ensure t
   ;; Prelude niceties from https://github.com/bbatsov/crux
   :bind (
-	 ("C-c o" . crux-open-with)
+	 ("C-a" . crux-move-beginning-of-line)
 	 ("C-k" . crux-smart-kill-line)
-	 ("S-RET" . crux-smart-open-line)
-	 ("C-S-RET" . crux-smart-open-line-above)
-	 ("C-c f" . crux-recentf-find-file) ;; TODO
-	 ("C-c F" . crux-recentf-find-directory) ;; TODO
-	 ("C-c n" . crux-cleanup-buffer-or-region)
+
+	 ("C-M-<return>" . crux-smart-open-line-above)
+	 ("C-S-<return>" . crux-smart-open-line-above)
+	 ("C-<return>" . crux-smart-open-line)
+	 ("M-<return>" . crux-smart-open-line)
+
+	 ("M-o" . crux-smart-open-line)
+	 ; ("M-S-o" . crux-smart-open-line-above) ; vim style idea, overlaps window split binds
+
+
+
+	 ("C-<backspace>" . crux-kill-line-backwards) ; err
+
+	 ("C-c d" . crux-duplicate-current-line-or-region)
+	 ("C-c M-d" . crux-duplicate-and-comment-current-line-or-region)
+
+	 ("C-c o" . crux-open-with)
+	 ("C-c f" . crux-recentf-find-file)
+	 ("C-c F" . crux-recentf-find-directory)
+	 
 	 ("C-c u" . crux-view-url)
 	 ("C-c e" . crux-eval-and-replace)
 	 ("C-c D" . crux-delete-file-and-buffer)
-	 ("C-c d" . crux-duplicate-current-line-or-region)
-	 ("C-c M-d" . crux-duplicate-and-comment-current-line-or-region)
 	 ("C-c r" . crux-rename-file-and-buffer)
 	 ("C-c t" . crux-visit-term-buffer)
 	 ("C-c k" . crux-kill-other-buffers)
 	 ;;("C-M z" . crux-indent-defun) ; err
 	 ("C-c I" . crux-find-user-init-file)
 	 ("C-c S" . crux-find-shell-init-file)
-	 ;; ("C-Backspace" . crux-kill-line-backwards) ; err
+
+	 ("C-c s" . crux-swap-windows)
 	 )
   )
 
