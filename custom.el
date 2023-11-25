@@ -2,6 +2,8 @@
 
 (menu-bar-mode -1)
 
+(recentf-mode)
+
 (load "server")
 (setq server-name "jarkon-emacs")
 (setq server-socket-dir "~/.emacs.d/server")
@@ -41,13 +43,33 @@
 	  ("M-6" . winum-select-window-6)
 	  ("M-7" . winum-select-window-7)
 	  ("M-8" . winum-select-window-8)
-	  ("M-9" . winum-select-window-9))
-  (:map magit-status-mode-map
-	;; Remap magit default keys. Does not run before using winum (TODO).
-	("M-1" . nil) ("C-1" . magit-section-show-level-1-all)
-	("M-2" . nil) ("C-2" . magit-section-show-level-2-all)
-	("M-3" . nil) ("C-3" . magit-section-show-level-3-all)
-	("M-4" . nil) ("C-4" . magit-section-show-level-4-all)))
+	  ("M-9" . winum-select-window-9)))
+
+
+(use-package crux :ensure t
+  ;; Prelude niceties from https://github.com/bbatsov/crux
+  :bind (
+	 ("C-c o" . crux-open-with)
+	 ("C-k" . crux-smart-kill-line)
+	 ("S-RET" . crux-smart-open-line)
+	 ("C-S-RET" . crux-smart-open-line-above)
+	 ("C-c f" . crux-recentf-find-file) ;; TODO
+	 ("C-c F" . crux-recentf-find-directory) ;; TODO
+	 ("C-c n" . crux-cleanup-buffer-or-region)
+	 ("C-c u" . crux-view-url)
+	 ("C-c e" . crux-eval-and-replace)
+	 ("C-c D" . crux-delete-file-and-buffer)
+	 ("C-c d" . crux-duplicate-current-line-or-region)
+	 ("C-c M-d" . crux-duplicate-and-comment-current-line-or-region)
+	 ("C-c r" . crux-rename-file-and-buffer)
+	 ("C-c t" . crux-visit-term-buffer)
+	 ("C-c k" . crux-kill-other-buffers)
+	 ;;("C-M z" . crux-indent-defun) ; err
+	 ("C-c I" . crux-find-user-init-file)
+	 ("C-c S" . crux-find-shell-init-file)
+	 ;; ("C-Backspace" . crux-kill-line-backwards) ; err
+	 )
+  )
 
 
 ;;;;; Programming (see extras/dev.el for bedrock defaults)
