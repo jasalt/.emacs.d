@@ -102,7 +102,7 @@
 
   ;; Configure hooks to automatically turn-on eglot for selected modes
   :hook
-  (((python-mode python-ts-mode ruby-mode elixir-mode) . eglot))
+  (((python-mode ruby-mode elixir-mode) . eglot))
 
   :custom
   (eglot-send-changes-idle-time 0.1)
