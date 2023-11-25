@@ -131,7 +131,7 @@
           treemacs-goto-tag-strategy               'refetch-index
           treemacs-header-scroll-indicators        '(nil . "^^^^^^")
           treemacs-hide-dot-git-directory          t
-          treemacs-indentation                     2
+          treemacs-indentation                     1
           treemacs-indentation-string              " "
           treemacs-is-never-other-window           nil
           treemacs-max-git-entries                 5000
@@ -150,7 +150,7 @@
           treemacs-recenter-after-project-expand   'on-distance
           treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
           treemacs-project-follow-into-home        nil
-          treemacs-show-cursor                     nil
+          treemacs-show-cursor                     t
           treemacs-show-hidden-files               t
           treemacs-silent-filewatch                nil
           treemacs-silent-refresh                  nil
@@ -159,18 +159,18 @@
           treemacs-space-between-root-nodes        t
           treemacs-tag-follow-cleanup              t
           treemacs-tag-follow-delay                1.5
-          treemacs-text-scale                      nil
+          treemacs-text-scale                      -1
           treemacs-user-mode-line-format           nil
           treemacs-user-header-line-format         nil
           treemacs-wide-toggle-width               70
-          treemacs-width                           39
+          treemacs-width                           26
           treemacs-width-increment                 1
           treemacs-width-is-initially-locked       t
           treemacs-workspace-switch-cleanup        nil)
 
     ;; The default width and height of the icons is 22 pixels. If you are
     ;; using a Hi-DPI display, uncomment this to double the icon size.
-    ;;(treemacs-resize-icons 44)
+    (treemacs-resize-icons 16)
 
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
