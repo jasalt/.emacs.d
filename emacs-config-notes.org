@@ -12,29 +12,12 @@ Realising that quite a bit changed in Emacs 29 since Prelude came to be, I decid
 
 Python LSP + Treesitter + Copilot setup took half a Sunday to get going and will update missing keybindings from my original config and improvement ideas here.
 
-* Missing keybindings
-C-c f, find recent files
 
-C-S-=, decrease buffer font
-C-+, increase buffer font
-
-C-c d, duplicate line
-
-M-<num>, change panel, winner mode(?)
-
-C-x D, side panel, neotree(?)
-C-c R, rename file
-
-
-C-w, yank line
 * Missing defaults / modes
-start with scratch buffer with org-mode
 
 undo tree
 
 multi-cursor
-
-comment region
 
 yes/no should do just y/n
 
