@@ -48,9 +48,6 @@
 ;;(require 'super-save)
 ;; add integration with ace-window
 
-
-
-
 ;; (defun prelude-cleanup-maybe ()
 ;;   "Invoke `whitespace-cleanup' if `prelude-clean-whitespace-on-save' is not nil."
 ;;   (when prelude-clean-whitespace-on-save
@@ -64,9 +61,6 @@
 ;;     (whitespace-mode +1)))
 
 ;; (add-hook 'text-mode-hook 'prelude-enable-whitespace)
-
-(use-package expand-region :ensure t
-  :bind ("C-=" . er/expand-region))
 
 
 (load "server")
@@ -184,27 +178,29 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package winum :ensure t :config (winum-mode)
   ;; https://github.com/deb0ch/emacs-winum
-  :bind
-  (:map global-map
-	  ;; Prefer OS Window Manager binding
-	  ;; ("M-`" . winum-select-window-by-number)
-	  ;; Prefer treemacs default map
-	  ;; ("M-0" . winum-select-window-0-or-10)
-	  ("M-1" . winum-select-window-1)
-	  ("M-2" . winum-select-window-2)
-	  ("M-3" . winum-select-window-3)
-	  ("M-4" . winum-select-window-4)
-	  ("M-5" . winum-select-window-5)
-	  ("M-6" . winum-select-window-6)
-	  ("M-7" . winum-select-window-7)
-	  ("M-8" . winum-select-window-8)
-	  ("M-9" . winum-select-window-9)))
+  :bind (
+	 ;; Prefer OS Window Manager binding
+	 ;; ("M-`" . winum-select-window-by-number)
+	 ;; Prefer treemacs default map
+	 ;; ("M-0" . winum-select-window-0-or-10)
+	 ("M-1" . winum-select-window-1)
+	 ("M-2" . winum-select-window-2)
+	 ("M-3" . winum-select-window-3)
+	 ("M-4" . winum-select-window-4)
+	 ("M-5" . winum-select-window-5)
+	 ("M-6" . winum-select-window-6)
+	 ("M-7" . winum-select-window-7)
+	 ("M-8" . winum-select-window-8)
+	 ("M-9" . winum-select-window-9)))
 
 (use-package move-text :ensure t
   :bind (
 	 ("C-S-<up>" . move-text-up)
 	 ("C-S-<down>" . move-text-down))
   )
+
+(use-package expand-region :ensure t
+  :bind ("C-=" . er/expand-region))
 
 (use-package crux :ensure t
   ;; Prelude niceties from https://github.com/bbatsov/crux
@@ -416,7 +412,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
     (treemacs-hide-gitignored-files-mode nil))
   :bind
-  (:map global-map
+  (
 	("M-0"       . treemacs-select-window)
 	("C-x t 1"   . treemacs-delete-other-windows)
 	("C-x t t"   . treemacs)
