@@ -1,5 +1,11 @@
 ;;;;; General
 
+(custom-set-faces
+ '(default ((t (:height 105 :family "Hack")))))
+
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+
 (menu-bar-mode -1)
 (size-indication-mode t)
 
@@ -104,9 +110,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (global-set-key (kbd "C-c <escape>") 'show-or-create-scratch)
 (global-set-key (kbd "C-c `") 'show-or-create-scratch)  ;; terminal workaround
-
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
 
 (global-set-key [(shift mouse-3)] 'acme-search-forward)
 (global-set-key [(mouse-8)] 'acme-search-forward)
