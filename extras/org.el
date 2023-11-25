@@ -91,14 +91,14 @@
 
 (use-package org
   :hook ((org-mode . visual-line-mode) ; wrap lines at word breaks
-;	 (org-mode . org-indent-mode 1)
+	 (org-mode . org-indent-mode)
 	 (org-mode . flyspell-mode))    ; spell checking!
 
   :bind (:map global-map
 	      ("C-c l s" . org-store-link)          ; Mnemonic: link → store
 	      ("C-c l i" . org-insert-link-global)
 	      ("C-c 1" . (lambda () (interactive) (find-file (concat org-directory "inbox.org"))))
-
+	      ("C-c 2" . (lambda () (interactive) (find-file (concat org-directory "todo.org"))))
 	      ) ; Mnemonic: link → insert
   :config
   ;; (require 'oc-csl)                     ; citation support
@@ -109,6 +109,9 @@
 
   ;; Make exporting quotes better
   (setq org-export-with-smart-quotes t)
+  
+  (setq org-startup-folded t)
+  
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
