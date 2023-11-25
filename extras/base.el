@@ -43,13 +43,13 @@
 ;; Consult: Misc. enhanced commands
 (use-package consult
   :ensure t
-  :bind (
+  :bind ( 
          ;; Drop-in replacements
          ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
          ("M-y"   . consult-yank-pop)   ; orig. yank-pop
          ;; Searching
          ("M-s r" . consult-ripgrep)
-         ("C-S-s" . consult-line)
+         ("C-s" . consult-line)
          ("M-s l" . consult-line)       ; Alternative: rebind C-s to use
          ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
          ("M-s L" . consult-line-multi) ; isearch to M-s s
@@ -156,8 +156,8 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-;; (use-package eshell
-;;   :bind (("C-r" . consult-history)))
+(use-package eshell
+  :bind (:map eshell-mode-map ("C-r" . consult-history)))
 
 ;; Orderless: powerful completion style
 (use-package orderless
