@@ -26,6 +26,9 @@
 (global-set-key (kbd "C-c <escape>") 'show-or-create-scratch)
 (global-set-key (kbd "C-c `") 'show-or-create-scratch)  ;; terminal workaround
 
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+
 ;; Pop marks faster by repeated spacing
 ;; Eg. C-u <space> <space> <space>
 (setq set-mark-command-repeat-pop 't)
