@@ -6,10 +6,20 @@
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
+(global-set-key (kbd "C-S-s") 'isearch-forward)  ; re-mapped to consult-line in extras/base.el
+
 (menu-bar-mode -1)
+(global-set-key (kbd "<f12>") 'menu-bar-mode)
+
 (size-indication-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(delete-selection-mode 1)  ; yanking replaces region content
+
+(use-package diminish :ensure t)
+(diminish 'which-key-mode)
+(diminish 'eldoc-mode)
 
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always)
@@ -17,6 +27,15 @@
 ;; if there is a dired buffer displayed in the next window, use its
 ;; current subdir, instead of the current subdir of this dired buffer
 (setq dired-dwim-target t)
+
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+;; revert buffers automatically when underlying files are changed externally
+(global-auto-revert-mode t)
 
 ;; savehist keeps track of some history
 (require 'savehist)
@@ -49,7 +68,7 @@
   :init (super-save-mode +1)
   :config (progn
 	    (add-to-list 'super-save-triggers 'ace-window)
-;;	    (diminish 'super-save-mode)
+	    (diminish 'super-save-mode)
 	    ))
 ;;(require 'super-save)
 ;; add integration with ace-window
@@ -141,8 +160,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  (key-chord-define-global "kd" 'mc/edit-lines)
 	  ))
 
-(use-package diminish :ensure t)
-
 (use-package undo-tree :ensure t
   :init (global-undo-tree-mode)
   :config (diminish 'undo-tree-mode)
@@ -170,7 +187,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package editorconfig :ensure t
   :init (progn
 	  (editorconfig-mode 1)
-	  ;;(diminish 'editorconfig-mode)
+	  (diminish 'editorconfig-mode)
 	  )
   )
 
@@ -202,12 +219,20 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("C-S-<down>" . move-text-down))
   )
 
+(use-package zop-to-char :ensure t
+  :bind (("M-z" . zop-up-to-char)
+	 ("M-Z" . zop-to-char)
+	 ))
+
 (use-package expand-region :ensure t
   :bind ("C-=" . er/expand-region))
 
 (use-package crux :ensure t
   ;; Prelude niceties from https://github.com/bbatsov/crux
-  :config (crux-with-region-or-line kill-region)  ; C-w kills row, not random region
+  :config (progn
+	    (global-set-key [remap kill-whole-line] 'crux-kill-whole-line)
+	    (crux-with-region-or-line kill-region)  ; C-w kills row, not random region
+	    )
   :bind (
 	 ("C-a" . crux-move-beginning-of-line)
 	 ("C-k" . crux-smart-kill-line)
@@ -220,7 +245,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("M-o" . crux-smart-open-line)
 	 ; ("M-S-o" . crux-smart-open-line-above) ; vim style idea, overlaps window split binds
 
-	 ("C-<backspace>" . crux-kill-line-backwards) ; err
+	 ("C-<backspace>" . crux-kill-line-backwards)
 
 	 ("C-c d" . crux-duplicate-current-line-or-region)
 	 ("C-c M-d" . crux-duplicate-and-comment-current-line-or-region)
