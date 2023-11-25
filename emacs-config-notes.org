@@ -15,12 +15,6 @@ Python LSP + Treesitter + Copilot setup took half a Sunday to get going and will
 
 * Missing defaults / modes
 
-undo tree
-
-multi-cursor
-
-yes/no should do just y/n
-
 * Improvement ideas
 ** evil-mode
 toggle binding
