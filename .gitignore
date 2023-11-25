@@ -12,3 +12,6 @@
 /recentf
 /url/
 /mc-lists.el
+*~undo-tree~
+/.mc-lists.el
+/bookmarks
