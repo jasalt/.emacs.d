@@ -61,7 +61,7 @@
   (load bootstrap-file nil 'nomessage))
 
 ;; If you want to turn off the welcome screen, uncomment this
-;(setopt inhibit-splash-screen t)
+(setopt inhibit-splash-screen t)
 
 (setopt initial-major-mode 'org-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
@@ -186,8 +186,8 @@ If the new path's directories does not exist, create them."
 (add-hook 'text-mode-hook 'visual-line-mode)
 
 ;; Modes to highlight the current line with
-(let ((hl-line-hooks '(prog-mode-hook)))  ; 
-  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+;; (let ((hl-line-hooks '(prog-mode-hook)))  ; 
+;;   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
