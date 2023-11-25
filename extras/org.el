@@ -77,6 +77,23 @@
 
 ;;; Optional variables
 
+;;; Calendar config
+;; Week starts on monday
+(setq calendar-week-start-day 1)
+;; Add week numbers to calendar
+(copy-face font-lock-constant-face 'calendar-iso-week-face)
+(set-face-attribute 'calendar-iso-week-face nil
+                    :height 0.7)
+(setq calendar-intermonth-text
+      '(propertize
+        (format "%2d"
+                (car
+                 (calendar-iso-from-absolute
+                  (calendar-absolute-from-gregorian (list month day year)))))
+        'font-lock-face 'calendar-iso-week-face))
+
+
+
 ;; Advanced: Custom link types
 ;; This example is for linking a person's 7-character ID to their page on the
 ;; free genealogy website Family Search.
@@ -94,12 +111,18 @@
 	 (org-mode . org-indent-mode)
 	 (org-mode . flyspell-mode))    ; spell checking!
 
-  :bind (:map global-map
-	      ("C-c l s" . org-store-link)          ; Mnemonic: link → store
-	      ("C-c l i" . org-insert-link-global)
-	      ("C-c 1" . (lambda () (interactive) (find-file (concat org-directory "inbox.org"))))
-	      ("C-c 2" . (lambda () (interactive) (find-file (concat org-directory "todo.org"))))
-	      ) ; Mnemonic: link → insert
+  :bind (
+	 ("C-c l s" . org-store-link)          ; Mnemonic: link → store
+	 ("C-c l i" . org-insert-link-global)  ; Mnemonic: link → insert
+	 ("C-c 1" . (lambda () (interactive) (find-file (concat org-directory "inbox.org"))))
+	 ("C-c 2" . (lambda () (interactive) (find-file (concat org-directory "todo.org"))))
+	 :map org-mode-map
+	 ("M-n" . org-shiftright)
+	 ("M-p" . org-shiftleft)
+	 ("C-M-f" . org-shiftmetaright)
+	 ("C-M-b" . org-shiftmetaleft)
+	 ("M-<return>" . org-meta-return)
+	 ) 
   :config
   ;; (require 'oc-csl)                     ; citation support
   ;; (add-to-list 'org-export-backends 'md)
@@ -127,8 +150,11 @@
   :config
   ;; Instead of just two states (TODO, DONE) we set up a few different states
   ;; that a task can be in.
+  
+  ;; (setq org-todo-keywords
+  ;; 	'((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)" "|" "DONE(d!)" "OBSOLETE(o@)")))
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "WAITING(w@/!)" "STARTED(s!)" "|" "DONE(d!)" "OBSOLETE(o@)")))
+        '((sequence "TODO(t)" "APPT(a)" "WAIT(w)" "|" "CANCELLED(c)" "DONE(d)")))
 
   ;; Refile configuration
   (setq org-outline-path-complete-in-steps nil)
