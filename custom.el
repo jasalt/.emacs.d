@@ -360,12 +360,17 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package git-gutter :ensure t  ; https://github.com/emacsorphanage/git-gutter
   :config (progn
+	    ;; (git-gutter:linum-setup) ; not for line-number-mode?
 	    (setq git-gutter:ask-p nil)
-	    ;; (set-face-background 'git-gutter:modified "purple") ;; background color
-	    ;; (set-face-foreground 'git-gutter:added "green")
-	    ;; (set-face-foreground 'git-gutter:deleted "red")
+	    (diminish 'git-gutter-mode)
+
+	    (set-face-background 'git-gutter:modified "orange")
+	    (set-face-foreground 'git-gutter:modified "white")
+	    (set-face-background 'git-gutter:added "lightgreen")
+	    (set-face-foreground 'git-gutter:added "white")
+	    (set-face-background 'git-gutter:deleted "red2")
+	    (set-face-foreground 'git-gutter:deleted "white")
 	    )
-  ;; (git-gutter:linum-setup) ; not for line-number-mode?
   :hook (prog-mode . git-gutter-mode)
   :bind (
 	 ;;("C-x C-g" . git-gutter)
