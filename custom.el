@@ -114,8 +114,6 @@
 ;; This function creates that assuming virtualenv is at .venv path.
 ;; Source: https://robbmann.io/posts/emacs-eglot-pyrightconfig/
 
-
-
 (use-package tramp :ensure t)  ; depends on
 ;; give /path/to/.venv
 
@@ -169,7 +167,7 @@
 
 (straight-use-package 'gptel)
 
-;;;; Treemacs
+;;;; Treemacs Sidebar
 ;; Full stock config from https://github.com/Alexander-Miller/treemacs#installation
 
 (use-package treemacs
@@ -256,6 +254,7 @@
 	("M-0"       . treemacs-select-window)
 	("C-x t 1"   . treemacs-delete-other-windows)
 	("C-x t t"   . treemacs)
+	("C-x D"     . treemacs)
 	("C-x t d"   . treemacs-select-directory)
 	("C-x t B"   . treemacs-bookmark)
 	("C-x t C-t" . treemacs-find-file)
