@@ -24,25 +24,36 @@
 (global-set-key (kbd "C-c <escape>") 'show-or-create-scratch)
 (global-set-key (kbd "C-c `") 'show-or-create-scratch)  ;; terminal workaround
 
-;;;;; Programming
+;;;;; Programming (see extras/dev.el for bedrock defaults)
 
-;; Installing tree-sitter language grammars following:
+(global-set-key (kbd "C-c C-SPC") 'comment-or-uncomment-region)
+
+;; If having problems with bedrock default method, install tree-sitter language grammars following:
 
 ;; https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
 
-;; Use build script https://github.com:casouri/tree-sitter-module
+;; Use build script
+;; git clone https://github.com/casouri/tree-sitter-module.git
 ;; Move them to directory ~/.emacs.d/tree-sitter/
 
 
+;; Eglot (LSP)
+
+;;sudo npm install --global pyright
+
 ;; Pyright requires config file per project.
+;; Does Neovim assist pyright to check the .venv dir automatically?
+;; -> When NeoVim is started in activated venv, pyright ran by it finds correct python
+
 
 ;; This function creates that assuming virtualenv is at .venv path.
 ;; Source: https://robbmann.io/posts/emacs-eglot-pyrightconfig/
 
-;; TODO Not yet clear if works
 
-;; Does Neovim assist pyright to check the .venv dir automatically?
-;; -> When NeoVim is started in activated venv, pyright ran by it finds correct python
+
+(use-package tramp :ensure t)  ; depends on
+;; give /path/to/.venv
+
 (defun pyrightconfig-write (virtualenv)
   (interactive "DEnv: ")
 
@@ -81,7 +92,7 @@
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :ensure t
-  :hook (prog-mode . copilot-mode)
+;;  :hook (prog-mode . copilot-mode)  ;; TODO hook to specific languages elisp-mode etc
   :bind (("C-c M-f" . copilot-complete)
          :map copilot-completion-map
          ("C-g" . 'copilot-clear-overlay)
@@ -90,3 +101,6 @@
          ("<tab>" . 'copilot-accept-completion)
          ("M-f" . 'copilot-accept-completion-by-word)
          ("M-<return>" . 'copilot-accept-completion-by-line)))
+
+(straight-use-package 'gptel)
+

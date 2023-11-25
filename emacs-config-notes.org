@@ -25,10 +25,19 @@ M-<num>, change panel, winner mode(?)
 C-x D, side panel, neotree(?)
 C-c R, rename file
 
+
+C-w, yank line
 * Missing defaults / modes
 start with scratch buffer with org-mode
 
 undo tree
+
+multi-cursor
+
+comment region
+
+yes/no should do just y/n
+
 * Improvement ideas
 ** evil-mode
 toggle binding
