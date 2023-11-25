@@ -212,20 +212,17 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Just use default theme and override some colors
-
-(custom-set-faces
- '(hl-line ((t (:background "gray96")))))
-(custom-set-faces
-'(ffap ((t (:background "gray90")))))
-(custom-set-faces
-'(highlight ((t (:background "gray90")))))
-
-;; (use-package emacs
-;;   :config
-;;   ;;(load-theme 'modus-vivendi)
-;;   ;;(load-theme 'modus-operandi)
-;;   )          ; for light theme, use modus-operandi
+(use-package emacs
+  :config
+  (progn
+    
+    ;;(load-theme 'modus-vivendi)   ; dark    
+    
+    (load-theme 'modus-operandi)  ; light
+    (custom-set-faces
+     '(hl-line ((t (:background "gray95"))))))
+  
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
