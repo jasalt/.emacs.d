@@ -24,6 +24,32 @@
 (global-set-key (kbd "C-c <escape>") 'show-or-create-scratch)
 (global-set-key (kbd "C-c `") 'show-or-create-scratch)  ;; terminal workaround
 
+
+(use-package winum :ensure t :config (winum-mode)
+  ;; https://github.com/deb0ch/emacs-winum
+  :bind
+  (:map global-map
+	  ;; Prefer OS Window Manager binding
+	  ;; ("M-`" . winum-select-window-by-number)
+	  ;; Prefer treemacs default map
+	  ;; ("M-0" . winum-select-window-0-or-10)
+	  ("M-1" . winum-select-window-1)
+	  ("M-2" . winum-select-window-2)
+	  ("M-3" . winum-select-window-3)
+	  ("M-4" . winum-select-window-4)
+	  ("M-5" . winum-select-window-5)
+	  ("M-6" . winum-select-window-6)
+	  ("M-7" . winum-select-window-7)
+	  ("M-8" . winum-select-window-8)
+	  ("M-9" . winum-select-window-9))
+  (:map magit-status-mode-map
+	;; Remap magit default keys. Does not run before using winum (TODO).
+	("M-1" . nil) ("C-1" . magit-section-show-level-1-all)
+	("M-2" . nil) ("C-2" . magit-section-show-level-2-all)
+	("M-3" . nil) ("C-3" . magit-section-show-level-3-all)
+	("M-4" . nil) ("C-4" . magit-section-show-level-4-all)))
+
+
 ;;;;; Programming (see extras/dev.el for bedrock defaults)
 
 (global-set-key (kbd "C-c C-SPC") 'comment-or-uncomment-region)
