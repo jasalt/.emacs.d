@@ -15,3 +15,5 @@
 *~undo-tree~
 /.mc-lists.el
 /bookmarks
+/savehist
+/saveplace

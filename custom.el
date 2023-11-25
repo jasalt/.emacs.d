@@ -5,12 +5,94 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(recentf-mode)
+;; always delete and copy recursively
+(setq dired-recursive-deletes 'always)
+(setq dired-recursive-copies 'always)
+;; if there is a dired buffer displayed in the next window, use its
+;; current subdir, instead of the current subdir of this dired buffer
+(setq dired-dwim-target t)
+
+;; savehist keeps track of some history
+(require 'savehist)
+(setq savehist-additional-variables
+      ;; search entries
+      '(search-ring regexp-search-ring)
+      ;; save every minute
+      savehist-autosave-interval 60
+      ;; keep the home clean
+      savehist-file (expand-file-name "savehist" "~/.emacs.d/"))
+(savehist-mode +1)
+
+;; save recent files
+(require 'recentf)
+(setq recentf-save-file (expand-file-name "recentf" "~/.emacs.d/")
+      recentf-max-saved-items 500
+      recentf-max-menu-items 15
+      ;; disable recentf-cleanup on Emacs start, because it can cause
+      ;; problems with remote files
+      recentf-auto-cleanup 'never)
+(defun prelude-recentf-exclude-p (file)
+  "A predicate to decide whether to exclude FILE from recentf."
+  (let ((file-dir (file-truename (file-name-directory file))))
+    (cl-some (lambda (dir)
+               (string-prefix-p dir file-dir))
+             (mapcar 'file-truename (list "~/.emacs.d/" package-user-dir)))))
+(recentf-mode +1)
+
+(use-package super-save :ensure t
+  :init (super-save-mode +1)
+  :config (progn
+	    (add-to-list 'super-save-triggers 'ace-window)
+;;	    (diminish 'super-save-mode)
+	    ))
+;;(require 'super-save)
+;; add integration with ace-window
+
+
+
+
+;; (defun prelude-cleanup-maybe ()
+;;   "Invoke `whitespace-cleanup' if `prelude-clean-whitespace-on-save' is not nil."
+;;   (when prelude-clean-whitespace-on-save
+;;     (whitespace-cleanup)))
+
+;; (defun prelude-enable-whitespace ()
+;;   "Enable `whitespace-mode' if `prelude-whitespace' is not nil."
+;;   (when prelude-whitespace
+;;     ;; keep the whitespace decent all the time (in this buffer)
+;;     (add-hook 'before-save-hook 'prelude-cleanup-maybe nil t)
+;;     (whitespace-mode +1)))
+
+;; (add-hook 'text-mode-hook 'prelude-enable-whitespace)
+
+(use-package expand-region :ensure t
+  :bind ("C-=" . er/expand-region))
+
 
 (load "server")
 (setq server-name "jarkon-emacs")
 (setq server-socket-dir "~/.emacs.d/server")
 (unless (server-running-p) (server-start))
+
+(defadvice server-visit-files (before parse-numbers-in-lines (files proc &optional nowait) activate)
+  "Open file with emacsclient with cursors positioned on requested line.
+Most of console-based utilities prints filename in format
+'filename:linenumber'.  So you may wish to open filename in that format.
+Just call:
+
+  emacsclient filename:linenumber
+
+and file 'filename' will be opened and cursor set on line 'linenumber'"
+  (ad-set-arg 0
+              (mapcar (lambda (fn)
+                        (let ((name (car fn)))
+                          (if (string-match "^\\(.*?\\):\\([0-9]+\\)\\(?::\\([0-9]+\\)\\)?$" name)
+                              (cons
+                               (match-string 1 name)
+                               (cons (string-to-number (match-string 2 name))
+                                     (string-to-number (or (match-string 3 name) ""))))
+                            fn)))
+		      files)))
 
 ;; Make scratch-buffer more convenient
 (setq initial-scratch-message "")
@@ -62,9 +144,37 @@
 	  (key-chord-define-global "kd" 'mc/edit-lines)
 	  ))
 
+(use-package diminish :ensure t)
+
 (use-package undo-tree :ensure t
   :init (global-undo-tree-mode)
+  :config (diminish 'undo-tree-mode)
   :bind ("C-x u" . undo-tree-visualize)
+  )
+
+(winner-mode +1)
+
+(use-package smartrep :ensure t)
+(use-package operate-on-number :ensure t)
+  
+(smartrep-define-key global-map "C-c ."
+  '(("+" . apply-operation-to-number-at-point)
+    ("-" . apply-operation-to-number-at-point)
+    ("*" . apply-operation-to-number-at-point)
+    ("/" . apply-operation-to-number-at-point)
+    ("\\" . apply-operation-to-number-at-point)
+    ("^" . apply-operation-to-number-at-point)
+    ("<" . apply-operation-to-number-at-point)
+    (">" . apply-operation-to-number-at-point)
+    ("#" . apply-operation-to-number-at-point)
+    ("%" . apply-operation-to-number-at-point)
+    ("'" . operate-on-number-at-point)))
+
+(use-package editorconfig :ensure t
+  :init (progn
+	  (editorconfig-mode 1)
+	  ;;(diminish 'editorconfig-mode)
+	  )
   )
 
 ;; Window splitting keys, same as Terminator / Konsole / iTerm
@@ -98,6 +208,7 @@
 
 (use-package crux :ensure t
   ;; Prelude niceties from https://github.com/bbatsov/crux
+  :config (crux-with-region-or-line kill-region)  ; C-w kills row, not random region
   :bind (
 	 ("C-a" . crux-move-beginning-of-line)
 	 ("C-k" . crux-smart-kill-line)
@@ -109,8 +220,6 @@
 
 	 ("M-o" . crux-smart-open-line)
 	 ; ("M-S-o" . crux-smart-open-line-above) ; vim style idea, overlaps window split binds
-
-
 
 	 ("C-<backspace>" . crux-kill-line-backwards) ; err
 
@@ -139,6 +248,18 @@
 ;;;;; Programming (see extras/dev.el for bedrock defaults)
 
 (global-set-key (kbd "C-c C-SPC") 'comment-or-uncomment-region)
+
+
+;; meaningful names for buffers with the same name
+(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+
+;; saveplace remembers your location in a file when saving files
+(setq save-place-file (expand-file-name "saveplace" "~/.emacs.d/"))
+;; activate it for all buffers
+(save-place-mode 1)
 
 ;; If having problems with bedrock default method, install tree-sitter language grammars following:
 
