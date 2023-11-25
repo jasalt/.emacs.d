@@ -186,8 +186,9 @@ If the new path's directories does not exist, create them."
 (add-hook 'text-mode-hook 'visual-line-mode)
 
 ;; Modes to highlight the current line with
-;; (let ((hl-line-hooks '(prog-mode-hook)))  ; 
-;;   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+(let ((hl-line-hooks '(prog-mode-hook)))  ; 
+  (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -211,7 +212,14 @@ If the new path's directories does not exist, create them."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Just use default theme
+;; Just use default theme and override some colors
+
+(custom-set-faces
+ '(hl-line ((t (:background "gray96")))))
+(custom-set-faces
+'(ffap ((t (:background "gray90")))))
+(custom-set-faces
+'(highlight ((t (:background "gray90")))))
 
 ;; (use-package emacs
 ;;   :config
