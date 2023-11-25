@@ -33,16 +33,37 @@
 ;; Eg. C-u <space> <space> <space>
 (setq set-mark-command-repeat-pop 't)
 
+(use-package key-chord
+  :ensure t
+  :init (progn
+	  (key-chord-define-global "jj" 'avy-goto-word-1)
+	  (key-chord-define-global "jl" 'avy-goto-line)
+	  (key-chord-define-global "jf" 'avy-goto-char)
+	  (key-chord-define-global "JJ" 'crux-switch-to-previous-buffer)
+	  (key-chord-define-global "uu" 'undo-tree-visualize)
+
+	  (key-chord-mode +1)
+	  )
+  )
+
+(use-package multiple-cursors :ensure t
+  :init (progn
+	  (key-chord-define-global "jn" 'mc/mark-more-like-this-extended)
+	  (key-chord-define-global "jp" 'mc/mark-previous-like-this)
+	  (key-chord-define-global "jm" 'mc/mark-all-like-this)
+	  (key-chord-define-global "jt" 'mc/mark-sgml-tag-pair)
+	  (key-chord-define-global "kd" 'mc/edit-lines)
+	  ))
+
+(use-package undo-tree :ensure t
+  :init (global-undo-tree-mode)
+  :bind ("C-x u" . undo-tree-visualize)
+  )
+
 ;; Window splitting keys, same as Terminator / Konsole / iTerm
-(global-set-key (kbd "C-S-o") '(lambda ()
-                                 (interactive)
-                                 (split-window-vertically nil)))
-(global-set-key (kbd "C-M-o") '(lambda ()
-                                 (interactive)
-                                 (split-window-horizontally nil)))
-(global-set-key (kbd "C-M-w") '(lambda ()
-                                 (interactive)
-                                 (delete-window)))    
+(global-set-key (kbd "C-S-o") '(lambda () (interactive) (split-window-vertically nil)))
+(global-set-key (kbd "C-M-o") '(lambda () (interactive) (split-window-horizontally nil)))
+(global-set-key (kbd "C-M-w") '(lambda () (interactive) (delete-window)))
 
 (use-package winum :ensure t :config (winum-mode)
   ;; https://github.com/deb0ch/emacs-winum
