@@ -357,6 +357,28 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("M-f" . 'copilot-accept-completion-by-word)
 	 ("M-<return>" . 'copilot-accept-completion-by-line)))
 
+(use-package git-gutter :ensure t
+  :config ;; (git-gutter:linum-setup) ; not for line-number-mode?
+  :hook (prog-mode . git-gutter-mode)
+  :bind (
+	 ("C-x C-g" . git-gutter)
+	 ("C-x v =" . git-gutter:popup-hunk)
+
+	 ;; Jump to next/previous hunk
+	 ("C-x p" . git-gutter:previous-hunk)
+	 ("C-x n" . git-gutter:next-hunk)
+
+	 ;; Stage current hunk
+	 ("C-x v s" . git-gutter:stage-hunk)
+
+	 ;; Revert current hunk
+	 ("C-x v r" . git-gutter:revert-hunk)
+
+	 ;; Mark current hunk
+	 ("C-x v SPC" . git-gutter:mark-hunk)
+	 )
+  )
+
 (use-package treemacs
   :ensure t
 ;;  :defer t
