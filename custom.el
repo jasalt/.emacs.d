@@ -165,17 +165,15 @@
 	 ("M-f" . 'copilot-accept-completion-by-word)
 	 ("M-<return>" . 'copilot-accept-completion-by-line)))
 
-(straight-use-package 'gptel)
-
-;;;; Treemacs Sidebar
-;; Full stock config from https://github.com/Alexander-Miller/treemacs#installation
-
 (use-package treemacs
   :ensure t
-  :defer t
+;;  :defer t
   :init
-  (with-eval-after-load 'winum
-    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  (progn (with-eval-after-load 'winum
+	   (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+	 (with-eval-after-load 'treemacs
+	   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)) ;; TODO move to bind section
+	 )
   :config
   (progn
     (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
@@ -258,7 +256,8 @@
 	("C-x t d"   . treemacs-select-directory)
 	("C-x t B"   . treemacs-bookmark)
 	("C-x t C-t" . treemacs-find-file)
-	("C-x t M-t" . treemacs-find-tag)))
+	("C-x t M-t" . treemacs-find-tag)
+	))
 
 (use-package treemacs-evil
   :after (treemacs evil)
