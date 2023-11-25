@@ -29,6 +29,10 @@
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
+(global-set-key [(shift mouse-3)] 'acme-search-forward)
+(global-set-key [(mouse-8)] 'acme-search-forward)
+(global-set-key [(shift mouse-8)] 'acme-search-backward)
+
 ;; Pop marks faster by repeated spacing
 ;; Eg. C-u <space> <space> <space>
 (setq set-mark-command-repeat-pop 't)
