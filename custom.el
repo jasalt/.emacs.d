@@ -26,6 +26,17 @@
 (global-set-key (kbd "C-c <escape>") 'show-or-create-scratch)
 (global-set-key (kbd "C-c `") 'show-or-create-scratch)  ;; terminal workaround
 
+;; Window splitting keys, same as Terminator / Konsole / iTerm
+(global-set-key (kbd "C-S-o") '(lambda ()
+                                 (interactive)
+                                 (split-window-vertically nil)))
+(global-set-key (kbd "C-M-o") '(lambda ()
+                                 (interactive)
+                                 (split-window-horizontally nil)))
+(global-set-key (kbd "C-M-w") '(lambda ()
+                                 (interactive)
+                                 (delete-window)))
+
 (use-package winum :ensure t :config (winum-mode)
   ;; https://github.com/deb0ch/emacs-winum
   :bind
