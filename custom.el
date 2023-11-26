@@ -357,7 +357,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("M-f" . 'copilot-accept-completion-by-word)
 	 ("M-<return>" . 'copilot-accept-completion-by-line)))
 
-
 (use-package git-gutter :ensure t  ; https://github.com/emacsorphanage/git-gutter
   :config (progn
 	    ;; (git-gutter:linum-setup) ; not for line-number-mode?
@@ -366,12 +365,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	    
 	    (setq git-gutter:update-interval 3)
 
-	    (set-face-background 'git-gutter:modified "orange")
-	    (set-face-foreground 'git-gutter:modified "white")
-	    (set-face-background 'git-gutter:added "lightgreen")
+	    (set-face-background 'git-gutter:modified "#e8edcc")
+	    (set-face-foreground 'git-gutter:modified "#e8edcc")
+	    (set-face-background 'git-gutter:added "#cceecc")
 	    (set-face-foreground 'git-gutter:added "white")
-	    (set-face-background 'git-gutter:deleted "red2")
-	    (set-face-foreground 'git-gutter:deleted "white")
+	    (set-face-background 'git-gutter:deleted "#eecccc")
+	    (set-face-foreground 'git-gutter:deleted "#aa2222")
 	    )
   :hook ((prog-mode markdown-mode toml-ts-mode) . git-gutter-mode)
   :bind (
@@ -397,7 +396,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("C-M-g SPC" . git-gutter:mark-hunk)
 	 )
   )
-
 (use-package treemacs
   :ensure t
 ;;  :defer t
