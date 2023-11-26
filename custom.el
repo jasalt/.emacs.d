@@ -373,7 +373,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	    (set-face-background 'git-gutter:deleted "red2")
 	    (set-face-foreground 'git-gutter:deleted "white")
 	    )
-  :hook (prog-mode . git-gutter-mode)
+  :hook ((prog-mode markdown-mode) . git-gutter-mode)
   :bind (
 	 ;;("C-x C-g" . git-gutter)
 	 ("C-M-g C-M-g" . git-gutter:popup-hunk)
