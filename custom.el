@@ -418,7 +418,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  treemacs-file-extension-regex            treemacs-last-period-regex-value
 	  treemacs-file-follow-delay               0.2
 	  treemacs-file-name-transformer           #'identity
-	  treemacs-follow-after-init               t
+	  treemacs-follow-after-init               nil ;; t
 	  treemacs-expand-after-init               t
 	  treemacs-find-workspace-method           'find-for-file-or-pick-first
 	  treemacs-git-command-pipe                ""
@@ -466,9 +466,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     ;; using a Hi-DPI display, uncomment this to double the icon size.
     (treemacs-resize-icons 16)
 
-    (treemacs-follow-mode t)
+    ;(treemacs-follow-mode t)  ; gives timer error
+    (treemacs-follow-mode 0)
+    ;(treemacs-tag-follow-mode t)
     (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode 'always)
+    (treemacs-fringe-indicator-mode 0)
+
     (when treemacs-python-executable
       (treemacs-git-commit-diff-mode t))
 
