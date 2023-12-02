@@ -345,8 +345,26 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (with-temp-file out-file (insert out-contents))))
 
 
+
+;; OPENAI LLM CONFIG STUFF
+
+;; TODO include these in chatgpt declaration
+(defun get-openai-api-key ()
+  "Return the value of the OPENAI_API_KEY environment variable."
+  (getenv "OPENAI_API_KEY"))
+(use-package spinner :ensure t)
+(use-package openai
+  :config (progn
+	    (setq openai-key #'get-openai-api-key)
+	    )
+  :straight (openai :type git :host github :repo "emacs-openai/openai"))
+(use-package chatgpt
+  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
+
+
 ;; https://github.com/zerolfx/copilot.el
 ;; Mapping examples https://github.com/zerolfx/copilot.el/issues/103
+;; TODO has server connection issues
 (use-package copilot
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :ensure t
