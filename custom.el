@@ -161,7 +161,10 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  ))
 
 (use-package undo-tree :ensure t
-  :init (global-undo-tree-mode)
+  :init (progn
+	  (setq undo-tree-history-directory-alist
+		`((".*" . ,temporary-file-directory)))
+	  (global-undo-tree-mode))
   :config (diminish 'undo-tree-mode)
   :bind ("C-x u" . undo-tree-visualize)
   )
