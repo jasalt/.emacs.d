@@ -422,8 +422,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("C-M-g n" . git-gutter:next-hunk)
 
 	 ;; Stage current hunk
-	 ("C-x v s" . git-gutter:stage-hunk)
+	 ;;("C-x v s" . git-gutter:stage-hunk)
 	 ("C-M-g s" . git-gutter:stage-hunk)
+	 
+	 ;;("C-x v a" . git-gutter:stage-hunk)
+	 ("C-M-g a" . git-gutter:stage-hunk)
 
 	 ;; Revert current hunk
 	 ("C-x v r" . git-gutter:revert-hunk)
