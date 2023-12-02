@@ -297,7 +297,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; Move them to directory ~/.emacs.d/tree-sitter/
 
 
-;; Eglot (LSP)
+;;;; Programming related config, tree-sitter, Eglot (LSP) etc.
+
+;; PHP
+
+;; Follow readme and install grammar at ~/.emacs.d/tree-sitter/
+;; https://github.com/emacs-php/php-ts-mode
+(use-package php-ts-mode
+  :straight (php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
+
+;; PYTHON
+
+;; TODO how to activate instead of pyright ?
+;; (use-package flymake-ruff
+;;   :ensure t
+;;   :hook (eglot-managed-mode . flymake-ruff-load))
 
 ;;sudo npm install --global pyright
 
@@ -377,6 +391,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("<tab>" . 'copilot-accept-completion)
 	 ("M-f" . 'copilot-accept-completion-by-word)
 	 ("M-<return>" . 'copilot-accept-completion-by-line)))
+
+
+;;;; MISC UI STUFF
 
 (use-package git-gutter :ensure t  ; https://github.com/emacsorphanage/git-gutter
   :config (progn
