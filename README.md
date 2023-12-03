@@ -10,10 +10,15 @@ Own modifications and stuff imported from Prelude lie at `custom.el`.
 
 Keeping code somewhat documented and using standard `use-package` (with `straight`) for managing and configuring packages.
 ## Installation
+### LSP
+
+- `pipx install pyright` (eglot uses automatically)
+
+### Tree-sitter grammars
 
 Currently may fail to start if tree-sitter grammars are not in place at `~/.emacs.d/tree-sitter/`.
 
-Install tree-sitter language grammars following:
+Install tree-sitter language grammars:
 
 ```
 git clone https://github.com/casouri/tree-sitter-module.git
