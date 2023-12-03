@@ -9,6 +9,32 @@ On original Bedrock config side, there are two files of interest: `early-init.el
 Own modifications and stuff imported from Prelude lie at `custom.el`.
 
 Keeping code somewhat documented and using standard `use-package` (with `straight`) for managing and configuring packages.
+## Installation
+
+Currently may fail to start if tree-sitter grammars are not in place at `~/.emacs.d/tree-sitter/`.
+
+Install tree-sitter language grammars following:
+
+```
+git clone https://github.com/casouri/tree-sitter-module.git
+cd tree-sitter-module
+./batch
+mkdir ~/.emacs.d/tree-sitter
+mv dist/* ~/.emacs.d/tree-sitter
+
+```
+
+Ref: https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
+
+
+PHP tree-sitter mode is more in progress and is built individually:
+
+```
+git clone https://github.com/tree-sitter/tree-sitter-php.git
+cd tree-sitter-php
+cp libtree-sitter-php.dylib ~/.emacs.d/tree-sitter
+```
+
 
 ## Trying this out without committing too hard
 
