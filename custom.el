@@ -1,7 +1,31 @@
-;;;;; General
+;; Platform specific stuff
 
-(custom-set-faces
- '(default ((t (:height 105 :family "Hack")))))
+(defmacro progn-on (platform &rest body)
+  "Evaluate given expressions if running on given platform."
+  (if (string-equal system-type platform)
+      (cons 'progn body)))
+
+(progn-on
+ "darwin"
+ (setq ns-use-native-fullscreen nil)
+ (setq mac-option-modifier 'nil
+       mac-command-modifier 'meta
+       mac-function-modifier 'hyper)
+ (set-variable 'magit-emacsclient-executable
+               "/usr/local/bin/emacsclient")
+ ;;(set-face-attribute 'default nil :font "Inconsolata-16")
+ ;; Mac spotlight search workaround
+ (global-unset-key (kbd " "))
+ (global-set-key (kbd " ") 'just-one-space)
+ )
+
+(progn-on
+ "gnu/linux"
+ (custom-set-faces
+  '(default ((t (:height 105 :family "Hack")))))
+ )
+
+;;;;; General
 
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
