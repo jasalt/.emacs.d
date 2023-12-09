@@ -257,6 +257,7 @@ If the new path's directories does not exist, create them."
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
 (load-file (expand-file-name "custom.el" user-emacs-directory))
+(load-file (expand-file-name "programming.el" user-emacs-directory))
 
 (load-file (expand-file-name "rare-packages/acme-search.el" user-emacs-directory))
 
