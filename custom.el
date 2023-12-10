@@ -296,8 +296,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   )
 
 
-;;;;; Programming (see extras/dev.el for bedrock defaults)
-
 (global-set-key (kbd "C-c C-SPC") 'comment-or-uncomment-region)
 
 
