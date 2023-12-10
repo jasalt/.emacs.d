@@ -3,9 +3,14 @@
 ;; Also refer to extras/dev.el which sets some Bedrock framework defaults
 ;; which might be merged with this file content at some point.
 
+
+(use-package clojure-mode :ensure t)  ;; TODO cider etc
+
+;; Jet (flexible replacement for jq)
+;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
+(use-package jet :ensure t)  
+
 (use-package lua-mode :ensure t) 
-
-
 
 ;; PHP
 
@@ -59,3 +64,20 @@
     ;; location
     (with-temp-file out-file (insert out-contents))))
 
+
+(use-package dap-mode :ensure t
+  :config (progn
+	    ;; (dap-mode 1)
+
+	    ;; ;; The modes below are optional
+
+	    ;; (dap-ui-mode 1)
+	    ;; ;; enables mouse hover support
+	    ;; (dap-tooltip-mode 1)
+	    ;; ;; use tooltips for mouse hover
+	    ;; ;; if it is not enabled `dap-mode' will use the minibuffer.
+	    ;; (tooltip-mode 1)
+	    ;; ;; displays floating panel with debug buttons
+	    ;; ;; requies emacs 26+
+	    ;; (dap-ui-controls-mode 1)
+	    ))
