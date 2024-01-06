@@ -317,14 +317,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; activate it for all buffers
 (save-place-mode 1)
 
-;; If having problems with bedrock default method, install tree-sitter language grammars following:
-
-;; https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
-
-;; Use build script
-;; git clone https://github.com/casouri/tree-sitter-module.git
-;; Move them to directory ~/.emacs.d/tree-sitter/
-
 
 
 
