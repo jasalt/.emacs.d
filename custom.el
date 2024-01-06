@@ -223,6 +223,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (global-set-key (kbd "C-M-o") '(lambda () (interactive) (split-window-horizontally nil)))
 (global-set-key (kbd "C-M-w") '(lambda () (interactive) (delete-window)))
 
+
+;; TODO has problems with treemacs mode with
+;; (treemacs--select-visible-window) failing
+(global-set-key (kbd "M-0") '(lambda () (interactive) (treemacs-select-window)))
+
 (use-package winum :ensure t :config (winum-mode)
   ;; https://github.com/deb0ch/emacs-winum
   :bind (
@@ -230,6 +235,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ;; ("M-`" . winum-select-window-by-number)
 	 ;; Prefer treemacs default map
 	 ;; ("M-0" . winum-select-window-0-or-10)
+	 ;; ("M-0" . treemacs-select-window)
 	 ("M-1" . winum-select-window-1)
 	 ("M-2" . winum-select-window-2)
 	 ("M-3" . winum-select-window-3)
@@ -239,6 +245,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("M-7" . winum-select-window-7)
 	 ("M-8" . winum-select-window-8)
 	 ("M-9" . winum-select-window-9)))
+
 
 (use-package move-text :ensure t
   :bind (
@@ -410,11 +417,13 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :ensure t
 ;;  :defer t
   :init
-  (progn (with-eval-after-load 'winum
-	   (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-	 (with-eval-after-load 'treemacs
-	   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)) ;; TODO move to bind section
-	 )
+  (progn
+    ;; (with-eval-after-load 'winum
+    ;;   (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+    
+    (with-eval-after-load 'treemacs
+      (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)) ;; TODO move to bind section
+    )
   :config
   (progn
     (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
@@ -493,7 +502,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (treemacs-hide-gitignored-files-mode nil))
   :bind
   (
-	("M-0"       . treemacs-select-window)
+	;; ("M-0"       . treemacs-select-window)
 	("C-x t 1"   . treemacs-delete-other-windows)
 	("C-x t t"   . treemacs)
 	("C-x D"     . treemacs)
