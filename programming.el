@@ -4,7 +4,9 @@
 ;; which might be merged with this file content at some point.
 
 
-(use-package clojure-mode :ensure t)  ;; TODO cider etc
+(use-package clojure-mode :ensure t)
+(use-package cider :ensure t)
+
 
 ;; Jet (flexible replacement for jq)
 ;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
