@@ -37,6 +37,7 @@ PHP tree-sitter mode is more in progress and is built individually:
 ```
 git clone https://github.com/tree-sitter/tree-sitter-php.git
 cd tree-sitter-php
+make
 cp libtree-sitter-php.dylib ~/.emacs.d/tree-sitter
 ```
 
