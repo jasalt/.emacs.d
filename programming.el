@@ -6,6 +6,9 @@
 
 (use-package clojure-mode :ensure t)
 (use-package cider :ensure t)
+;; TODO :config (setq cider-enrich-classpath t)
+;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
+
 
 
 ;; Jet (flexible replacement for jq)
