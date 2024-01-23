@@ -23,6 +23,9 @@
  "gnu/linux"
  (custom-set-faces
   '(default ((t (:height 105 :family "Hack")))))
+ (pixel-scroll-precision-mode 0)
+ (pixel-scroll-mode 0)
+ 
  )
 
 ;;;;; General
