@@ -4,7 +4,14 @@
 ;; which might be merged with this file content at some point.
 
 
-(use-package clojure-mode :ensure t)
+(use-package clojure-mode :ensure t
+  :config (defun ed-clojure/eval-first-comment-sexp ()
+	    (interactive)
+	    (save-excursion
+	      (re-search-forward "^(comment")
+	      (forward-sexp)
+	      (cider-eval-last-sexp)))
+  )
 (use-package cider :ensure t)
 ;; TODO :config (setq cider-enrich-classpath t)
 ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
