@@ -72,12 +72,12 @@
       ;; save every minute
       savehist-autosave-interval 60
       ;; keep the home clean
-      savehist-file (expand-file-name "savehist" "~/.emacs.d/"))
+      savehist-file (expand-file-name "savehist" "~/.emacs.d/.cache/"))
 (savehist-mode +1)
 
 ;; save recent files
 (require 'recentf)
-(setq recentf-save-file (expand-file-name "recentf" "~/.emacs.d/")
+(setq recentf-save-file (expand-file-name "recentf" "~/.emacs.d/.cache/")
       recentf-max-saved-items 500
       recentf-max-menu-items 15
       ;; disable recentf-cleanup on Emacs start, because it can cause
@@ -117,7 +117,7 @@
 
 (load "server")
 (setq server-name "jarkon-emacs")
-(setq server-socket-dir "~/.emacs.d/server")
+(setq server-socket-dir "~/.emacs.d/.cache/server")
 (unless (server-running-p) (server-start))
 
 (defadvice server-visit-files (before parse-numbers-in-lines (files proc &optional nowait) activate)
@@ -316,7 +316,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
 
 ;; saveplace remembers your location in a file when saving files
-(setq save-place-file (expand-file-name "saveplace" "~/.emacs.d/"))
+(setq save-place-file (expand-file-name "saveplace" "~/.emacs.d/.cache/"))
 ;; activate it for all buffers
 (save-place-mode 1)
 
