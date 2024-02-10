@@ -256,10 +256,9 @@ If the new path's directories does not exist, create them."
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
-(load-file (expand-file-name "custom.el" user-emacs-directory))
-(load-file (expand-file-name "programming.el" user-emacs-directory))
-
-(load-file (expand-file-name "rare-packages/acme-search.el" user-emacs-directory))
+(load-file (expand-file-name "personal/custom.el" user-emacs-directory))
+(load-file (expand-file-name "personal/programming.el" user-emacs-directory))
+(load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
