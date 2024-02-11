@@ -59,34 +59,25 @@
 
 
 ;; optionally if you want to use debugger  ; TODO
-(use-package dap-mode)
 ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
 
-;; (use-package dap-mode :ensure t
-;;   :config (progn
-;; 	    ;; (dap-mode 1)
-
-;; 	    ;; ;; The modes below are optional
-
-;; 	    ;; (dap-ui-mode 1)
-;; 	    ;; ;; enables mouse hover support
-;; 	    ;; (dap-tooltip-mode 1)
-;; 	    ;; ;; use tooltips for mouse hover
-;; 	    ;; ;; if it is not enabled `dap-mode' will use the minibuffer.
-;; 	    ;; (tooltip-mode 1)
-;; 	    ;; ;; displays floating panel with debug buttons
-;; 	    ;; ;; requies emacs 26+
-;; 	    ;; (dap-ui-controls-mode 1)
-;; 	    ))
-
+(use-package dap-mode :ensure t
+  :init
+  (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
+  )
+;; (setq dap-print-io t) ; print debug info into *Messages*
 
 ;; PYTHON
 
+
 (use-package lsp-pyright
+  :init
+  (setq dap-python-debugger 'debugpy)  ;; TODO, no response
   :ensure t
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))
+                         (require 'lsp-pyright)
+			 (require 'dap-python)
+                         (lsp))))
 					; or lsp-deferred
 
 ;;sudo npm install --global pyright  ; TODO needed at all?
