@@ -13,6 +13,9 @@
 ;; more things (including debugging) out of the box.
 
 (use-package company :ensure t)  ;; lsp-mode default completion
+;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
+(use-package company-box :ensure t :hook (company-mode . company-box-mode)) 
+
 (use-package yasnippet :ensure t)  ;; lsp-mode default snippets
 
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
@@ -40,6 +43,14 @@
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
+;; Optionally
+(use-package lsp-ui :ensure t :hook (lsp-mode . lsp-ui-mode)
+  ;;:init (lsp-ui-sideline-toggle-symbols-info)
+  ;; :config (setq lsp-ui-doc-position 'bottom)
+  ;; :commands lsp-ui-mode
+  )
+
+
 (use-package lsp-treemacs :ensure t
   ;;lsp-treemacs-errors-list
   ) ; TODO
@@ -49,9 +60,7 @@
 ;;     :hook (XXX-mode . lsp-deferred)
 ;;     :commands (lsp lsp-deferred))
 
-;; Optionally
-;; (use-package lsp-ui :commands lsp-ui-mode)
-;; TODO Err: lsp--auto-configure: Cannot open load file: No such file or directory, lsp-ui
+
 
 ;; optionally if you want to use debugger  ; TODO
 ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
@@ -143,6 +152,7 @@
 (use-package jet :ensure t)  
 
 ;; TODO yasnippet
+;; ERR: company-call-backend-raw: Company: backend company-capf error "[yas] ‘yas-expand-snippet’ needs properly setup ‘yas-minor-mode’" with args (post-completion rlv_product_search_override)
 ;; https://clojure-lsp.io/features/#snippets
 
 ;; TODO treemacs support
