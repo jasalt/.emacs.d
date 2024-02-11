@@ -17,3 +17,7 @@
 /bookmarks
 /savehist
 /saveplace
+/intelephense/
+/lsp-cache/
+/request/
+/.dap-breakpoints
