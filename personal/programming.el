@@ -68,6 +68,7 @@
 (use-package dap-mode :ensure t
   :init
   (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
+  :config (dap-ui-mode 1)
   )
 ;; (setq dap-print-io t) ; print debug info into *Messages*
 
@@ -180,7 +181,11 @@
    ;; Intelephense WP stubs https://marioyepes.com/blog/intelephense-wordpress-acf-genesis-conf/
    lsp-intelephense-stubs ["apache" "bcmath" "bz2" "calendar" "com_dotnet" "Core" "ctype" "curl" "date" "dba" "dom" "enchant" "exif" "fileinfo" "filter" "fpm" "ftp" "gd" "hash" "iconv" "imap" "interbase" "intl" "json" "ldap" "libxml" "mbstring" "mcrypt" "meta" "mssql" "mysqli" "oci8" "odbc" "openssl" "pcntl" "pcre" "PDO" "pdo_ibm" "pdo_mysql" "pdo_pgsql" "pdo_sqlite" "pgsql" "Phar" "posix" "pspell" "readline" "recode" "Reflection" "regex" "session" "shmop" "SimpleXML" "snmp" "soap" "sockets" "sodium" "SPL" "sqlite3" "standard" "superglobals" "sybase" "sysvmsg" "sysvsem" "sysvshm" "tidy" "tokenizer" "wddx" "xml" "xmlreader" "xmlrpc" "xmlwriter" "Zend OPcache" "zip" "zlib" "wordpress"]
    )
+  ;;:hook (php-ts-mode . dap-php)
   )
+;; TODO manually
+;;(dap-php-setup)
+;;(require 'dap)
 
 ;; (with-eval-after-load 'lsp-mode
 ;;   (require 'dap-php)
