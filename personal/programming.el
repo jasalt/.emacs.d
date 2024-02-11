@@ -24,7 +24,7 @@
   (setq lsp-keymap-prefix "C-c l"  ; (few alternatives - "C-l", "C-c l")
 	
 	treemacs-space-between-root-nodes nil
-	company-minimum-prefix-length 1
+	company-minimum-prefix-length 3
 	company-idle-delay 0.0 ;php-mode recommend?
 	lsp-idle-delay 0.1 ;php-mode recommend?
 	lsp-file-watch-threshold 5000  ; increased from 1000, enough for WP projects
@@ -32,14 +32,7 @@
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
 	gc-cons-threshold (* 100 1024 1024))  
-  :hook ( ; Enable lsp-mode to following language modes
-	 (python-ts-mode . lsp)
-	 (clojure-mode . lsp)
-	 (clojure-script-mode . lsp)
-	 (clojurec-mode . lsp)
-	 (php-ts-mode . lsp)
-
-	 ;; Which key integration
+  :hook (;; Which key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
@@ -60,20 +53,15 @@
 ;;     :hook (XXX-mode . lsp-deferred)
 ;;     :commands (lsp lsp-deferred))
 
-
-
-;; optionally if you want to use debugger  ; TODO
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
-
 (use-package dap-mode :ensure t
   :init
   (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
   :config (dap-ui-mode 1)
-  )
 ;; (setq dap-print-io t) ; print debug info into *Messages*
+  )
+
 
 ;; PYTHON
-
 
 (use-package lsp-pyright
   :init
@@ -82,9 +70,8 @@
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
 			 (require 'dap-python)
-                         (lsp))))
-					; or lsp-deferred
-
+                         (lsp)))) ; or lsp-deferred
+					
 ;;sudo npm install --global pyright  ; TODO needed at all?
 
 ;; Pyright requires config file per project.
@@ -92,6 +79,8 @@
 ;; -> When NeoVim is started in activated venv, pyright ran by it finds correct python
 
 (defun pyrightconfig-write (virtualenv)
+  "Helper function that attempts to create pyright config file.
+   Copied from somewhere..."
   (interactive "DEnv: ")
 
   (let* (;; file-truename and tramp-file-local-name ensure that neither `~' nor
@@ -135,37 +124,38 @@
 	      (re-search-forward "^(comment")
 	      (forward-sexp)
 	      (cider-eval-last-sexp)))
-  )
+  :hook ((clojure-mode . lsp)
+	 (clojure-script-mode . lsp)
+	 (clojurec-mode . lsp)))
+
 (use-package cider :ensure t
   :init
   (setq
    lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
    ;; lsp-enable-completion-at-point nil ; use cider completion instead of lsp
    )
+  ;; :config (setq cider-enrich-classpath t) ; TODO
+  ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
   )
-
-;; TODO :config (setq cider-enrich-classpath t)
-;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
-
 
 ;; Jet (flexible replacement for jq)
 ;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
-(use-package jet :ensure t)  
+(use-package jet :ensure t)
+
 
 ;; TODO yasnippet
 ;; ERR: company-call-backend-raw: Company: backend company-capf error "[yas] ‘yas-expand-snippet’ needs properly setup ‘yas-minor-mode’" with args (post-completion rlv_product_search_override)
 ;; https://clojure-lsp.io/features/#snippets
+;; (with-eval-after-load 'lsp-mode
+;;   (require 'dap-php)
+;;   (yas-global-mode))
 
 ;; TODO treemacs support
 ;; https://clojure-lsp.io/features/#project-tree
 ;; lsp-treemacs-call-hierarchy not working
 ;; https://clojure-lsp.io/features/#call-hierarchy
 
-
 (use-package lua-mode :ensure t) 
-
-
-
 
 ;; PHP
 
@@ -175,18 +165,14 @@
 ;; TODO update
 (use-package php-ts-mode
   :straight (php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode")
-  :init
+  :config
   (setq
    lsp-intelephense-format-braces "k&r"
    ;; Intelephense WP stubs https://marioyepes.com/blog/intelephense-wordpress-acf-genesis-conf/
-   lsp-intelephense-stubs ["apache" "bcmath" "bz2" "calendar" "com_dotnet" "Core" "ctype" "curl" "date" "dba" "dom" "enchant" "exif" "fileinfo" "filter" "fpm" "ftp" "gd" "hash" "iconv" "imap" "interbase" "intl" "json" "ldap" "libxml" "mbstring" "mcrypt" "meta" "mssql" "mysqli" "oci8" "odbc" "openssl" "pcntl" "pcre" "PDO" "pdo_ibm" "pdo_mysql" "pdo_pgsql" "pdo_sqlite" "pgsql" "Phar" "posix" "pspell" "readline" "recode" "Reflection" "regex" "session" "shmop" "SimpleXML" "snmp" "soap" "sockets" "sodium" "SPL" "sqlite3" "standard" "superglobals" "sybase" "sysvmsg" "sysvsem" "sysvshm" "tidy" "tokenizer" "wddx" "xml" "xmlreader" "xmlrpc" "xmlwriter" "Zend OPcache" "zip" "zlib" "wordpress"]
-   )
-  ;;:hook (php-ts-mode . dap-php)
-  )
-;; TODO manually
-;;(dap-php-setup)
-;;(require 'dap)
+   lsp-intelephense-stubs ["apache" "bcmath" "bz2" "calendar" "com_dotnet" "Core" "ctype" "curl" "date" "dba" "dom" "enchant" "exif" "fileinfo" "filter" "fpm" "ftp" "gd" "hash" "iconv" "imap" "interbase" "intl" "json" "ldap" "libxml" "mbstring" "mcrypt" "meta" "mssql" "mysqli" "oci8" "odbc" "openssl" "pcntl" "pcre" "PDO" "pdo_ibm" "pdo_mysql" "pdo_pgsql" "pdo_sqlite" "pgsql" "Phar" "posix" "pspell" "readline" "recode" "Reflection" "regex" "session" "shmop" "SimpleXML" "snmp" "soap" "sockets" "sodium" "SPL" "sqlite3" "standard" "superglobals" "sybase" "sysvmsg" "sysvsem" "sysvshm" "tidy" "tokenizer" "wddx" "xml" "xmlreader" "xmlrpc" "xmlwriter" "Zend OPcache" "zip" "zlib" "wordpress"])
+  :hook (php-ts-mode . (lambda () (require 'dap-php) (lsp))))
 
-;; (with-eval-after-load 'lsp-mode
-;;   (require 'dap-php)
-;;   (yas-global-mode))
+;; TODO try install vscode ext with (dap-php-setup)
+;; If getting startup error and "Cannot find module ... phpDebug.js"
+;; in *Listen for XDebug stderr* output, copy extension from another editor eg:
+;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
