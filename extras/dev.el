@@ -101,8 +101,8 @@
   ;; no :ensure t here because it's built-in
 
   ;; Configure hooks to automatically turn-on eglot for selected modes
-  :hook
-  (((python-mode ruby-mode elixir-mode) . eglot))
+  ;; :hook
+  ;; (((python-mode ruby-mode elixir-mode php-mode) . eglot))
 
   :custom
   (eglot-send-changes-idle-time 0.1)
@@ -111,6 +111,10 @@
   :config
   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
   ;; Sometimes you need to tell Eglot where to find the language server
-  ; (add-to-list 'eglot-server-programs
-  ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+   
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+
+  ;; (add-to-list 'eglot-server-programs '(php-ts-mode "intelephense" "--stdio"))
+  ;; (add-hook 'php-ts-mode-hook 'eglot-ensure) ;; autostart
   )
