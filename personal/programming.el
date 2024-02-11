@@ -24,14 +24,11 @@
 	company-minimum-prefix-length 1
 	company-idle-delay 0.0 ;php-mode recommend?
 	lsp-idle-delay 0.1 ;php-mode recommend?
+	lsp-file-watch-threshold 5000  ; increased from 1000, enough for WP projects
 	
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
-	gc-cons-threshold (* 100 1024 1024)
-	
-	)  
-  
-  
+	gc-cons-threshold (* 100 1024 1024))  
   :hook ( ; Enable lsp-mode to following language modes
 	 (python-ts-mode . lsp)
 	 (clojure-mode . lsp)
@@ -55,8 +52,6 @@
 ;; Optionally
 ;; (use-package lsp-ui :commands lsp-ui-mode)
 ;; TODO Err: lsp--auto-configure: Cannot open load file: No such file or directory, lsp-ui
-
-
 
 ;; optionally if you want to use debugger  ; TODO
 ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
