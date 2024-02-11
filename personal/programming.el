@@ -143,9 +143,8 @@
 (use-package cider :ensure t
   :init
   (setq
-   ;; use cider indentation instead of lsp, less strict is ok
-   lsp-enable-indentation nil 
-   ;; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp)
+   lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
+   ;; lsp-enable-completion-at-point nil ; use cider completion instead of lsp
    )
   )
 
@@ -178,12 +177,15 @@
 ;; TODO check that .so file exists so this won't error at start without it
 ;; TODO update
 (use-package php-ts-mode
-  :straight (php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
-
+  :straight (php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode")
+  :init
+  (setq
+   lsp-intelephense-format-braces "k&r"
+   ;; Intelephense WP stubs https://marioyepes.com/blog/intelephense-wordpress-acf-genesis-conf/
+   lsp-intelephense-stubs ["apache" "bcmath" "bz2" "calendar" "com_dotnet" "Core" "ctype" "curl" "date" "dba" "dom" "enchant" "exif" "fileinfo" "filter" "fpm" "ftp" "gd" "hash" "iconv" "imap" "interbase" "intl" "json" "ldap" "libxml" "mbstring" "mcrypt" "meta" "mssql" "mysqli" "oci8" "odbc" "openssl" "pcntl" "pcre" "PDO" "pdo_ibm" "pdo_mysql" "pdo_pgsql" "pdo_sqlite" "pgsql" "Phar" "posix" "pspell" "readline" "recode" "Reflection" "regex" "session" "shmop" "SimpleXML" "snmp" "soap" "sockets" "sodium" "SPL" "sqlite3" "standard" "superglobals" "sybase" "sysvmsg" "sysvsem" "sysvshm" "tidy" "tokenizer" "wddx" "xml" "xmlreader" "xmlrpc" "xmlwriter" "Zend OPcache" "zip" "zlib" "wordpress"]
+   )
+  )
 
 ;; (with-eval-after-load 'lsp-mode
 ;;   (require 'dap-php)
 ;;   (yas-global-mode))
-
-;; WP Notes
-;; Watching WP root dir is probably too much as there is 4000+ sub dirs
