@@ -12,18 +12,40 @@
 ;; Using lsp-mode instead of built-in eglot because it promises to integrate
 ;; more things (including debugging) out of the box.
 
-(use-package company :ensure t)  ;; lsp-mode default completion mechanism
+(use-package company :ensure t)  ;; lsp-mode default completion
+(use-package yasnippet :ensure t)  ;; lsp-mode default snippets
 
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix "C-c l")  ; (few alternatives - "C-l", "C-c l")
-  ;;https://emacs-lsp.github.io/lsp-mode/page/performance/
-  (setq read-process-output-max (* 1024 1024))
-  (setq gc-cons-threshold 100000000)
-  :hook ((python-ts-mode . lsp)
+  (setq lsp-keymap-prefix "C-c l"  ; (few alternatives - "C-l", "C-c l")
+	
+	treemacs-space-between-root-nodes nil
+	company-minimum-prefix-length 1
+	company-idle-delay 0.0 ;php-mode recommend?
+	lsp-idle-delay 0.1 ;php-mode recommend?
+	
+	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+	read-process-output-max (* 1024 1024)
+	gc-cons-threshold (* 100 1024 1024)
+	
+	)  
+  
+  
+  :hook ( ; Enable lsp-mode to following language modes
+	 (python-ts-mode . lsp)
+	 (clojure-mode . lsp)
+	 (clojure-script-mode . lsp)
+	 (clojurec-mode . lsp)
+	 (php-ts-mode . lsp)
+
+	 ;; Which key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
+
+(use-package lsp-treemacs :ensure t
+  ;;lsp-treemacs-errors-list
+  ) ; TODO
 
 ;; TODO if startup is slow, defer with eg.
 ;; (use-package lsp-mode
@@ -34,7 +56,7 @@
 ;; (use-package lsp-ui :commands lsp-ui-mode)
 ;; TODO Err: lsp--auto-configure: Cannot open load file: No such file or directory, lsp-ui
 
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)  ; TODO
+
 
 ;; optionally if you want to use debugger  ; TODO
 (use-package dap-mode)
@@ -106,6 +128,10 @@
     (with-temp-file out-file (insert out-contents))))
 
 
+;;;; Clojure
+
+;; https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/#basic-configuration
+
 (use-package clojure-mode :ensure t
   :config (defun ed-clojure/eval-first-comment-sexp ()
 	    (interactive)
@@ -114,7 +140,15 @@
 	      (forward-sexp)
 	      (cider-eval-last-sexp)))
   )
-(use-package cider :ensure t)
+(use-package cider :ensure t
+  :init
+  (setq
+   ;; use cider indentation instead of lsp, less strict is ok
+   lsp-enable-indentation nil 
+   ;; lsp-enable-completion-at-point nil ; uncomment to use cider completion instead of lsp)
+   )
+  )
+
 ;; TODO :config (setq cider-enrich-classpath t)
 ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
 
@@ -123,12 +157,33 @@
 ;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
 (use-package jet :ensure t)  
 
+;; TODO yasnippet
+;; https://clojure-lsp.io/features/#snippets
+
+;; TODO treemacs support
+;; https://clojure-lsp.io/features/#project-tree
+;; lsp-treemacs-call-hierarchy not working
+;; https://clojure-lsp.io/features/#call-hierarchy
+
+
 (use-package lua-mode :ensure t) 
+
+
+
 
 ;; PHP
 
 ;; Follow readme and install grammar at ~/.emacs.d/tree-sitter/
 ;; https://github.com/emacs-php/php-ts-mode
 ;; TODO check that .so file exists so this won't error at start without it
+;; TODO update
 (use-package php-ts-mode
   :straight (php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode"))
+
+
+;; (with-eval-after-load 'lsp-mode
+;;   (require 'dap-php)
+;;   (yas-global-mode))
+
+;; WP Notes
+;; Watching WP root dir is probably too much as there is 4000+ sub dirs
