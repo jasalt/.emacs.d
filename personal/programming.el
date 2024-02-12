@@ -8,32 +8,31 @@
 ;; - Language specific configs for LSP, DAP, tree-sitter, etc.
 
 
-;;;;; LSP
-;; Using lsp-mode instead of built-in eglot because it promises to integrate
-;; more things (including debugging) out of the box.
+;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
 (use-package company :ensure t)  ;; lsp-mode default completion
-;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
-(use-package company-box :ensure t :hook (company-mode . company-box-mode)) 
 
-(use-package yasnippet :ensure t)  ;; lsp-mode default snippets
+;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
+(use-package company-box :ensure t :hook (company-mode . company-box-mode))
+
+;; https://clojure-lsp.io/features/#snippets
+(use-package yasnippet :ensure t :init (yas-global-mode 1))
 
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l"  ; (few alternatives - "C-l", "C-c l")
-	
+
 	treemacs-space-between-root-nodes nil
 	company-minimum-prefix-length 3
 	company-idle-delay 0.0 ;php-mode recommend?
 	lsp-idle-delay 0.1 ;php-mode recommend?
 	lsp-file-watch-threshold 5000  ; increased from 1000, enough for WP projects
-	
+
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
-	gc-cons-threshold (* 100 1024 1024))  
-  :hook (;; Which key integration
-         (lsp-mode . lsp-enable-which-key-integration))
+	gc-cons-threshold (* 100 1024 1024))
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
 ;; Optionally
@@ -42,7 +41,6 @@
   ;; :config (setq lsp-ui-doc-position 'bottom)
   ;; :commands lsp-ui-mode
   )
-
 
 (use-package lsp-treemacs :ensure t
   ;;lsp-treemacs-errors-list
@@ -71,8 +69,7 @@
                          (require 'lsp-pyright)
 			 (require 'dap-python)
                          (lsp)))) ; or lsp-deferred
-					
-;;sudo npm install --global pyright  ; TODO needed at all?
+;sudo npm install --global pyright  ; TODO needed at all?
 
 ;; Pyright requires config file per project.
 ;; Does Neovim assist pyright to check the .venv dir automatically?
@@ -141,14 +138,6 @@
 ;; Jet (flexible replacement for jq)
 ;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
 (use-package jet :ensure t)
-
-
-;; TODO yasnippet
-;; ERR: company-call-backend-raw: Company: backend company-capf error "[yas] ‘yas-expand-snippet’ needs properly setup ‘yas-minor-mode’" with args (post-completion rlv_product_search_override)
-;; https://clojure-lsp.io/features/#snippets
-;; (with-eval-after-load 'lsp-mode
-;;   (require 'dap-php)
-;;   (yas-global-mode))
 
 ;; TODO treemacs support
 ;; https://clojure-lsp.io/features/#project-tree
