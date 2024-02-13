@@ -162,7 +162,22 @@
    lsp-intelephense-stubs ["apache" "bcmath" "bz2" "calendar" "com_dotnet" "Core" "ctype" "curl" "date" "dba" "dom" "enchant" "exif" "fileinfo" "filter" "fpm" "ftp" "gd" "hash" "iconv" "imap" "interbase" "intl" "json" "ldap" "libxml" "mbstring" "mcrypt" "meta" "mssql" "mysqli" "oci8" "odbc" "openssl" "pcntl" "pcre" "PDO" "pdo_ibm" "pdo_mysql" "pdo_pgsql" "pdo_sqlite" "pgsql" "Phar" "posix" "pspell" "readline" "recode" "Reflection" "regex" "session" "shmop" "SimpleXML" "snmp" "soap" "sockets" "sodium" "SPL" "sqlite3" "standard" "superglobals" "sybase" "sysvmsg" "sysvsem" "sysvshm" "tidy" "tokenizer" "wddx" "xml" "xmlreader" "xmlrpc" "xmlwriter" "Zend OPcache" "zip" "zlib" "wordpress"])
   :hook (php-ts-mode . (lambda () (require 'dap-php) (lsp))))
 
-;; TODO try install vscode ext with (dap-php-setup)
-;; If getting startup error and "Cannot find module ... phpDebug.js"
-;; in *Listen for XDebug stderr* output, copy extension from another editor eg:
+;; NOTE If getting startup error and "Cannot find module ... phpDebug.js"
+;; when installing vscode ext with (dap-php-setup) in *Listen for XDebug stderr* output,
+;; copy extension from another editor eg:
 ;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
+
+
+(use-package copilot  ; TODO move to cp.el (WIP)
+  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :ensure t
+;;  :hook (prog-mode . copilot-mode)  ;; TODO hook to specific languages elisp-mode etc
+  :bind (("C-c M-f" . copilot-complete)
+	 :map copilot-completion-map
+	 ("C-g" . 'copilot-clear-overlay)
+	 ("M-p" . 'copilot-previous-completion)
+	 ("M-n" . 'copilot-next-completion)
+	 ("<tab>" . 'copilot-accept-completion)
+	 ("M-f" . 'copilot-accept-completion-by-word)
+	 ("M-<return>" . 'copilot-accept-completion-by-line)))
+

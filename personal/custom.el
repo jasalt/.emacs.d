@@ -1,5 +1,15 @@
 ;; Platform specific stuff
 
+
+;;TODO (setq use-package-always-ensure t) ; allows removing :ensure from each call
+;;TODO update https://github.com/rranelli/auto-package-update.el
+;; (use-package auto-package-update
+;;   :config
+;;   (setq auto-package-update-delete-old-versions t)
+;;   (setq auto-package-update-hide-results t)
+;;   (auto-package-update-maybe))
+;; TODO update straight separately also?
+
 (defmacro progn-on (platform &rest body)
   "Evaluate given expressions if running on given platform."
   (if (string-equal system-type platform)
@@ -347,22 +357,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
 
 
-;; https://github.com/zerolfx/copilot.el
-;; Mapping examples https://github.com/zerolfx/copilot.el/issues/103
-;; TODO has server connection issues
-(use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t
-;;  :hook (prog-mode . copilot-mode)  ;; TODO hook to specific languages elisp-mode etc
-  :bind (("C-c M-f" . copilot-complete)
-	 :map copilot-completion-map
-	 ("C-g" . 'copilot-clear-overlay)
-	 ("M-p" . 'copilot-previous-completion)
-	 ("M-n" . 'copilot-next-completion)
-	 ("<tab>" . 'copilot-accept-completion)
-	 ("M-f" . 'copilot-accept-completion-by-word)
-	 ("M-<return>" . 'copilot-accept-completion-by-line)))
-
 
 ;;;; MISC UI STUFF
 
@@ -454,7 +448,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  treemacs-recenter-after-tag-follow       nil
 	  treemacs-recenter-after-project-jump     'always
 	  treemacs-recenter-after-project-expand   'on-distance
-	  treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+	  treemacs-litter-directories
+	  '("/node_modules" "/.venv" "/.cask" "/.clj-kondo" "/.cpcache" ".lsp")
 	  treemacs-project-follow-into-home        nil
 	  treemacs-show-cursor                     t
 	  treemacs-show-hidden-files               t
@@ -478,9 +473,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     ;; using a Hi-DPI display, uncomment this to double the icon size.
     (treemacs-resize-icons 16)
 
-    ;(treemacs-follow-mode t)  ; gives timer error
+    ;;(treemacs-follow-mode t)  ; FIXME Error running timer ‘treemacs--follow’: (wrong-type-argument arrayp nil) [6 times]
+                                ; treemacs-find-file-node: Wrong type argument: arrayp, nil
+    
     (treemacs-follow-mode 0)
-    ;(treemacs-tag-follow-mode t)
+    ;;(treemacs-tag-follow-mode t) ; FIXME Encountered error while following tag at point: (wrong-type-argument arrayp nil)
+    ;;(treemacs-tag-follow-mode nil)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode 0)
 
