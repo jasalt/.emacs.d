@@ -44,6 +44,7 @@
 
 (use-package lsp-treemacs :ensure t
   ;;lsp-treemacs-errors-list
+  :config (lsp-treemacs-sync-mode 1)
   ) ; TODO
 
 ;; TODO if startup is slow, defer with eg.
