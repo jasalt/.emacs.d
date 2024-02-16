@@ -1,3 +1,6 @@
+;; WIP Copilot config file -- Not in use yet
+;; Consult programming.el for active copilot related config
+
 ;; https://github.com/zerolfx/copilot.el
 
 ;; ATM requires newer jsonrpc than built-in
