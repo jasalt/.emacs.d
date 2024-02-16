@@ -32,7 +32,8 @@
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
 	gc-cons-threshold (* 100 1024 1024))
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :hook ((yaml-ts-mode . lsp-mode)
+	 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
 ;; Optionally
