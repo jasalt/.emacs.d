@@ -1,9 +1,8 @@
+;; General editor behavior related settings, partially inherited from Prelude
+
+
 (setq use-package-always-ensure t)  ; don't require :ensure t for every package
 
-;; Platform specific stuff
-
-
-;;TODO (setq use-package-always-ensure t) ; allows removing :ensure from each call
 ;;TODO update https://github.com/rranelli/auto-package-update.el
 ;; (use-package auto-package-update
 ;;   :config
@@ -11,6 +10,7 @@
 ;;   (setq auto-package-update-hide-results t)
 ;;   (auto-package-update-maybe))
 ;; TODO update straight separately also?
+
 
 (defmacro progn-on (platform &rest body)
   "Evaluate given expressions if running on given platform."
