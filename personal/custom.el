@@ -1,3 +1,5 @@
+(setq use-package-always-ensure t)  ; don't require :ensure t for every package
+
 ;; Platform specific stuff
 
 
@@ -54,9 +56,10 @@
 
 (delete-selection-mode 1)  ; yanking replaces region content
 
-(use-package diminish :ensure t)
+(use-package diminish)
 (diminish 'which-key-mode)
 (diminish 'eldoc-mode)
+;;TODO cleanup programming mode noise
 
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always)
@@ -101,7 +104,7 @@
              (mapcar 'file-truename (list "~/.emacs.d/" package-user-dir)))))
 (recentf-mode +1)
 
-(use-package super-save :ensure t
+(use-package super-save
   :init (super-save-mode +1)
   :config (progn
 	    (add-to-list 'super-save-triggers 'ace-window)
@@ -176,19 +179,18 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (setq set-mark-command-repeat-pop 't)
 
 (use-package key-chord
-  :ensure t
   :init (progn
 	  (key-chord-define-global "jj" 'avy-goto-word-1)
 	  (key-chord-define-global "jl" 'avy-goto-line)
 	  (key-chord-define-global "jf" 'avy-goto-char)
 	  (key-chord-define-global "JJ" 'crux-switch-to-previous-buffer)
-	  (key-chord-define-global "uu" 'undo-tree-visualize)
+	  ;;(key-chord-define-global "uu" 'undo-tree-visualize)
 
 	  (key-chord-mode +1)
 	  )
   )
 
-(use-package multiple-cursors :ensure t
+(use-package multiple-cursors
   :init (progn
 	  (key-chord-define-global "jn" 'mc/mark-more-like-this-extended)
 	  (key-chord-define-global "jp" 'mc/mark-previous-like-this)
@@ -197,7 +199,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  (key-chord-define-global "kd" 'mc/edit-lines)
 	  ))
 
-(use-package undo-tree :ensure t
+(use-package undo-tree
   :init (progn
 	  (setq undo-tree-history-directory-alist
 		`((".*" . ,temporary-file-directory)))
@@ -208,8 +210,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (winner-mode +1)
 
-(use-package smartrep :ensure t)
-(use-package operate-on-number :ensure t)
+(use-package smartrep)
+(use-package operate-on-number)
   
 (smartrep-define-key global-map "C-c ."
   '(("+" . apply-operation-to-number-at-point)
@@ -224,7 +226,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     ("%" . apply-operation-to-number-at-point)
     ("'" . operate-on-number-at-point)))
 
-(use-package editorconfig :ensure t
+(use-package editorconfig
   :init (progn
 	  (editorconfig-mode 1)
 	  (diminish 'editorconfig-mode)
@@ -241,7 +243,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; (treemacs--select-visible-window) failing
 (global-set-key (kbd "M-0") '(lambda () (interactive) (treemacs-select-window)))
 
-(use-package winum :ensure t :config (winum-mode)
+(use-package winum :config (winum-mode)
   ;; https://github.com/deb0ch/emacs-winum
   :bind (
 	 ;; Prefer OS Window Manager binding
@@ -260,21 +262,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("M-9" . winum-select-window-9)))
 
 
-(use-package move-text :ensure t
+(use-package move-text
   :bind (
 	 ("C-S-<up>" . move-text-up)
 	 ("C-S-<down>" . move-text-down))
   )
 
-(use-package zop-to-char :ensure t
+(use-package zop-to-char
   :bind (("M-z" . zop-up-to-char)
 	 ("M-Z" . zop-to-char)
 	 ))
 
-(use-package expand-region :ensure t
+(use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-(use-package crux :ensure t
+(use-package crux
   ;; Prelude niceties from https://github.com/bbatsov/crux
   :config (progn
 	    (global-set-key [remap kill-whole-line] 'crux-kill-whole-line)
@@ -336,7 +338,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; This function creates that assuming virtualenv is at .venv path.
 ;; Source: https://robbmann.io/posts/emacs-eglot-pyrightconfig/
 
-(use-package tramp :ensure t)  ; depends on
+(use-package tramp)  ; depends on
 ;; give /path/to/.venv
 
 
@@ -347,7 +349,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (defun get-openai-api-key ()
   "Return the value of the OPENAI_API_KEY environment variable."
   (getenv "OPENAI_API_KEY"))
-(use-package spinner :ensure t)
+(use-package spinner)
 (use-package openai
   :config (progn
 	    (setq openai-key #'get-openai-api-key)
@@ -360,7 +362,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 ;;;; MISC UI STUFF
 
-(use-package git-gutter :ensure t  ; https://github.com/emacsorphanage/git-gutter
+(use-package git-gutter  ; https://github.com/emacsorphanage/git-gutter
   :config (progn
 	    ;; (git-gutter:linum-setup) ; not for line-number-mode?
 	    (setq git-gutter:ask-p nil)
@@ -402,8 +404,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("C-M-g SPC" . git-gutter:mark-hunk)
 	 )
   )
-(use-package treemacs
-  :ensure t
+
+(use-package treemacs  ;; TODO startup dir is stubbornly ~
 ;;  :defer t
   :init
   (progn
@@ -506,27 +508,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	))
 
 (use-package treemacs-evil
-  :after (treemacs evil)
-  :ensure t)
+  :after (treemacs evil))
 
 (use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
+  :after (treemacs projectile))
 
 (use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
+  :hook (dired-mode . treemacs-icons-dired-enable-once))
 
 (use-package treemacs-magit
-  :after (treemacs magit)
-  :ensure t)
+  :after (treemacs magit))
 
 (use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
   :after (treemacs persp-mode) ;;or perspective vs. persp-mode
-  :ensure t
   :config (treemacs-set-scope-type 'Perspectives))
 
 (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
   :after (treemacs)
-  :ensure t
   :config (treemacs-set-scope-type 'Tabs))

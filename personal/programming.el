@@ -10,13 +10,13 @@
 
 ;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
-(use-package company :ensure t)  ;; lsp-mode default completion
+(use-package company)  ;; lsp-mode default completion
 
 ;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
-(use-package company-box :ensure t :hook (company-mode . company-box-mode))
+(use-package company-box :hook (company-mode . company-box-mode))
 
 ;; https://clojure-lsp.io/features/#snippets
-(use-package yasnippet :ensure t :init (yas-global-mode 1))
+(use-package yasnippet :init (yas-global-mode 1))
 
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
 (use-package lsp-mode
@@ -37,13 +37,13 @@
   :commands lsp)
 
 ;; Optionally
-(use-package lsp-ui :ensure t :hook (lsp-mode . lsp-ui-mode)
+(use-package lsp-ui :hook (lsp-mode . lsp-ui-mode)
   ;;:init (lsp-ui-sideline-toggle-symbols-info)
   ;; :config (setq lsp-ui-doc-position 'bottom)
   ;; :commands lsp-ui-mode
   )
 
-(use-package lsp-treemacs :ensure t
+(use-package lsp-treemacs
   ;;lsp-treemacs-errors-list
   :config (lsp-treemacs-sync-mode 1)
   ) ; TODO
@@ -53,7 +53,7 @@
 ;;     :hook (XXX-mode . lsp-deferred)
 ;;     :commands (lsp lsp-deferred))
 
-(use-package dap-mode :ensure t
+(use-package dap-mode
   :init
   (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
   :config (dap-ui-mode 1)
@@ -66,7 +66,6 @@
 (use-package lsp-pyright
   :init
   (setq dap-python-debugger 'debugpy)  ;; TODO, no response
-  :ensure t
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
 			 (require 'dap-python)
@@ -116,7 +115,7 @@
 
 ;; https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/#basic-configuration
 
-(use-package clojure-mode :ensure t
+(use-package clojure-mode
   :config (defun ed-clojure/eval-first-comment-sexp ()
 	    (interactive)
 	    (save-excursion
@@ -127,7 +126,7 @@
 	 (clojure-script-mode . lsp)
 	 (clojurec-mode . lsp)))
 
-(use-package cider :ensure t
+(use-package cider
   :init
   (setq
    lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
@@ -139,14 +138,15 @@
 
 ;; Jet (flexible replacement for jq)
 ;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
-(use-package jet :ensure t)
+(use-package jet)
 
 ;; TODO treemacs support
 ;; https://clojure-lsp.io/features/#project-tree
 ;; lsp-treemacs-call-hierarchy not working
 ;; https://clojure-lsp.io/features/#call-hierarchy
 
-(use-package lua-mode :ensure t) 
+(use-package lua-mode) 
+
 
 ;; PHP
 
@@ -171,7 +171,6 @@
 
 (use-package copilot  ; TODO move to cp.el (WIP)
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  :ensure t
 ;;  :hook (prog-mode . copilot-mode)  ;; TODO hook to specific languages elisp-mode etc
   :bind (("C-c M-f" . copilot-complete)
 	 :map copilot-completion-map
