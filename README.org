@@ -2,6 +2,8 @@ Personal work-in-progress Emacs 29+ IDE setup aimed to be on par and exceed NeoV
 
 This is not a stable project for broad public consumption at this point. Upstream Bedrock project, Prelude or some other config distribution is probably a better starting point for a new config for most people. There may be some useful config snippets however.
 
+#+html: <p align="center"><img src="screenshots/fork.png" /></p>
+
 * Supported IDE features by language
 
 | Language | LSP | DAP | Tree-sitter | TS "auto build" |
