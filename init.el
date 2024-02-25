@@ -260,6 +260,12 @@ If the new path's directories does not exist, create them."
 (load-file (expand-file-name "personal/programming.el" user-emacs-directory))
 (load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
 
+;; Load org2blog.el config if it exists
+(let ((filename (expand-file-name "personal/org2blog.el" user-emacs-directory)))
+  (if (file-exists-p filename)
+      (load-file filename)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework

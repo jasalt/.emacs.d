@@ -1,0 +1,8 @@
+;; Rename this as org2blog.el so it gets loaded by init.el
+(use-package org2blog :ensure t
+  :config
+  (setq org2blog/wp-blog-alist
+        '(("chronicoverengineering"
+           :url "https://example.com/xmlrpc.php"
+           :username "example_user"))
+        org2blog/wp-image-upload t))
