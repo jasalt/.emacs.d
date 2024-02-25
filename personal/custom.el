@@ -346,22 +346,28 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; give /path/to/.venv
 
 
-
-;; OPENAI LLM CONFIG STUFF
+;; LLM CONFIG STUFF
 
 ;; TODO include these in chatgpt declaration
 (defun get-openai-api-key ()
-  "Return the value of the OPENAI_API_KEY environment variable."
+  "Return the value of the OPENAI_API_KEY environment variable.
+   It needs to be set in .profile and maybe in .zshrc"
   (getenv "OPENAI_API_KEY"))
-(use-package spinner)
+
 (use-package openai
-  :config (progn
-	    (setq openai-key #'get-openai-api-key)
-	    )
+  :config 
+  (setq openai-key #'get-openai-api-key)
+	  
   :straight (openai :type git :host github :repo "emacs-openai/openai"))
+
+(use-package spinner)
 (use-package chatgpt
   :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
 
+
+(use-package gpt  ; https://github.com/stuhlmueller/gpt.el
+  :config (setq gpt-openai-key (get-openai-api-key)
+		gpt-openai-engine "gpt-4-turbo-preview"))
 
 
 ;;;; MISC UI STUFF
