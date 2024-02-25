@@ -1,5 +1,9 @@
 ;; General editor behavior related settings, partially inherited from Prelude
 
+;; Comment function like in Clojure
+;; https://robjohnson.dev/posts/elisp-cheat-sheet-for-clojure-devs/
+(defmacro comment (&rest body)
+  nil)
 
 (setq use-package-always-ensure t)  ; don't require :ensure t for every package
 
