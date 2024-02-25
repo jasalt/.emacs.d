@@ -43,11 +43,6 @@
   ;; :commands lsp-ui-mode
   )
 
-(use-package lsp-treemacs
-  ;;lsp-treemacs-errors-list
-  :config (lsp-treemacs-sync-mode 1)
-  ) ; TODO
-
 ;; TODO if startup is slow, defer with eg.
 ;; (use-package lsp-mode
 ;;     :hook (XXX-mode . lsp-deferred)

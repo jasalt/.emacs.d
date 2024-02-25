@@ -409,7 +409,10 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 )
   )
 
-(use-package treemacs  ;; TODO startup dir is stubbornly ~
+(comment
+;; TODO startup dir is stubbornly ~
+;; TODO LSP-mode breaks (delete-other-windows) https://github.com/emacs-lsp/lsp-treemacs/issues/122
+(use-package treemacs
 ;;  :defer t
   :init
   (progn
@@ -530,3 +533,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
   :after (treemacs)
   :config (treemacs-set-scope-type 'Tabs))
+
+(use-package lsp-treemacs
+  ;;lsp-treemacs-errors-list
+  :config (lsp-treemacs-sync-mode 1)
+  ) ; TODO
+)
