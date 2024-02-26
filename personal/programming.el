@@ -16,7 +16,11 @@
 (use-package company-box :hook (company-mode . company-box-mode))
 
 ;; https://clojure-lsp.io/features/#snippets
-(use-package yasnippet :init (yas-global-mode 1))
+(use-package yasnippet
+  :hook
+  ((clojure-ts-mode . yas-minor-mode)
+   (org-mode . yas-minor-mode)
+   ))
 
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
 (use-package lsp-mode
