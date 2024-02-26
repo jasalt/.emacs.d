@@ -247,7 +247,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; (treemacs--select-visible-window) failing
 (global-set-key (kbd "M-0") '(lambda () (interactive) (treemacs-select-window)))
 
-(use-package winum :config (winum-mode)
+(use-package winum
+  :config (winum-mode)
+  (setq winum-scope 'frame-local)
   ;; https://github.com/deb0ch/emacs-winum
   :bind (
 	 ;; Prefer OS Window Manager binding
