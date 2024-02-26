@@ -166,7 +166,8 @@
 
 (use-package copilot  ; TODO move to cp.el (WIP)
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-;;  :hook (prog-mode . copilot-mode)  ;; TODO hook to specific languages elisp-mode etc
+  
+	   ;; :hook (prog-mode . copilot-mode)  ;; manual startup for now
   :bind (("C-c M-f" . copilot-complete)
 	 :map copilot-completion-map
 	 ("C-g" . 'copilot-clear-overlay)
@@ -174,5 +175,10 @@
 	 ("M-n" . 'copilot-next-completion)
 	 ("<tab>" . 'copilot-accept-completion)
 	 ("M-f" . 'copilot-accept-completion-by-word)
-	 ("M-<return>" . 'copilot-accept-completion-by-line)))
+	 ("M-<return>" . 'copilot-accept-completion-by-line))
+  :config
+  ; https://github.com/copilot-emacs/copilot.el/issues/249
+  (add-to-list  
+	   'copilot-indentation-alist
+	   '(emacs-lisp-mode 2)))
 
