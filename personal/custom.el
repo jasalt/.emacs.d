@@ -60,10 +60,9 @@
 
 (delete-selection-mode 1)  ; yanking replaces region content
 
-(use-package diminish)
-(diminish 'which-key-mode)
-(diminish 'eldoc-mode)
-;;TODO cleanup programming mode noise
+(use-package blackout)  ; helps keeps modeline clean
+(blackout 'eldoc-mode)
+(blackout 'which-key-mode)
 
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always)

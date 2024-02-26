@@ -107,10 +107,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org
+  ;; :blackout ((visual-line-mode . "foo")  ;; TODO does not eval properly
+  ;; 	     (org-indent-mode . "bar")      ;; works only on runtime
+  ;; 	     )
   :hook ((org-mode . visual-line-mode) ; wrap lines at word breaks
 	 (org-mode . org-indent-mode)
 	 (org-mode . flyspell-mode))    ; spell checking!
-
   :bind (
 	 ("C-c l s" . org-store-link)          ; Mnemonic: link → store
 	 ("C-c l i" . org-insert-link-global)  ; Mnemonic: link → insert
