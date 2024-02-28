@@ -73,6 +73,10 @@
 ;; current subdir, instead of the current subdir of this dired buffer
 (setq dired-dwim-target t)
 
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once))
+
+
 ;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
       `((".*" . ,temporary-file-directory)))
