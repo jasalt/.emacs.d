@@ -23,6 +23,8 @@
    (org-mode . yas-minor-mode)
    ))
 
+(use-package logview)
+
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
 (use-package lsp-mode
   :init
