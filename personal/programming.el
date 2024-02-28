@@ -52,10 +52,16 @@
 ;;     :hook (XXX-mode . lsp-deferred)
 ;;     :commands (lsp lsp-deferred))
 
+
+(global-unset-key (kbd "<f10>")) ; unbind useless menu key, could be mode local
+
 (use-package dap-mode
   :init
-  (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
+  (setq dap-auto-configure-features '(locals controls tooltip sessions breakpoints expressions)) ;
   :config (dap-ui-mode 1)
+  :bind (("<f5>" . dap-continue)
+	 ("<f10>" . dap-next))  ; todo activate also? if php, use default profile
+  :custom (dap-ui-controls-screen-position 'posframe-poshandler-frame-bottom-right-corner)
 ;; (setq dap-print-io t) ; print debug info into *Messages*
   )
 
