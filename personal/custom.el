@@ -29,8 +29,8 @@
        mac-function-modifier 'hyper)
  (set-variable 'magit-emacsclient-executable
                "/usr/local/bin/emacsclient")
- ;;(set-face-attribute 'default nil :font "Inconsolata-16")
- ;; Mac spotlight search workaround
+ (set-face-attribute 'default nil :font "Hack-14")  ; "Inconsolata-16"
+ ;; Cmd+Space Spotlight search binding workaround
  (global-unset-key (kbd " "))
  (global-set-key (kbd " ") 'just-one-space)
  )
