@@ -10,10 +10,13 @@
 
 ;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
-(use-package company)  ;; lsp-mode default completion
+(use-package company  ;; lsp-mode default completion backend
+  :straight (company :type git :host github :repo "company-mode/company-mode"))  
 
 ;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
-(use-package company-box :hook (company-mode . company-box-mode))
+(use-package company-box
+  :straight (company-box :type git :host github :repo "sebastiencs/company-box")
+  :hook (company-mode . company-box-mode))
 
 ;; https://clojure-lsp.io/features/#snippets
 (use-package yasnippet :init (yas-global-mode 1))
@@ -51,9 +54,7 @@
 (use-package dap-mode
   :init
   (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
-  :config (dap-ui-mode 1)
-;; (setq dap-print-io t) ; print debug info into *Messages*
-  )
+  :config (dap-ui-mode 1))  ;; (setq dap-print-io t) ; print debug info into *Messages*
 
 
 ;; PYTHON
