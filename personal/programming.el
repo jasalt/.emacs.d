@@ -10,10 +10,13 @@
 
 ;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
-(use-package company :blackout t)  ;; lsp-mode default completion
+(use-package company  ;; lsp-mode default completion backend
+  :straight (company :type git :host github :repo "company-mode/company-mode"))  
 
 ;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
-(use-package company-box :hook (company-mode . company-box-mode) :blackout t)
+(use-package company-box
+  :straight (company-box :type git :host github :repo "sebastiencs/company-box")
+  :hook (company-mode . company-box-mode))
 
 ;; https://clojure-lsp.io/features/#snippets
 (use-package yasnippet

@@ -29,8 +29,8 @@
        mac-function-modifier 'hyper)
  (set-variable 'magit-emacsclient-executable
                "/usr/local/bin/emacsclient")
- ;;(set-face-attribute 'default nil :font "Inconsolata-16")
- ;; Mac spotlight search workaround
+ (set-face-attribute 'default nil :font "Hack-14")  ; "Inconsolata-16"
+ ;; Cmd+Space Spotlight search binding workaround
  (global-unset-key (kbd " "))
  (global-set-key (kbd " ") 'just-one-space)
  )
@@ -370,16 +370,39 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    It needs to be set in .profile and maybe in .zshrc"
   (getenv "OPENAI_API_KEY"))
 
+;; To set Mac Env vars that GUI Emacs (d12frosted/homebrew-emacs-plus) reads:
+;; add to ~/Library/LaunchAgents/com.example.set-env-vars.plist
+;; <?xml version="1.0" encoding="UTF-8"?>
+;; <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+;; <plist version="1.0">
+;; <dict>
+;;   <key>Label</key>
+;;   <string>setenv.MY_VARS</string>
+;;   <key>ProgramArguments</key>
+;;   <array>
+;;     <string>sh</string>
+;;     <string>-c</string>
+;;     <string>launchctl setenv MY_VAR my_value</string>
+;;   </array>
+;;   <key>RunAtLoad</key>
+;;   <true/>
+;;   <key>KeepAlive</key>
+;;   <true/>
+;; </dict>
+;; </plist>
+
+
 (use-package openai
   :config 
   (setq openai-key #'get-openai-api-key)
 	  
   :straight (openai :type git :host github :repo "emacs-openai/openai"))
 
+;; Wrong type argument: listp error means that (getenv "OPENAI_API_KEY")
+;; probably returns ""
 (use-package spinner)
 (use-package chatgpt
   :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
-
 
 (use-package gpt  ; https://github.com/stuhlmueller/gpt.el
   :config (setq gpt-openai-key (get-openai-api-key)
