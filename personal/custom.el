@@ -344,10 +344,19 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (save-place-mode 1)
 
 
+;; Minimal writeroom-mode alternative
+(use-package olivetti
+  :config
+  (custom-set-faces
+  '(olivetti-fringe ((t (:background "gray" :foreground "white")))))
+  :custom
+  (olivetti-style 'fancy)
+  (olivetti-margin-width 8)
+  (olivetti-body-width 80)
+  )
 
 
-;; This function creates that assuming virtualenv is at .venv path.
-;; Source: https://robbmann.io/posts/emacs-eglot-pyrightconfig/
+
 
 (use-package tramp)  ; depends on
 ;; give /path/to/.venv
