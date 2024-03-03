@@ -431,11 +431,10 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 )
   )
 
-(comment
 ;; TODO startup dir is stubbornly ~
-;; TODO LSP-mode breaks (delete-other-windows) https://github.com/emacs-lsp/lsp-treemacs/issues/122
+
 (use-package treemacs
-;;  :defer t
+  ;;  :defer t
   :init
   (progn
     ;; (with-eval-after-load 'winum
@@ -444,6 +443,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (with-eval-after-load 'treemacs
       (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)) ;; TODO move to bind section
     )
+  :custom (treemacs-no-delete-other-windows nil) ;; TODO LSP-mode breaks (delete-other-windows) https://github.com/emacs-lsp/lsp-treemacs/issues/122
   :config
   (progn
     (setq treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
@@ -505,7 +505,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (treemacs-resize-icons 16)
 
     ;;(treemacs-follow-mode t)  ; FIXME Error running timer ‘treemacs--follow’: (wrong-type-argument arrayp nil) [6 times]
-                                ; treemacs-find-file-node: Wrong type argument: arrayp, nil
+					; treemacs-find-file-node: Wrong type argument: arrayp, nil
     
     (treemacs-follow-mode 0)
     ;;(treemacs-tag-follow-mode t) ; FIXME Encountered error while following tag at point: (wrong-type-argument arrayp nil)
@@ -526,38 +526,39 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (treemacs-hide-gitignored-files-mode nil))
   :bind
   (
-	;; ("M-0"       . treemacs-select-window)
-	("C-x t 1"   . treemacs-delete-other-windows)
-	("C-x t t"   . treemacs)
-	("C-x D"     . treemacs)
-	("C-x t d"   . treemacs-select-directory)
-	("C-x t B"   . treemacs-bookmark)
-	("C-x t C-t" . treemacs-find-file)
-	("C-x t M-t" . treemacs-find-tag)
-	))
+   ;; ("M-0"       . treemacs-select-window)
+   ("C-x t 1"   . treemacs-delete-other-windows)
+   ("C-x t t"   . treemacs)
+   ("C-x D"     . treemacs)
+   ("C-x t d"   . treemacs-select-directory)
+   ("C-x t B"   . treemacs-bookmark)
+   ("C-x t C-t" . treemacs-find-file)
+   ("C-x t M-t" . treemacs-find-tag)
+   )
+  )
 
-(use-package treemacs-evil
-  :after (treemacs evil))
+(comment
 
-(use-package treemacs-projectile
-  :after (treemacs projectile))
+ (use-package treemacs-evil
+   :after (treemacs evil))
 
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once))
+ (use-package treemacs-projectile
+   :after (treemacs projectile))
 
-(use-package treemacs-magit
-  :after (treemacs magit))
+ (use-package treemacs-magit
+   :after (treemacs magit))
 
-(use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
-  :after (treemacs persp-mode) ;;or perspective vs. persp-mode
-  :config (treemacs-set-scope-type 'Perspectives))
+ (use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
+   :after (treemacs persp-mode) ;;or perspective vs. persp-mode
+   :config (treemacs-set-scope-type 'Perspectives))
 
-(use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
-  :after (treemacs)
-  :config (treemacs-set-scope-type 'Tabs))
+ (use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+   :after (treemacs)
+   :config (treemacs-set-scope-type 'Tabs))
 
-(use-package lsp-treemacs
-  ;;lsp-treemacs-errors-list
-  :config (lsp-treemacs-sync-mode 1)
-  ) ; TODO
-)
+ (use-package lsp-treemacs
+   ;;lsp-treemacs-errors-list
+   :config (lsp-treemacs-sync-mode 1)
+   ) ; TODO
+ )
+
