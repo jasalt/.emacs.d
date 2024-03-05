@@ -41,8 +41,16 @@
   '(default ((t (:height 105 :family "Hack")))))
  (pixel-scroll-precision-mode 0)
  (pixel-scroll-mode 0)
- 
+
+ ;; Save lock files to /var/tmp (fix problem with Python Werkzeug auto reload)
+ (setq lock-file-name-transforms
+       '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t)))
+
  )
+
+;; (magit-add-section-hook 'magit-status-sections-hook
+;;                         'magit-insert-modules
+;;                         'magit-insert-unpulled-from-pushremote)
 
 ;;;;; General
 
