@@ -74,6 +74,9 @@
 
 ;; PYTHON
 
+(use-package emacs
+  :hook (python-ts-mode . lsp-deferred))
+
 (use-package lsp-pyright
   :init
   (setq dap-python-debugger 'debugpy)  ;; TODO, no response
