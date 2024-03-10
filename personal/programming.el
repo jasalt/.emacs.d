@@ -28,6 +28,9 @@
 
 (use-package logview)
 
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+(setenv "LSP_USE_PLISTS" "true")
+
 ;;https://emacs-lsp.github.io/lsp-mode/page/installation/#use-package
 (use-package lsp-mode
   :init
