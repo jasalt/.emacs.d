@@ -256,16 +256,17 @@ If the new path's directories does not exist, create them."
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
+(load-file (expand-file-name "personal/custom.el" user-emacs-directory))
+
+(load-file (expand-file-name "personal/programming.el" user-emacs-directory))
+(load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
+
 ;; Load some private configs if they exists
 (dolist (filename '("personal/org2blog.el"
 		    "personal/env.el"))
   (let ((full-filename (expand-file-name filename user-emacs-directory)))
     (if (file-exists-p full-filename)
 	(load-file full-filename))))
-
-(load-file (expand-file-name "personal/custom.el" user-emacs-directory))
-(load-file (expand-file-name "personal/programming.el" user-emacs-directory))
-(load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
