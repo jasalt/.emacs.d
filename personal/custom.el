@@ -57,10 +57,15 @@
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
-(global-set-key (kbd "C-S-s") 'isearch-forward)  ; re-mapped to consult-line in extras/base.el
+;; re-mapped to consult-line in extras/base.el
+(global-set-key (kbd "C-S-s") 'isearch-forward)
 
 (menu-bar-mode -1)
 (global-set-key (kbd "<f12>") 'menu-bar-mode)
+
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Auto-Scrolling.html
+(setq scroll-conservatively 101)  ; avoid recentering when moving cursor
+(setq scroll-margin 0)  ; TODO would be nice to set as a mode specific setting
 
 (size-indication-mode t)
 
