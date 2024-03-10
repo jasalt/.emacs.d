@@ -76,13 +76,19 @@
 
 
 ;; PYTHON
+;; pipx install ruff ruff-lsp
 
 (use-package emacs
   :hook (python-ts-mode . lsp-deferred))
 
+;; https://emacs-lsp.github.io/lsp-pyright/
 (use-package lsp-pyright
   :init
   (setq dap-python-debugger 'debugpy)  ;; TODO, no response
+  :config
+  (setq lsp-pyright-disable-organize-imports t)  ; ruff does this
+  ;; (setq lsp-pyright-auto-import-completions nil)  ; ruff does this too?
+  ;; (setq lsp-pyright-typechecking-mode "strict") ; defaults to basic
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
 			 (require 'dap-python)
