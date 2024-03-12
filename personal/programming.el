@@ -38,8 +38,8 @@
 
 	treemacs-space-between-root-nodes nil
 	company-minimum-prefix-length 3
-	company-idle-delay 0.0 ;php-mode recommend?
-	lsp-idle-delay 0.1 ;php-mode recommend?
+	company-idle-delay 0.5 ;php-mode recommend?
+	lsp-idle-delay 0.5 ;php-mode recommend?
 	lsp-file-watch-threshold 5000  ; increased from 1000, enough for WP projects
 
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
