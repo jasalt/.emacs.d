@@ -430,7 +430,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	    (setq git-gutter:ask-p nil)
 	    (diminish 'git-gutter-mode)
 	    
-	    (setq git-gutter:update-interval 3)
+	    (setq git-gutter:update-interval 1)
 
 	    (set-face-background 'git-gutter:modified "#e8edcc")
 	    (set-face-foreground 'git-gutter:modified "#e8edcc")
