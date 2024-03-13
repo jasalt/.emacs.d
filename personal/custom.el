@@ -302,21 +302,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package crux
   ;; Prelude niceties from https://github.com/bbatsov/crux
-  :config (progn
-	    (global-set-key [remap kill-whole-line] 'crux-kill-whole-line)
-	    (crux-with-region-or-line kill-region)  ; C-w kills row, not random region
-	    )
+  :config
+  (global-set-key [remap kill-whole-line] 'crux-kill-whole-line)
+  (crux-with-region-or-line kill-region)  ; C-w kills row, not random region TODO
+  (unbind-key "C-S-<return>" org-mode-map)
   :bind (
 	 ("C-a" . crux-move-beginning-of-line)
 	 ("C-k" . crux-smart-kill-line)
 
-	 ("C-M-<return>" . crux-smart-open-line-above)
-	 ("C-S-<return>" . crux-smart-open-line-above)
+	 ;; vscode style
 	 ("C-<return>" . crux-smart-open-line)
-	 ("M-<return>" . crux-smart-open-line)
+	 ("C-S-<return>" . crux-smart-open-line-above)
 
+	 ;; vim style
 	 ("M-o" . crux-smart-open-line)
-	 ; ("M-S-o" . crux-smart-open-line-above) ; vim style idea, overlaps window split binds
+	 ("M-S-o" . crux-smart-open-line-above)
 
 	 ("C-<backspace>" . crux-kill-line-backwards)
 
