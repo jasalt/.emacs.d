@@ -98,6 +98,7 @@
 ;; Vertico: better vertical completion for minibuffer commands
 (use-package vertico
   :ensure t
+  :bind (("M-RET" . minibuffer-complete))
   :init
   ;; You'll want to make sure that e.g. fido-mode isn't enabled
   (vertico-mode))
