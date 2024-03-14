@@ -78,7 +78,7 @@
 (blackout 'which-key-mode)
 
 ;; Dired customization
-(setq dired-listing-switches "-lhX")  ;; TODO -X does not seem to have effect
+(setq dired-listing-switches "-alh")  ;; default -al
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always)
 (setq dired-recursive-copies 'always)
