@@ -4,9 +4,14 @@
 ;; which might be merged with this file content at some point.
 
 ;; TOC:
-;; - General LSP config
+;; - General code editing UI stuff
+;; - LSP-Mode general config
 ;; - Language specific configs for LSP, DAP, tree-sitter, etc.
 
+(use-package ethan-wspace
+  :config
+  (setq mode-require-final-newline nil)
+  (global-ethan-wspace-mode 1))
 
 ;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
