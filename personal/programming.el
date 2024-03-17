@@ -120,6 +120,30 @@
 ;; sudo npm install --global pyright  ; TODO needed at all? Should auto-install.
 ;; pipx install ruff ruff-lsp
 
+(comment
+ "Making (python-shell-send-region) work with Django manage.py"
+
+ ;; Working static setting
+ (setq python-shell-interpreter "/home/user/dev/django-toybox/.venv/bin/ipython"
+       python-shell-interpreter-args "--simple-prompt -i /home/user/dev/django-toybox/manage.py shell_plus")
+ )
+
+(defun set-django-root-for-python-shell ()
+   "Ask user for Django project root having manage.py and .venv to use with
+    (run-python). Experimental but initially working. WIP...
+
+    Expects .venv to be in project dir, eg. with poetry requires:
+    poetry config virtualenvs.in-project true"
+   ;; - TODO (automate) recursively search upwards for manage.py to decide dir automatically,
+   ;; - TODO (automate) check if ipython exists and use python if not
+   ;; - TODO (hook) python-ts-mode :init (?)
+   (interactive)
+   (let ((abs-dir-name (expand-file-name (read-directory-name "Select Django root directory (with manage.py): "))))
+     (message "Selected: %s" abs-dir-name)
+     (setq python-shell-interpreter (concat abs-dir-name ".venv/bin/" "ipython")
+	   python-shell-interpreter-args (concat "--simple-prompt -i " (concat abs-dir-name "manage.py") " shell_plus"))))
+
+
 (use-package emacs
   :hook (python-ts-mode . lsp-deferred))
 
