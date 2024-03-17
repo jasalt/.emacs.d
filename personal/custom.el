@@ -1,25 +1,40 @@
-;; General editor behavior related settings, partially inherited from Prelude
+;; General editor settings.
 
-;; Comment function like in Clojure
-;; https://robjohnson.dev/posts/elisp-cheat-sheet-for-clojure-devs/
+;; Good pieces from Emacs Prelude bolted on top of Emacs Bedrock
+;; plus personal additions scrapped from around the web.
+
+;; New functionality is added to beginning of file so structure tends to get
+;; out of hand every few months, refactoring once in a while..
+
+;; TODO split Prelude stuff to it's own file
+
 (defmacro comment (&rest body)
+  "Clojure-like comment function.
+   Source: https://robjohnson.dev/posts/elisp-cheat-sheet-for-clojure-devs/."
   nil)
 
-(setq use-package-always-ensure t)  ; don't require :ensure t for every package
-
-;;TODO update https://github.com/rranelli/auto-package-update.el
-;; (use-package auto-package-update
-;;   :config
-;;   (setq auto-package-update-delete-old-versions t)
-;;   (setq auto-package-update-hide-results t)
-;;   (auto-package-update-maybe))
-;; TODO update straight separately also?
-
-
 (defmacro progn-on (platform &rest body)
-  "Evaluate given expressions if running on given platform."
+  "Evaluate given expressions if running on given platform.
+   Platform can be darwin, gnu/linux or winnt."
   (if (string-equal system-type platform)
       (cons 'progn body)))
+
+;; UPDATE CONFIG
+(comment
+ (use-package auto-package-update
+   :config ;; TODO Automatic updating would be nice
+   (setq auto-package-update-delete-old-versions t)
+   (setq auto-package-update-hide-results t)
+   (auto-package-update-maybe))
+
+ ;; Meanwhile occasionally run:
+ (package-upgrade-all)
+ (straight-pull-all)
+ )
+
+; default to :ensure t for every package declaration
+(setq use-package-always-ensure t)
+
 
 (progn-on
  "darwin"
@@ -265,7 +280,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package smartrep)
 (use-package operate-on-number)
-  
+
 (smartrep-define-key global-map "C-c ."
   '(("+" . apply-operation-to-number-at-point)
     ("-" . apply-operation-to-number-at-point)
@@ -357,7 +372,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("C-c o" . crux-open-with)
 	 ("C-c f" . crux-recentf-find-file)
 	 ("C-c F" . crux-recentf-find-directory)
-	 
+
 	 ("C-c u" . crux-view-url)
 	 ("C-c e" . crux-eval-and-replace)
 	 ("C-c D" . crux-delete-file-and-buffer)
@@ -401,7 +416,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 
 
-
 (use-package tramp)  ; depends on
 ;; give /path/to/.venv
 
@@ -437,9 +451,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 
 (use-package openai
-  :config 
+  :config
   (setq openai-key #'get-openai-api-key)
-	  
+
   :straight (openai :type git :host github :repo "emacs-openai/openai"))
 
 ;; Wrong type argument: listp error means that (getenv "OPENAI_API_KEY")
@@ -460,7 +474,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	    ;; (git-gutter:linum-setup) ; not for line-number-mode?
 	    (setq git-gutter:ask-p nil)
 	    (diminish 'git-gutter-mode)
-	    
+
 	    (setq git-gutter:update-interval 1)
 
 	    (set-face-background 'git-gutter:modified "#e8edcc")
@@ -484,7 +498,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ;; Stage current hunk
 	 ;;("C-x v s" . git-gutter:stage-hunk)
 	 ("C-M-g s" . git-gutter:stage-hunk)
-	 
+
 	 ;;("C-x v a" . git-gutter:stage-hunk)
 	 ("C-M-g a" . git-gutter:stage-hunk)
 
@@ -506,7 +520,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (progn
     ;; (with-eval-after-load 'winum
     ;;   (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-    
+
     (with-eval-after-load 'treemacs
       (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)) ;; TODO move to bind section
     )
@@ -558,11 +572,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  treemacs-space-between-root-nodes        t
 	  treemacs-tag-follow-cleanup              t
 	  treemacs-tag-follow-delay                1.5
-	  treemacs-text-scale                      -1
+	  treemacs-text-scale                      -0.5
 	  treemacs-user-mode-line-format           nil
 	  treemacs-user-header-line-format         nil
 	  treemacs-wide-toggle-width               70
-	  treemacs-width                           26
+	  treemacs-width                           35
 	  treemacs-width-increment                 1
 	  treemacs-width-is-initially-locked       t
 	  treemacs-workspace-switch-cleanup        nil)
@@ -573,7 +587,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
     ;;(treemacs-follow-mode t)  ; FIXME Error running timer ‘treemacs--follow’: (wrong-type-argument arrayp nil) [6 times]
 					; treemacs-find-file-node: Wrong type argument: arrayp, nil
-    
+
     (treemacs-follow-mode 0)
     ;;(treemacs-tag-follow-mode t) ; FIXME Encountered error while following tag at point: (wrong-type-argument arrayp nil)
     ;;(treemacs-tag-follow-mode nil)
@@ -628,4 +642,3 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    :config (lsp-treemacs-sync-mode 1)
    ) ; TODO
  )
-

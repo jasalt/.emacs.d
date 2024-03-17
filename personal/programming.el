@@ -9,14 +9,16 @@
 ;; - Language specific configs for LSP, DAP, tree-sitter, etc.
 
 (use-package ethan-wspace
+  :blackout t
   :config
   (setq mode-require-final-newline nil)
-  (global-ethan-wspace-mode 1))
+  (global-ethan-wspace-mode 1)
+  )
 
 ;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
 (use-package company  ;; lsp-mode default completion backend
-  :straight (company :type git :host github :repo "company-mode/company-mode"))  
+  :straight (company :type git :host github :repo "company-mode/company-mode"))
 
 ;; UI enhancement, not restricted to buffer area, shows help tooltip, not for TTY
 (use-package company-box
@@ -233,7 +235,7 @@
 
 (use-package copilot  ; TODO move to cp.el (WIP)
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
-  
+
 	   ;; :hook (prog-mode . copilot-mode)  ;; manual startup for now
   :bind (("C-c M-f" . copilot-complete)
 	 :map copilot-completion-map
@@ -245,7 +247,6 @@
 	 ("M-<return>" . 'copilot-accept-completion-by-line))
   :config
   ; https://github.com/copilot-emacs/copilot.el/issues/249
-  (add-to-list  
+  (add-to-list
 	   'copilot-indentation-alist
 	   '(emacs-lisp-mode 2)))
-
