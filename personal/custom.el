@@ -124,7 +124,7 @@
 (blackout 'which-key-mode)
 
 ;; Dired customization
-(setq dired-listing-switches "-lhX")  ;; TODO -X does not seem to have effect
+(setq dired-listing-switches "-alh")  ;; default -al
 ;; always delete and copy recursively
 (setq dired-recursive-deletes 'always)
 (setq dired-recursive-copies 'always)
@@ -449,7 +449,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; </dict>
 ;; </plist>
 
-
 (use-package openai
   :config
   (setq openai-key #'get-openai-api-key)
@@ -466,6 +465,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :config (setq gpt-openai-key (get-openai-api-key)
 		gpt-openai-engine "gpt-4-turbo-preview"))
 
+;; TODO https://github.com/douo/magit-gptcommit
+(setq gptel-api-key (get-openai-api-key))
+(use-package magit-gptcommit
+  :demand t
+  :after gptel magit
+  )
 
 ;;;; MISC UI STUFF
 

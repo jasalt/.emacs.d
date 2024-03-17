@@ -117,24 +117,28 @@
 
 
 ;; PYTHON
+;; sudo npm install --global pyright  ; TODO needed at all? Should auto-install.
 ;; pipx install ruff ruff-lsp
 
 (use-package emacs
   :hook (python-ts-mode . lsp-deferred))
 
-;; https://emacs-lsp.github.io/lsp-pyright/
-(use-package lsp-pyright
-  :init
-  (setq dap-python-debugger 'debugpy)  ;; TODO, no response
+(use-package lsp-pyright  ; https://emacs-lsp.github.io/lsp-pyright/
+  ;; :init
+  ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
   :config
   (setq lsp-pyright-disable-organize-imports t)  ; ruff does this
   ;; (setq lsp-pyright-auto-import-completions nil)  ; ruff does this too?
   ;; (setq lsp-pyright-typechecking-mode "strict") ; defaults to basic
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
-			 (require 'dap-python)
+			 ;; (require 'dap-python)
                          (lsp)))) ; or lsp-deferred
-;sudo npm install --global pyright  ; TODO needed at all?
+
+
+;; NOTE if fails at start with type errors, go to ~/.emacs.d/elpa and run:
+;; find . -type f -name '*.elc' -delete
+
 
 ;; Pyright requires config file per project.
 ;; Does Neovim assist pyright to check the .venv dir automatically?
