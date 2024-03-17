@@ -48,11 +48,42 @@
 
  )
 
-;; (magit-add-section-hook 'magit-status-sections-hook
-;;                         'magit-insert-modules
-;;                         'magit-insert-unpulled-from-pushremote)
+(comment
+ (use-package guess-language         ; WIP Automatically detect language for Flyspell
+   :ensure t
+   :defer t
+   :init (add-hook 'text-mode-hook #'guess-language-mode)
+   :config
+   (setq guess-language-langcodes '((en . ("en_GB" "English"))
+                                    (fi . ("fi_FI" "Finnish")))
+         guess-language-languages '(en it)
+         guess-language-min-paragraph-length 45)
+   :diminish guess-language-mode)
 
-;;;;; General
+ ;; To download dictionary, http://aspell.net/aspell-0.60.html
+ ;; ftp://ftp.gnu.org/gnu/aspell/dict/
+ (defvar mu-languages-ring nil "Languages ring for Ispell")
+
+ (let ((languages '("en_GB" "fi_FI")))
+   (setq mu-languages-ring (make-ring (length languages)))
+   (dolist (elem languages) (ring-insert mu-languages-ring elem)))
+
+ (defun mu-cycle-ispell-languages ()
+   (interactive)
+   (let ((language (ring-ref mu-languages-ring -1)))
+     (ring-insert mu-languages-ring language)
+     (ispell-change-dictionary language)))
+ )
+
+
+(comment
+ "forgot what this was about"
+ (magit-add-section-hook 'magit-status-sections-hook
+			 'magit-insert-modules
+			 'magit-insert-unpulled-from-pushremote)
+ )
+
+;;;;; General 
 
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
