@@ -267,6 +267,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  (key-chord-define-global "kd" 'mc/edit-lines)
 	  ))
 
+(use-package zop-to-char
+  :bind (("M-z" . zop-up-to-char)
+	 ("M-Z" . zop-to-char)
+	 ))
+
 (use-package undo-tree
   :init (progn
 	  (setq undo-tree-history-directory-alist
@@ -337,11 +342,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	 ("C-S-<up>" . move-text-up)
 	 ("C-S-<down>" . move-text-down))
   )
-
-(use-package zop-to-char
-  :bind (("M-z" . zop-up-to-char)
-	 ("M-Z" . zop-to-char)
-	 ))
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
