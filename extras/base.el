@@ -43,13 +43,13 @@
 ;; Consult: Misc. enhanced commands
 (use-package consult
   :ensure t
-  :bind ( 
+  :bind (
          ;; Drop-in replacements
          ("C-x b" . consult-buffer)     ; orig. switch-to-buffer
          ("M-y"   . consult-yank-pop)   ; orig. yank-pop
          ;; Searching
          ("M-s r" . consult-ripgrep)
-         ("C-s" . consult-line)
+         ;;("C-M-s" . consult-line)
          ("M-s l" . consult-line)       ; Alternative: rebind C-s to use
          ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
          ("M-s L" . consult-line-multi) ; isearch to M-s s
