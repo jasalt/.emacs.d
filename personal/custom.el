@@ -247,30 +247,38 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (setq set-mark-command-repeat-pop 't)
 
 (use-package key-chord
-  :init (progn
-	  (key-chord-define-global "jj" 'avy-goto-word-1)
-	  (key-chord-define-global "jl" 'avy-goto-line)
-	  (key-chord-define-global "jf" 'avy-goto-char)
-	  (key-chord-define-global "JJ" 'crux-switch-to-previous-buffer)
-	  ;;(key-chord-define-global "uu" 'undo-tree-visualize)
+  :init
+  (key-chord-define-global "jf" 'avy-goto-word-1)
+  (key-chord-define-global "jl" 'avy-goto-line)
+  ;;(key-chord-define-global "jf" 'avy-goto-char)
+  ;;(key-chord-define-global "JJ" 'crux-switch-to-previous-buffer)
+  ;;(key-chord-define-global "uu" 'undo-tree-visualize)
 
-	  (key-chord-mode +1)
-	  )
+  (key-chord-mode +1)
   )
 
-(use-package multiple-cursors
-  :init (progn
-	  (key-chord-define-global "jn" 'mc/mark-more-like-this-extended)
-	  (key-chord-define-global "jp" 'mc/mark-previous-like-this)
-	  (key-chord-define-global "jm" 'mc/mark-all-like-this)
-	  (key-chord-define-global "jt" 'mc/mark-sgml-tag-pair)
-	  (key-chord-define-global "kd" 'mc/edit-lines)
-	  ))
 
-(use-package zop-to-char
-  :bind (("M-z" . zop-up-to-char)
-	 ("M-Z" . zop-to-char)
-	 ))
+(use-package multiple-cursors
+  :init
+  (key-chord-define-global "jn" 'mc/mark-more-like-this-extended)
+  (key-chord-define-global "jp" 'mc/mark-previous-like-this)
+  (key-chord-define-global "jm" 'mc/mark-all-like-this)
+  (key-chord-define-global "jt" 'mc/mark-sgml-tag-pair)
+  (key-chord-define-global "kd" 'mc/edit-lines)
+  )
+
+
+(use-package jump-char  ; iy-go-to-char successor
+  :init
+  (key-chord-define-global "jj" 'jump-char-forward)
+  (key-chord-define-global "JJ" 'jump-char-backward)
+  )
+
+;;  Not fitting well with multiple cursors
+;; (use-package zop-to-char
+;;   :bind (("M-z" . zop-up-to-char)
+;; 	 ("M-Z" . zop-to-char)
+;; 	 ))
 
 (use-package undo-tree
   :init (progn
