@@ -267,12 +267,22 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (key-chord-define-global "kd" 'mc/edit-lines)
   )
 
-
-(use-package jump-char  ; iy-go-to-char successor
-  :init
-  (key-chord-define-global "jj" 'jump-char-forward)
-  (key-chord-define-global "JJ" 'jump-char-backward)
+(use-package iy-go-to-char
+  :straight (iy-go-to-char :type git :host github
+			   :repo "doitian/iy-go-to-char")
+  :config
+  (add-to-list 'mc/cursor-specific-vars 'iy-go-to-char-start-pos)
+  (key-chord-define-global "jj" 'iy-go-up-to-char)
+  (key-chord-define-global "JJ" 'iy-go-up-to-char-backward)
   )
+
+;; TODO NOT multi-cursor compatible, jumps every cursor to same location
+;; Eg. https://github.com/doitian/iy-go-to-char/commit/c1b5d5317b85a6eadd75ba70062fe364e3356efc
+;; (use-package jump-char  ; iy-go-to-char successor
+;;   :init
+;;   (key-chord-define-global "jj" 'jump-char-forward)
+;;   (key-chord-define-global "JJ" 'jump-char-backward)
+;;   )
 
 ;;  Not fitting well with multiple cursors
 ;; (use-package zop-to-char
