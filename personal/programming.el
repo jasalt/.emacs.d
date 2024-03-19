@@ -143,6 +143,10 @@
      (setq python-shell-interpreter (concat abs-dir-name ".venv/bin/" "ipython")
 	   python-shell-interpreter-args (concat "--simple-prompt -i " (concat abs-dir-name "manage.py") " shell_plus"))))
 
+;; Fix unreadable ipython term traceback colors in global ipython profile settings
+;; Run `ipython profile create', then set in : ~/.ipython/profile_default/ipython_config.py:
+;; c.InteractiveShell.colors = 'nocolor'
+;; -- https://jsstevenson.github.io/blog/2022/custom-ipython-colors/
 
 (use-package emacs
   :hook (python-ts-mode . lsp-deferred))
