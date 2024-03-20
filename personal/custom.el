@@ -271,7 +271,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package phi-search  ; MC compatible i-search
   :config
-  (global-set-key (kbd "C-s") 'phi-searc)
+  (global-set-key (kbd "C-s") 'phi-search)
   (global-set-key (kbd "C-r") 'phi-search-backward))
 
 ;; BROKEN MC support :<
