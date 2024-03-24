@@ -267,6 +267,11 @@
 ;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
 
 
+;; Javascript
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
+
+
 (use-package copilot  ; TODO move to cp.el (WIP)
   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
 
