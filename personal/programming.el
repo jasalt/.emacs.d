@@ -15,6 +15,8 @@
   (global-ethan-wspace-mode 1)
   )
 
+(setq-default tab-width 4)
+
 ;; Using lsp-mode instead of built-in eglot because it integrates more features.
 
 (use-package company  ;; lsp-mode default completion backend
