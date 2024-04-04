@@ -487,16 +487,33 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package chatgpt
   :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
 
-(use-package gpt  ; https://github.com/stuhlmueller/gpt.el
-  :config (setq gpt-openai-key (get-openai-api-key)
-		gpt-openai-engine "gpt-4-turbo-preview"))
+;; (use-package gpt  ; https://github.com/stuhlmueller/gpt.el
+;;   :config (setq gpt-openai-key (get-openai-api-key)
+;; 		gpt-openai-engine "gpt-4-turbo-preview"))
 
-;; TODO https://github.com/douo/magit-gptcommit
+; https://github.com/karthink/gptel?tab=readme-ov-file#straight
+(straight-use-package 'gptel)
+
+;; (gptel-make-ollama "Ollama"             ;Any name of your choosing
+;;   :host "192.168.0.107:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '("nous-hermes2"))
+
+
+(setq
+ gptel-model "nous-hermes2"
+ gptel-backend (gptel-make-ollama "Ollama"
+                 :host "192.168.0.107:11434"
+                 :stream t
+                 :models '("nous-hermes2")))
+
+;; Todo https://github.com/douo/magit-gptcommit
 (setq gptel-api-key (get-openai-api-key))
 (use-package magit-gptcommit
   :demand t
   :after gptel magit
   )
+
 
 ;;;; MISC UI STUFF
 
