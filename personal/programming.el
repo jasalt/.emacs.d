@@ -245,10 +245,21 @@
 
 (use-package lua-mode)
 
-;; using html-ls and emmet-ls
-(use-package mhtml-mode
-  :init
-  (add-to-list 'auto-mode-alist '("\\.twig\\'" . mhtml-mode))
+
+;;;;; HTML editing
+;; Using web-mode, and lsp-mode with html-lsp and emmet-ls
+
+(use-package web-mode
+  ;; TODO incompatibility with lsp-mode possible
+  ;; lsp-format does not handle {% %} {{ }} template tags
+  :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+  :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
+  :config (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+  )
+
+(comment ; disabled, indent was not compatible with template tags
+ (use-package mhtml-mode
+  :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . mhtml-mode))
   :hook ((mhtml-mode . yas-minor-mode)(mhtml-mode . lsp-deferred))
   :config
   ;; Remove overlapping of some personal bindings
@@ -256,7 +267,7 @@
   (define-key mhtml-mode-map (kbd "C-c 2") nil)
   (define-key mhtml-mode-map (kbd "C-c 3") nil)
   (define-key mhtml-mode-map (kbd "C-c 4") nil)
-  )
+  ))
 
 
 ;; PHP
