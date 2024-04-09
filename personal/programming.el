@@ -243,7 +243,20 @@
 ;; lsp-treemacs-call-hierarchy not working
 ;; https://clojure-lsp.io/features/#call-hierarchy
 
-(use-package lua-mode) 
+(use-package lua-mode)
+
+;; using html-ls and emmet-ls
+(use-package mhtml-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.twig\\'" . mhtml-mode))
+  :hook ((mhtml-mode . yas-minor-mode)(mhtml-mode . lsp-deferred))
+  :config
+  ;; Remove overlapping of some personal bindings
+  (define-key mhtml-mode-map (kbd "C-c 1") nil)
+  (define-key mhtml-mode-map (kbd "C-c 2") nil)
+  (define-key mhtml-mode-map (kbd "C-c 3") nil)
+  (define-key mhtml-mode-map (kbd "C-c 4") nil)
+  )
 
 
 ;; PHP
