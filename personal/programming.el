@@ -49,13 +49,14 @@
 	company-minimum-prefix-length 3
 	company-idle-delay 0.5 ;php-mode recommend?
 	lsp-idle-delay 0.5 ;php-mode recommend?
-	lsp-file-watch-threshold 5000  ; increased from 1000, enough for WP projects
+	lsp-file-watch-threshold 7000  ; increased from 1000, enough for WP projects
 
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
 	gc-cons-threshold (* 100 1024 1024))
-  :hook ((yaml-ts-mode . lsp-mode)
-	 (lsp-mode . lsp-enable-which-key-integration))
+  :hook (
+		 ;; (yaml-ts-mode . lsp-mode)
+		 (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 
 ;; Optionally
