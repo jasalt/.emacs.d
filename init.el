@@ -215,13 +215,14 @@ If the new path's directories does not exist, create them."
 (use-package emacs
   :config
   (progn
-    
-    ;;(load-theme 'modus-vivendi)   ; dark    
-    
-    (load-theme 'modus-operandi)  ; light
-    (custom-set-faces
-     '(hl-line ((t (:background "gray95"))))))
-  
+    (load-theme 'modus-vivendi)   ; dark
+	;; (custom-set-faces
+    ;;  '(hl-line ((t (:background "gray95")))))
+	
+    ;;(load-theme 'modus-operandi)  ; light
+    ;; (custom-set-faces
+    ;;  '(hl-line ((t (:background "gray95")))))
+	)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
