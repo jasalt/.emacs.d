@@ -500,12 +500,19 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;;   :models '("nous-hermes2"))
 
 
+;; (setq
+;;  gptel-model "nous-hermes-2-solar-10.7b:q6_k"
+;;  gptel-backend (gptel-make-ollama "Ollama"
+;;                  :host "192.168.0.106:11434"
+;;                  :stream t
+;;                  :models '("eas/nous-hermes-2-solar-10.7b:q6_k")))
+
 (setq
- gptel-model "nous-hermes-2-solar-10.7b:q6_k"
+ gptel-model "stable-code"
  gptel-backend (gptel-make-ollama "Ollama"
-                 :host "192.168.0.106:11434"
+                 ;;:host "192.168.0.106:11434"
                  :stream t
-                 :models '("eas/nous-hermes-2-solar-10.7b:q6_k")))
+                 :models '("stable-code")))
 
 ;; Todo https://github.com/douo/magit-gptcommit
 (setq gptel-api-key (get-openai-api-key))
