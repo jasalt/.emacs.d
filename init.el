@@ -215,11 +215,11 @@ If the new path's directories does not exist, create them."
 (use-package emacs
   :config
   (progn
-    (load-theme 'modus-vivendi)   ; dark
+    ;;(load-theme 'modus-vivendi)   ; dark
 	;; (custom-set-faces
     ;;  '(hl-line ((t (:background "gray95")))))
 	
-    ;;(load-theme 'modus-operandi)  ; light
+    (load-theme 'modus-operandi)  ; light
     ;; (custom-set-faces
     ;;  '(hl-line ((t (:background "gray95")))))
 	)
@@ -257,18 +257,23 @@ If the new path's directories does not exist, create them."
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
+;; Load some private configs if they exists
+(let ((full-filename (expand-file-name "personal/env.el" user-emacs-directory)))
+  (message "Loading personal/env.el")
+  (if (file-exists-p full-filename)
+	  (load-file full-filename)
+    (message "WARNING personal/env.el missing")))
+
 (load-file (expand-file-name "personal/custom.el" user-emacs-directory))
 
 (load-file (expand-file-name "personal/programming.el" user-emacs-directory))
 (load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
 
 ;; Load some private configs if they exists
-(dolist (filename '("personal/org2blog.el"
-		    "personal/env.el"))
+(dolist (filename '("personal/org2blog.el"))
   (let ((full-filename (expand-file-name filename user-emacs-directory)))
     (if (file-exists-p full-filename)
 	(load-file full-filename))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework
@@ -280,10 +285,13 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default))
  '(package-selected-packages '(evil which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:height 105 :family "Hack"))))
+ '(olivetti-fringe ((t (:background "gray" :foreground "white")))))
