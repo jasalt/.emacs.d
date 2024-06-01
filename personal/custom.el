@@ -441,18 +441,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   )
 
 
-
 (use-package tramp)  ; depends on
 ;; give /path/to/.venv
 
-
-;; LLM CONFIG STUFF
-
-;; TODO include these in chatgpt declaration
-(defun get-openai-api-key ()
-  "Return the value of the OPENAI_API_KEY environment variable.
-   It needs to be set in .profile and maybe in .zshrc"
-  (getenv "OPENAI_API_KEY"))
 
 ;; To set Mac Env vars that GUI Emacs (d12frosted/homebrew-emacs-plus) reads:
 ;; add to ~/Library/LaunchAgents/com.example.set-env-vars.plist
@@ -475,47 +466,27 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; </dict>
 ;; </plist>
 
-(use-package openai
-  :config
-  (setq openai-key #'get-openai-api-key)
-
-  :straight (openai :type git :host github :repo "emacs-openai/openai"))
-
-;; Wrong type argument: listp error means that (getenv "OPENAI_API_KEY")
-;; probably returns ""
-(use-package spinner)
-(use-package chatgpt
-  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
-
-;; (use-package gpt  ; https://github.com/stuhlmueller/gpt.el
-;;   :config (setq gpt-openai-key (get-openai-api-key)
-;; 		gpt-openai-engine "gpt-4-turbo-preview"))
-
 ; https://github.com/karthink/gptel?tab=readme-ov-file#straight
 (straight-use-package 'gptel)
 
-;; (gptel-make-ollama "Ollama"             ;Any name of your choosing
-;;   :host "192.168.0.107:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '("nous-hermes2"))
-
-
-;; (setq
-;;  gptel-model "nous-hermes-2-solar-10.7b:q6_k"
-;;  gptel-backend (gptel-make-ollama "Ollama"
-;;                  :host "192.168.0.106:11434"
-;;                  :stream t
-;;                  :models '("eas/nous-hermes-2-solar-10.7b:q6_k")))
+(gptel-make-ollama "Ollama"  ;; Local
+                 :stream t
+                 :models '("stable-code" "llama3" "deepseek-coder"))
 
 (setq
- gptel-model "stable-code"
- gptel-backend (gptel-make-ollama "Ollama"
-                 ;;:host "192.168.0.106:11434"
-                 :stream t
-                 :models '("stable-code")))
+ gptel-model "llama3-70b-8192"
+ gptel-backend (gptel-make-openai "Groq"
+				 :host "api.groq.com"
+				 :endpoint "/openai/v1/chat/completions"
+				 :stream t
+				 :key (getenv "GROQ_API_KEY")
+				 :models '("llama3-70b-8192"
+						   "llama3-8b-8192"
+						   "gemma-7b-it"
+						   "mixtral-8x7b-32768"
+						   )))
 
-;; Todo https://github.com/douo/magit-gptcommit
-(setq gptel-api-key (get-openai-api-key))
+;; TODO https://github.com/douo/magit-gptcommit
 (use-package magit-gptcommit
   :demand t
   :after gptel magit
