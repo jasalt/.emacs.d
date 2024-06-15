@@ -54,8 +54,6 @@
  "gnu/linux"
  (custom-set-faces
   '(default ((t (:height 105 :family "Hack")))))
- (pixel-scroll-precision-mode 0)
- (pixel-scroll-mode 0)
 
  ;; Save lock files to /var/tmp (fix problem with Python Werkzeug auto reload)
  (setq lock-file-name-transforms
