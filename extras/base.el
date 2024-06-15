@@ -49,6 +49,7 @@
          ("M-y"   . consult-yank-pop)   ; orig. yank-pop
          ;; Searching
          ("M-s r" . consult-ripgrep)
+         ;;("C-M-s" . consult-line)
          ("M-s l" . consult-line)       ; Alternative: rebind C-s to use
          ("M-s s" . consult-line)       ; consult-line instead of isearch, bind
          ("M-s L" . consult-line-multi) ; isearch to M-s s
@@ -64,28 +65,29 @@
   ;; Narrowing lets you restrict results to certain groups of candidates
   (setq consult-narrow-key "<"))
 
-(use-package embark
-  :ensure t
-  :demand t
-  :after avy
-  :bind (("C-c a" . embark-act))        ; bind this to an easy key to hit
-  :init
-  ;; Add the option to run embark when using avy
-  (defun bedrock/avy-action-embark (pt)
-    (unwind-protect
-        (save-excursion
-          (goto-char pt)
-          (embark-act))
-      (select-window
-       (cdr (ring-ref avy-ring 0))))
-    t)
 
-  ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
-  ;; candidate you select
-  (setf (alist-get ?. avy-dispatch-alist) 'bedrock/avy-action-embark))
+;; (use-package embark ; Disabled default UI helper
+;;   :ensure t
+;;   :demand t
+;;   :after avy
+;;   :bind (("C-c a" . embark-act))        ; bind this to an easy key to hit
+;;   :init
+;;   ;; Add the option to run embark when using avy
+;;   (defun bedrock/avy-action-embark (pt)
+;;     (unwind-protect
+;;         (save-excursion
+;;           (goto-char pt)
+;;           (embark-act))
+;;       (select-window
+;;        (cdr (ring-ref avy-ring 0))))
+;;     t)
 
-(use-package embark-consult
-  :ensure t)
+;;   ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
+;;   ;; candidate you select
+;;   (setf (alist-get ?. avy-dispatch-alist) 'bedrock/avy-action-embark))
+
+;; (use-package embark-consult
+;;   :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -96,6 +98,7 @@
 ;; Vertico: better vertical completion for minibuffer commands
 (use-package vertico
   :ensure t
+  :bind (("M-RET" . minibuffer-complete))
   :init
   ;; You'll want to make sure that e.g. fido-mode isn't enabled
   (vertico-mode))
@@ -157,12 +160,8 @@
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package eshell
-  :init
-  (defun bedrock/setup-eshell ()
-    ;; Something funny is going on with how Eshell sets up its keymaps; this is
-    ;; a work-around to make C-r bound in the keymap
-    (keymap-set eshell-mode-map "C-r" 'consult-history))
-  :hook ((eshell-mode . bedrock/setup-eshell)))
+  :bind (:map eshell-mode-map ("C-r" . consult-history)))
+
 
 ;; Orderless: powerful completion style
 (use-package orderless

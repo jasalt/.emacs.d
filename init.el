@@ -1,12 +1,12 @@
-;;;  ________                                                _______                 __                            __
-;;; /        |                                              /       \               /  |                          /  |
-;;; $$$$$$$$/ _____  ____   ______   _______  _______       $$$$$$$  | ______   ____$$ | ______   ______   _______$$ |   __
-;;; $$ |__   /     \/    \ /      \ /       |/       |      $$ |__$$ |/      \ /    $$ |/      \ /      \ /       $$ |  /  |
-;;; $$    |  $$$$$$ $$$$  |$$$$$$  /$$$$$$$//$$$$$$$/       $$    $$</$$$$$$  /$$$$$$$ /$$$$$$  /$$$$$$  /$$$$$$$/$$ |_/$$/
-;;; $$$$$/   $$ | $$ | $$ |/    $$ $$ |     $$      \       $$$$$$$  $$    $$ $$ |  $$ $$ |  $$/$$ |  $$ $$ |     $$   $$<
-;;; $$ |_____$$ | $$ | $$ /$$$$$$$ $$ \_____ $$$$$$  |      $$ |__$$ $$$$$$$$/$$ \__$$ $$ |     $$ \__$$ $$ \_____$$$$$$  \
-;;; $$       $$ | $$ | $$ $$    $$ $$       /     $$/       $$    $$/$$       $$    $$ $$ |     $$    $$/$$       $$ | $$  |
-;;; $$$$$$$$/$$/  $$/  $$/ $$$$$$$/ $$$$$$$/$$$$$$$/        $$$$$$$/  $$$$$$$/ $$$$$$$/$$/       $$$$$$/  $$$$$$$/$$/   $$/
+;;;  ________                                             
+;;; /        |                                            
+;;; $$$$$$$$/ _____  ____   ______   _______  _______     
+;;; $$ |__   /     \/    \ /      \ /       |/       |    
+;;; $$    |  $$$$$$ $$$$  |$$$$$$  /$$$$$$$//$$$$$$$/     
+;;; $$$$$/   $$ | $$ | $$ |/    $$ $$ |     $$      \     
+;;; $$ |_____$$ | $$ | $$ /$$$$$$$ $$ \_____ $$$$$$  |    
+;;; $$       $$ | $$ | $$ $$    $$ $$       /     $$/     
+;;; $$$$$$$$/$$/  $$/  $$/ $$$$$$$/ $$$$$$$/$$$$$$$/      
 
 ;;; Minimal init.el
 
@@ -44,13 +44,26 @@
 ;; You can simply uncomment the following if you'd like to get started with
 ;; MELPA packages quickly:
 ;;
-;; (with-eval-after-load 'package
-;;   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+(with-eval-after-load 'package
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 ;; If you want to turn off the welcome screen, uncomment this
-;(setopt inhibit-splash-screen t)
+(setopt inhibit-splash-screen t)
 
-(setopt initial-major-mode 'fundamental-mode)  ; default mode for the *scratch* buffer
+(setopt initial-major-mode 'org-mode)  ; default mode for the *scratch* buffer
 (setopt display-time-default-load-average nil) ; this information is useless for most
 
 ;; Automatically reread from disk if the underlying file changes
@@ -93,7 +106,7 @@ If the new path's directories does not exist, create them."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Show the help buffer after startup
-(add-hook 'after-init-hook 'help-quick)
+;;(add-hook 'after-init-hook 'help-quick)
 
 ;; which-key: shows a popup of available keybindings when typing a long key
 ;; sequence (e.g. C-x ...)
@@ -150,8 +163,8 @@ If the new path's directories does not exist, create them."
 (setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
 
 ;; Enable horizontal scrolling
-(setopt mouse-wheel-tilt-scroll t)
-(setopt mouse-wheel-flip-direction t)
+;;(setopt mouse-wheel-tilt-scroll t)
+;;(setopt mouse-wheel-flip-direction t)
 
 ;; We won't set these, but they're good to know about
 ;;
@@ -163,7 +176,7 @@ If the new path's directories does not exist, create them."
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 
 ;; Use common keystrokes by default
-(cua-mode)
+;;(cua-mode)
 
 ;; Display line numbers in programming mode
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -173,8 +186,9 @@ If the new path's directories does not exist, create them."
 (add-hook 'text-mode-hook 'visual-line-mode)
 
 ;; Modes to highlight the current line with
-(let ((hl-line-hooks '(text-mode-hook prog-mode-hook)))
+(let ((hl-line-hooks '(prog-mode-hook)))  ; 
   (mapc (lambda (hook) (add-hook hook 'hl-line-mode)) hl-line-hooks))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -190,7 +204,7 @@ If the new path's directories does not exist, create them."
 (add-to-list 'tab-bar-format 'tab-bar-format-global 'append)
 (setopt display-time-format "%a %F %T")
 (setopt display-time-interval 1)
-(display-time-mode)
+;;(display-time-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -200,7 +214,16 @@ If the new path's directories does not exist, create them."
 
 (use-package emacs
   :config
-  (load-theme 'modus-vivendi))          ; for light theme, use modus-operandi
+  (progn
+    ;;(load-theme 'modus-vivendi)   ; dark
+	;; (custom-set-faces
+    ;;  '(hl-line ((t (:background "gray95")))))
+	
+    (load-theme 'modus-operandi)  ; light
+    ;; (custom-set-faces
+    ;;  '(hl-line ((t (:background "gray95")))))
+	)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -213,10 +236,10 @@ If the new path's directories does not exist, create them."
 
 ;; UI/UX enhancements mostly focused on minibuffer and autocompletion interfaces
 ;; These ones are *strongly* recommended!
-;(load-file (expand-file-name "extras/base.el" user-emacs-directory))
+(load-file (expand-file-name "extras/base.el" user-emacs-directory))
 
 ;; Packages for software development
-;(load-file (expand-file-name "extras/dev.el" user-emacs-directory))
+(load-file (expand-file-name "extras/dev.el" user-emacs-directory))
 
 ;; Vim-bindings in Emacs (evil-mode configuration)
 ;(load-file (expand-file-name "extras/vim-like.el" user-emacs-directory))
@@ -224,7 +247,7 @@ If the new path's directories does not exist, create them."
 ;; Org-mode configuration
 ;; WARNING: need to customize things inside the elisp file before use! See
 ;; the file extras/org-intro.txt for help.
-;(load-file (expand-file-name "extras/org.el" user-emacs-directory))
+(load-file (expand-file-name "extras/org.el" user-emacs-directory))
 
 ;; Email configuration in Emacs
 ;; WARNING: needs the `mu' program installed; see the elisp file for more
@@ -234,6 +257,23 @@ If the new path's directories does not exist, create them."
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
+;; Load some private configs if they exists
+(let ((full-filename (expand-file-name "personal/env.el" user-emacs-directory)))
+  (message "Loading personal/env.el")
+  (if (file-exists-p full-filename)
+	  (load-file full-filename)
+    (message "WARNING personal/env.el missing")))
+
+(load-file (expand-file-name "personal/custom.el" user-emacs-directory))
+
+(load-file (expand-file-name "personal/programming.el" user-emacs-directory))
+(load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
+
+;; Load some private configs if they exists
+(dolist (filename '("personal/org2blog.el"))
+  (let ((full-filename (expand-file-name filename user-emacs-directory)))
+    (if (file-exists-p full-filename)
+	(load-file full-filename))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;   Built-in customization framework
@@ -245,10 +285,13 @@ If the new path's directories does not exist, create them."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(which-key)))
+ '(custom-safe-themes
+   '("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default))
+ '(package-selected-packages '(evil which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:height 105 :family "Hack"))))
+ '(olivetti-fringe ((t (:background "gray" :foreground "white")))))
