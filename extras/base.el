@@ -104,6 +104,7 @@
   (vertico-mode))
 
 (use-package vertico-directory
+  :ensure nil
   :after vertico
   :bind (:map vertico-map
               ("M-DEL" . vertico-directory-delete-word)))
@@ -160,6 +161,7 @@
 
 (use-package eshell
   :bind (:map eshell-mode-map ("C-r" . consult-history)))
+
 
 ;; Orderless: powerful completion style
 (use-package orderless
