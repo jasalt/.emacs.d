@@ -235,6 +235,11 @@
   ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
   )
 
+(use-package clay
+  :straight (clay :type git
+				  :host github
+				  :repo "scicloj/clay.el"))
+
 ;; Jet (flexible replacement for jq)
 ;; Requires jet binary in path https://github.com/borkdude/jet/ and clojure-mode
 (use-package jet)
