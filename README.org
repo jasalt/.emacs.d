@@ -1,8 +1,22 @@
-Personal work-in-progress Emacs 29+ IDE setup aimed to be on par and exceed NeoVim and VSCode in computer keyboard activities. Mainly focused in coding PHP, Clojure and Python and org-mode.
+* Introduction
 
-This is not a stable project for broad public consumption at this point. Upstream Bedrock project, Prelude or some other config distribution is probably a better starting point for a new config for most people. There may be some useful config snippets however.
+Emacs 29+ config mainly focused in programming PHP, Clojure and Python, writing with org-mode and compatibility with GNU/Linux and MacOS.
 
 #+html: <p align="center"><img src="screenshots/fork.png" /></p>
+
+It is based on my [[https://github.com/jasalt/emacs-prelude][earlier Emacs Prelude based config]] (2013-) that was mostly in use for simple scripting, magit and note taking that was migrated 2023 over to more minimal [[https://codeberg.org/ashton314/emacs-bedrock][Bedrock starter config]] including most useful pieces of Prelude and working IDE configurations for select languages and LLM tools as addition.
+
+On original Bedrock config side, there are two files of interest: =early-init.el= and =init.el=. Follow [[https://codeberg.org/ashton314/emacs-bedrock][original repo readme]] for more info. Package management is handled using standard =use-package= (and =straight= for git support) which embeds configuration for each package in a neat way.
+
+Own additions are in =personal/= directory while changes in other files are kept minimal, including:
+
+- Parts of [[https://github.com/bbatsov/prelude][Emacs Prelude]] via [[https://github.com/bbatsov/crux][crux.el]] in =personal/custom.el= and programming config in =personal/programming.el=.
+- Keychord-mode
+- Multiple cursors setup (with minor issues, using psi-search for compatibility)
+- Org-mode "GTD" setup
+- Etc.
+
+The original Bedrock project, Prelude or some other config distribution is probably a better starting point for a new config for most people. There may be some useful config snippets however.
 
 * Supported IDE features by language
 
@@ -13,35 +27,16 @@ This is not a stable project for broad public consumption at this point. Upstrea
 | Clojure  | x   | *** |             | x               |
 | Yaml     | x   |     | x           | x               |
 
-- * PHP tree-sitter needs to be improved to support embedded HTML and PHP eg. mixed documents. Related pull request https://github.com/nvim-treesitter/nvim-treesitter/pull/5876 issue which has been updated since I looked at it the last time.
-- ** Python DAP is enabled but not tested
-- *** Clojure uses Cider which provides step debugger
-  
-* Background
-
-Previously I have been coding mostly with VSCode for work and fun instead of Emacs where it used to seem too time consuming to support different programming languages with various 3rd party packages for syntax coloring, indendation, code intelligence, debugging tools and so on. Situation however changed last few years with tree-sitter, LSP and DAP projects where those features are being developed in standard editor-agnostic way and can be used and configured in more generic way on editor side.
-
-* Details
-
-This is based on my [[https://github.com/jasalt/emacs-prelude][earlier Emacs Prelude based config]] (2013-) that was mostly in use for simple scripting, magit and note taking that was migrated 2023 over to more minimal [[https://sr.ht/~ashton314/emacs-bedrock/][Bedrock starter config]]. It is currently kept up to date with Bedrock upstream development on relevant parts while deviates a bit with few overrides in Bedrock config. 
-
-On original Bedrock config side, there are two files of interest: =early-init.el= and =init.el=. Follow [[https://sr.ht/~ashton314/emacs-bedrock/][original repo readme]] for more info. Package management is handled using standard =use-package= (and =straight= for git support) which embeds configuration for each package in a neat way.
-
-Own additions are in =personal/= directory while changes in other files are kept minimal.
-
-- Includes many best parts of [[https://github.com/bbatsov/prelude][Emacs Prelude]] via [[https://github.com/bbatsov/crux][crux.el]] in =personal/custom.el= and programming config in =personal/programming.el=.
-- Multiple cursors
-- Keychords
-- Org-mode "GTD" setup
-- Etc.
-
+- (*) PHP tree-sitter needs to be improved to support embedded HTML and PHP eg. mixed documents. Related pull request https://github.com/nvim-treesitter/nvim-treesitter/pull/5876 issue which has been updated since I looked at it the last time.
+- (**) Python DAP is enabled but not tested
+- (***) Clojure uses Cider which provides step debugger
 * Installation
 
-Install Emacs 29+, from eg. [[https://packages.debian.org/bookworm-backports/emacs][Debian 12 Backports repo]] or [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted/homebrew-emacs-plus]] on Mac. Clone this repository as =.emacs.d= and install tree-sitter grammars before start.
+Install Emacs 29+, from eg. [[https://packages.debian.org/bookworm-backports/emacs][Debian 12 Backports repo]] or [[https://github.com/d12frosted/homebrew-emacs-plus][d12frosted/homebrew-emacs-plus]] on Mac. Clone this repository as =.emacs.d= and install tree-sitter grammars before start which needs to be manually done for PHP.
 
-Also, Emacs 29.1 added the handy =--init-directory= flag. This means that you can run =emacs --init-directory path/to/emacs-bedrock/= and all the customizations and package installations will be isolated to the project directory. 
+Emacs 29.1 added the handy =--init-directory= flag. This means that you can run =emacs --init-directory path/to/emacs-bedrock/= and all the customizations and package installations will be isolated to the project directory.
 
-There may be some problems to diagnose after install, this is not a stable project after all.
+There may be some initialisation problems to diagnose after install, which I try fix once in a while when I notice them.
 
 ** Installing tree-sitter grammars
 
@@ -49,33 +44,45 @@ Currently tree-sitter grammars need to be placed at =~/.emacs.d/tree-sitter/= be
 
 To install them manually:
 
-```
+#+begin_src
 git clone https://github.com/casouri/tree-sitter-module.git
 cd tree-sitter-module
 ./batch
 mkdir ~/.emacs.d/tree-sitter
 mv dist/* ~/.emacs.d/tree-sitter
-
-```
+#+end_src
 
 Ref: https://git.savannah.gnu.org/cgit/emacs.git/tree/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter
 
 
 PHP tree-sitter mode is more in progress and is built individually:
 
-```
+#+begin_src
 git clone https://github.com/tree-sitter/tree-sitter-php.git
 cd tree-sitter-php
 make
 ln -s `pwd`/libtree-sitter-php.so ~/.emacs.d/tree-sitter
-```
+#+end_src
 
 ** LSP
 Config uses lsp-mode over (built-in) eglot which installs LSP servers automatically for languages enabled in config (hook =(lsp)=).
 
 I found the built-in eglot LSP client being bit overwhelming to get working over lsp-mode that has more IDE features built-in like DAP debugging and automatic LSP server installation. It is also quite well documented in one place, plus also in video format on System Crafters Youtube channel.
 
-Performance-wise it seems also fine for debugging eg. a large web-app, like a full WordPress-installation with near 5000 files to watch on Skylake-era laptop CPU, comparing to experience with NeoVim (or VSCode), for now at least.
+Performance-wise it seems also fine for debugging eg. a large web-app, such as full WordPress-installation with 5000+ files to watch on Skylake-era laptop CPU, comparing to experience with NeoVim (or VSCode), for now at least.
+
+** gptel keys
+For GUI Emacs which does necessarily load shell environment vars when started from KDE Plasma menubar, some API keys can be defined in ~personal/env.el~ which gets loaded on startup if it exists eg.
+
+#+begin_src
+(setenv "GROQ_API_KEY" "gsk_XXXXXXXXXXXXXXXX")
+#+end_src
 
 ** Copilot
 =M-x copilot-login=
+
+* Background
+
+Previously I have been coding mostly with VSCode for work and fun instead of using Emacs where it used to seem too time consuming to support IDE features for different programming languages with various 3rd party packages for syntax coloring, indendation, code intelligence, debugging tools and so on.
+
+Situation however changed last few years with tree-sitter, LSP and DAP projects where those features are being developed in standard editor-agnostic way and can be used and configured in more generic way on editor side.
