@@ -230,6 +230,7 @@
   (setq
    lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
    ;; lsp-enable-completion-at-point nil ; use cider completion instead of lsp
+   cider-repl-display-help-banner nil
    )
   ;; :config (setq cider-enrich-classpath t) ; TODO
   ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
