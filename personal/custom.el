@@ -117,6 +117,12 @@
 
 (delete-selection-mode 1)  ; yanking replaces region content
 
+;; C-S-v for pasting in terminal as in terminal emulator
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (local-unset-key (kbd "C-S-v"))
+            (local-set-key (kbd "C-S-v") 'yank)))
+
 (use-package blackout)  ; helps keeps modeline clean
 (blackout 'eldoc-mode)
 (blackout 'which-key-mode)
