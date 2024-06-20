@@ -35,6 +35,11 @@
 ; default to :ensure t for every package declaration
 (setq use-package-always-ensure t)
 
+(use-package exec-path-from-shell
+  :config (when (memq window-system '(mac ns x))
+			(dolist (var '("ANONYMIZE_KEY" "GROQ_API_KEY"))
+			  (add-to-list 'exec-path-from-shell-variables var))
+			(exec-path-from-shell-initialize)))
 
 (progn-on
  "darwin"

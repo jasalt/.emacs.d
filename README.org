@@ -71,12 +71,8 @@ I found the built-in eglot LSP client being bit overwhelming to get working over
 
 Performance-wise it seems also fine for debugging eg. a large web-app, such as full WordPress-installation with 5000+ files to watch on Skylake-era laptop CPU, comparing to experience with NeoVim (or VSCode), for now at least.
 
-** gptel keys
-For GUI Emacs which does necessarily load shell environment vars when started from KDE Plasma menubar, some API keys can be defined in ~personal/env.el~ which gets loaded on startup if it exists eg.
-
-#+begin_src
-(setenv "GROQ_API_KEY" "gsk_XXXXXXXXXXXXXXXX")
-#+end_src
+** Environment variables
+Set API keys or other environment variables in shell config, eg. `~/.zshrc` or `~/.bashrc` and then set which ones to read on Emacs startup by `exec-path-from-shell` on startup in `personal/custom.el` also on GUI Emacs started from KDE Plasma Shell menu (or MacOS app icon).
 
 ** Copilot
 =M-x copilot-login=

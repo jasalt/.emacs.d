@@ -257,13 +257,6 @@ If the new path's directories does not exist, create them."
 ;; Tools for academic researchers
 ;(load-file (expand-file-name "extras/researcher.el" user-emacs-directory))
 
-;; Load some private configs if they exists
-(let ((full-filename (expand-file-name "personal/env.el" user-emacs-directory)))
-  (message "Loading personal/env.el")
-  (if (file-exists-p full-filename)
-	  (load-file full-filename)
-    (message "WARNING personal/env.el missing")))
-
 (load-file (expand-file-name "personal/custom.el" user-emacs-directory))
 
 (load-file (expand-file-name "personal/programming.el" user-emacs-directory))
