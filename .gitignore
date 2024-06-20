@@ -22,3 +22,13 @@
 /request/
 /.dap-breakpoints
 /personal/org2blog.el
+/.extension/
+/.lsp-session-v1
+/.org-id-locations
+/dap-ui-repl-php-history
+*.elc
+/gptel-crowdsourced-prompts.csv
+/logview-cache.extmap
+/session.*
+/tramp
+/workspace/
