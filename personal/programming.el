@@ -27,7 +27,6 @@
   :straight (company-box :type git :host github :repo "sebastiencs/company-box")
   :hook (company-mode . company-box-mode))
 
-;; https://clojure-lsp.io/features/#snippets
 (use-package yasnippet
   :blackout t
   :hook
@@ -212,6 +211,7 @@
 
 ;;;; Clojure
 
+;; TODO https://clojure-lsp.io/features/#snippets
 ;; https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/#basic-configuration
 
 (use-package clojure-mode
@@ -230,15 +230,19 @@
   (setq
    lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
    ;; lsp-enable-completion-at-point nil ; use cider completion instead of lsp
+   lsp-lens-enable nil
+   cider-use-tooltips nil
    cider-repl-display-help-banner nil
    cider-connection-message-fn #'cider-random-tip
-   cider-repl-pop-to-buffer-on-connect nil
-   ;; cider-repl-pop-to-buffer-on-connect 'display-only ; show but don't focus
+   ;;cider-repl-pop-to-buffer-on-connect nil
+   cider-repl-pop-to-buffer-on-connect 'display-only ; show but don't focus
    cider-repl-buffer-size-limit 100000
    cider-use-overlays 'errors-only
    cider-save-file-on-load t
    clojure-toplevel-inside-comment-form t ; eval inside comment form
    )
+  :custom (cider-enrich-classpath t "Enable experimental enrich classpath")
+
   ;; :config (setq cider-enrich-classpath t) ; TODO
   ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
   )
