@@ -478,14 +478,14 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ; https://github.com/karthink/gptel?tab=readme-ov-file#straight
 (straight-use-package 'gptel)
 
-(gptel-make-ollama "Ollama@localhost"
-  :stream t
-  :models '("stable-code" "llama3" "deepseek-coder-v2"))
-
-(gptel-make-ollama "Ollama@mbp14"
-  :host "mbp14:11434"
-  :stream t
-  :models '("stable-code" "deepseek-coder-v2" "llama3"))
+(let ((local-llms '("deepseek-coder-v2" "llama3" "stable-code")))
+  (gptel-make-ollama "Ollama@localhost"
+    :stream t
+    :models local-llms)
+  (gptel-make-ollama "Ollama@mbp14"
+    :host "mbp14:11434"
+    :stream t
+    :models local-llms))
 
 (setq
  gptel-model "llama3-70b-8192"
@@ -495,16 +495,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :stream t
   :key (getenv "GROQ_API_KEY")
   :models '("llama3-70b-8192"
-			"llama3-8b-8192"
-			"gemma-7b-it"
-			"mixtral-8x7b-32768"
-			)))
+			"mixtral-8x7b-32768")))
 
 ;; TODO https://github.com/douo/magit-gptcommit
 (use-package magit-gptcommit
   :demand t
-  :after gptel magit
-  )
+  :after gptel magit)
 
 
 ;;;; MISC UI STUFF
