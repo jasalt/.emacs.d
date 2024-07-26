@@ -480,17 +480,16 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (gptel-make-ollama "Ollama@localhost"
   :stream t
-  :models '("stable-code" "llama3" "deepseek-coder"))
+  :models '("stable-code" "llama3" "deepseek-coder-v2"))
+
+(gptel-make-ollama "Ollama@mbp14"
+  :host "mbp14:11434"
+  :stream t
+  :models '("stable-code" "deepseek-coder-v2" "llama3"))
 
 (setq
- gptel-model "deepseek-coder-v2"
- gptel-backend (gptel-make-ollama "Ollama@mbp14"
-				 :host "mbp14:11434"
-				 :stream t
-				 :models '("deepseek-coder-v2")))
-;; deepseek-coder-v2:16b-lite-instruct-q5_K_M
-
-(gptel-make-openai "Groq"
+ gptel-model "llama3-70b-8192"
+ gptel-backend (gptel-make-openai "Groq"
   :host "api.groq.com"
   :endpoint "/openai/v1/chat/completions"
   :stream t
@@ -499,8 +498,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 			"llama3-8b-8192"
 			"gemma-7b-it"
 			"mixtral-8x7b-32768"
-			))
-
+			)))
 
 ;; TODO https://github.com/douo/magit-gptcommit
 (use-package magit-gptcommit
