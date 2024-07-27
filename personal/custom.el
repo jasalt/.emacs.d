@@ -475,27 +475,29 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; </dict>
 ;; </plist>
 
-; https://github.com/karthink/gptel?tab=readme-ov-file#straight
-(straight-use-package 'gptel)
 
-(let ((local-llms '("deepseek-coder-v2" "llama3" "stable-code")))
-  (gptel-make-ollama "Ollama@localhost"
-    :stream t
-    :models local-llms)
-  (gptel-make-ollama "Ollama@mbp14"
-    :host "mbp14:11434"
-    :stream t
-    :models local-llms))
+(use-package gptel ; https://github.com/karthink/gptel
+  :straight t
+  :config
+  (let ((local-llms '("deepseek-coder-v2" "llama3" "stable-code")))
+	(gptel-make-ollama "Ollama@localhost"
+      :stream t
+      :models local-llms)
+	(gptel-make-ollama "Ollama@mbp14"
+      :host "mbp14:11434"
+      :stream t
+      :models local-llms))
+  (setq
+   gptel-model "llama3-70b-8192"
+   gptel-backend (gptel-make-openai "Groq"
+				   :host "api.groq.com"
+				   :endpoint "/openai/v1/chat/completions"
+				   :stream t
+				   :key (getenv "GROQ_API_KEY")
+				   :models '("llama3-70b-8192"
+							 "mixtral-8x7b-32768")))
+  :bind ("C-x G" . gptel))
 
-(setq
- gptel-model "llama3-70b-8192"
- gptel-backend (gptel-make-openai "Groq"
-  :host "api.groq.com"
-  :endpoint "/openai/v1/chat/completions"
-  :stream t
-  :key (getenv "GROQ_API_KEY")
-  :models '("llama3-70b-8192"
-			"mixtral-8x7b-32768")))
 
 ;; TODO https://github.com/douo/magit-gptcommit
 (use-package magit-gptcommit
