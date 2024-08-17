@@ -220,12 +220,14 @@
 	 (clojurec-mode . lsp)))
 
 (use-package cider
-  :config (defun ed-clojure/eval-first-comment-sexp ()
-			(interactive)
-			(save-excursion
-			  (re-search-forward "^(comment")
-			  (forward-sexp)
-			  (cider-eval-last-sexp)))
+  :config
+  (defun ed-clojure/eval-first-comment-sexp ()
+	(interactive)
+	(save-excursion
+	  (re-search-forward "^(comment")
+	  (forward-sexp)
+	  (cider-eval-last-sexp)))
+  (cider-register-cljs-repl-type 'sci-js "(+ 1 2 3)")
   :init
   (setq
    lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
@@ -246,6 +248,14 @@
   ;; :config (setq cider-enrich-classpath t) ; TODO
   ;; https://docs.cider.mx/cider/config/basic_config.html#use-enrich-classpath
   )
+
+;; https://github.com/babashka/scittle/tree/main/doc/nrepl
+(defun mm/cider-connected-hook ()
+	(when (eq 'sci-js cider-cljs-repl-type)
+      (setq-local cider-show-error-buffer nil)
+      (cider-set-repl-type 'cljs)))
+
+(add-hook 'cider-connected-hook #'mm/cider-connected-hook)
 
 (use-package clay
   :straight (clay :type git
