@@ -261,11 +261,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; Eg. C-u <space> <space> <space>
 (setq set-mark-command-repeat-pop 't)
 
-(use-package key-chord
-  :chords
-  ("jf" . 'avy-goto-word-1)
-  ("jl" . 'avy-goto-line)
-  )
+(use-package key-chord)
 
 ;; Allow definions like (key-chord-define-global "jf" 'avy-goto-word-1)
 ;; with :chords key
@@ -279,6 +275,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   ("jm" . 'mc/mark-all-like-this)
   ("jt" . 'mc/mark-sgml-tag-pair)
   ("kd" . 'mc/edit-lines)
+  ("jf" . 'avy-goto-word-1)
+  ("jl" . 'avy-goto-line)
   )
 
 (use-package mc-extras)
