@@ -111,7 +111,12 @@
   :bind (("<f5>" . dap-continue) ;; TODO (dap--get-sessions) (dap--cur-session-or-die)
 	 ("C-<f5>" . dap-debug)
 	 ("S-<f5>" . dap-debug-restart)
-	 ("<f10>" . dap-next))  ; todo activate also? if php, use default profile
+	 ("<f10>" . dap-next)
+	 ("C-M-n" . dap-next)      ; cider
+	 ("C-M-c" . dap-continue)  ; cider
+	 ("C-c C-e" . dap-eval-thing-at-point)
+	 ("C-M-x" . dap-eval-region)
+	 )  ; todo activate also? if php, use default profile
   :custom (dap-ui-controls-screen-position 'posframe-poshandler-frame-bottom-right-corner)
   (dap-ui-locals-expand-depth t)  ; TODO not working?
   ;; (setq dap-print-io t) ; print debug info into *Messages*

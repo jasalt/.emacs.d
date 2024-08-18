@@ -35,6 +35,12 @@
 ; default to :ensure t for every package declaration
 (setq use-package-always-ensure t)
 
+(defun transparency (value)
+  "Set the transparency of the frame window.  VALUE = 0-100."
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
+
+;; Read environment values from shell environment
 (use-package exec-path-from-shell
   :config (when (memq window-system '(mac ns x))
 			(dolist (var '("ANONYMIZE_KEY" "GROQ_API_KEY"))
@@ -477,7 +483,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package gptel ; https://github.com/karthink/gptel
   :straight t
-  :config
+  :bind ("C-x G" . gptel)
+  :config                     ; These models below can be run at home
   (let ((local-llms '("deepseek-coder-v2" "llama3" "stable-code")))
 	(gptel-make-ollama "Ollama@localhost"
       :stream t
@@ -494,8 +501,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 				   :stream t
 				   :key (getenv "GROQ_API_KEY")
 				   :models '("llama3-70b-8192"
-							 "mixtral-8x7b-32768")))
-  :bind ("C-x G" . gptel))
+							 "mixtral-8x7b-32768"))))
 
 
 ;; TODO https://github.com/douo/magit-gptcommit
