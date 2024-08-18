@@ -263,23 +263,22 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package key-chord
   :init
-  (key-chord-define-global "jf" 'avy-goto-word-1)
-  (key-chord-define-global "jl" 'avy-goto-line)
-  ;;(key-chord-define-global "jf" 'avy-goto-char)
-  ;;(key-chord-define-global "JJ" 'crux-switch-to-previous-buffer)
-  ;;(key-chord-define-global "uu" 'undo-tree-visualize)
-
-  (key-chord-mode +1)
+  ("jf" . 'avy-goto-word-1)
+  ("jl" . 'avy-goto-line)
   )
 
+;; Allow definions like (key-chord-define-global "jf" 'avy-goto-word-1)
+;; with :chords key
+(use-package use-package-chords
+  :config (key-chord-mode 1))
 
 (use-package multiple-cursors
-  :init
-  (key-chord-define-global "jn" 'mc/mark-more-like-this-extended)
-  (key-chord-define-global "jp" 'mc/mark-previous-like-this)
-  (key-chord-define-global "jm" 'mc/mark-all-like-this)
-  (key-chord-define-global "jt" 'mc/mark-sgml-tag-pair)
-  (key-chord-define-global "kd" 'mc/edit-lines)
+  :chords
+  ("jn" . 'mc/mark-more-like-this-extended)
+  ("jp" . 'mc/mark-previous-like-this)
+  ("jm" . 'mc/mark-all-like-this)
+  ("jt" . 'mc/mark-sgml-tag-pair)
+  ("kd" . 'mc/edit-lines)
   )
 
 (use-package mc-extras)
