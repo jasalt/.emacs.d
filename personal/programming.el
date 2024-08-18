@@ -221,8 +221,11 @@
 
 (use-package clojure-mode
   :hook ((clojure-mode . lsp)
-	 (clojure-script-mode . lsp)
-	 (clojurec-mode . lsp)))
+		 (clojure-script-mode . lsp)
+		 (clojurec-mode . lsp))
+  :config (add-hook 'clojure-mode-hook 'lsp)  ;; HACK cause phel requires removing it
+  )
+
 
 (use-package cider
   :config
@@ -276,6 +279,24 @@
 ;; lsp-treemacs-call-hierarchy not working
 ;; https://clojure-lsp.io/features/#call-hierarchy
 
+
+;; Phel
+;; https://codeberg.org/mmontone/interactive-lang-tools/src/branch/master/backends/phel
+
+(add-to-list
+ 'package-archives
+ '("interactive-lang-tools" .
+   "https://codeberg.org/mmontone/interactive-lang-tools/raw/branch/master/archive/"))
+
+(use-package ilt-phel)
+(use-package phel-mode  ; derived from clojure-mode
+  :mode "\\.phel\\'"
+  ;; TODO workaround for lsp-warning coming from lsp hooked to clojure-mode
+  :config (setq lsp-warn-no-matched-clients nil)
+  ;; :hook (phel-mode . ilt-mode) ; TODO requires starting ilt server process manually
+  )
+
+
 (use-package lua-mode)
 
 
@@ -322,15 +343,6 @@
 ;; when installing vscode ext with (dap-php-setup) in *Listen for XDebug stderr* output,
 ;; copy extension from another editor eg:
 ;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
-
-(add-to-list 'package-archives '("interactive-lang-tools" . "https://codeberg.org/mmontone/interactive-lang-tools/raw/branch/master/archive/"))
-
-;; https://codeberg.org/mmontone/interactive-lang-tools/src/branch/master/backends/phel
-(use-package ilt)
-(use-package ilt-phel)
-(use-package phel-mode
-  :config (add-to-list 'auto-mode-alist '("\\.phel\\'" . phel-mode))
-  :hook (phel-mode . ilt-mode))
 
 ;; Javascript
 
