@@ -256,7 +256,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (setq set-mark-command-repeat-pop 't)
 
 (use-package key-chord
-  :init
+  :chords
   ("jf" . 'avy-goto-word-1)
   ("jl" . 'avy-goto-line)
   )
