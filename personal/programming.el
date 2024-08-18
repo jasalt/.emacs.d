@@ -318,6 +318,14 @@
 ;; copy extension from another editor eg:
 ;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
 
+(add-to-list 'package-archives '("interactive-lang-tools" . "https://codeberg.org/mmontone/interactive-lang-tools/raw/branch/master/archive/"))
+
+;; https://codeberg.org/mmontone/interactive-lang-tools/src/branch/master/backends/phel
+(use-package ilt)
+(use-package ilt-phel)
+(use-package phel-mode
+  :config (add-to-list 'auto-mode-alist '("\\.phel\\'" . phel-mode))
+  :hook (phel-mode . ilt-mode))
 
 ;; Javascript
 
