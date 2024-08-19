@@ -270,14 +270,13 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package multiple-cursors
   :chords
-  ("jn" . 'mc/mark-more-like-this-extended)
-  ("jp" . 'mc/mark-previous-like-this)
-  ("jm" . 'mc/mark-all-like-this)
-  ("jt" . 'mc/mark-sgml-tag-pair)
-  ("kd" . 'mc/edit-lines)
-  ("jf" . 'avy-goto-word-1)
-  ("jl" . 'avy-goto-line)
-  )
+  ("jn" . mc/mark-more-like-this-extended)
+  ("jp" . mc/mark-previous-like-this)
+  ("jm" . mc/mark-all-like-this)
+  ("jt" . mc/mark-sgml-tag-pair)
+  ("kd" . mc/edit-lines)
+  ("jf" . avy-goto-word-1)
+  ("jl" . avy-goto-line))
 
 (use-package mc-extras)
 
