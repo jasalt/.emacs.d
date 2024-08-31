@@ -43,7 +43,7 @@
 ;; Read environment values from shell environment
 (use-package exec-path-from-shell
   :config (when (memq window-system '(mac ns x))
-			(dolist (var '("ANONYMIZE_KEY" "GROQ_API_KEY"))
+			(dolist (var '("ANONYMIZE_KEY" "GROQ_API_KEY" "CLAUDE_API_KEY"))
 			  (add-to-list 'exec-path-from-shell-variables var))
 			(exec-path-from-shell-initialize)))
 
@@ -498,7 +498,10 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 				   :stream t
 				   :key (getenv "GROQ_API_KEY")
 				   :models '("llama3-70b-8192"
-							 "mixtral-8x7b-32768"))))
+							 "mixtral-8x7b-32768")))
+  (gptel-make-anthropic "Claude"
+  :stream t
+  :key (getenv "CLAUDE_API_KEY")))
 
 
 ;; TODO https://github.com/douo/magit-gptcommit
