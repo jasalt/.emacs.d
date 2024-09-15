@@ -482,7 +482,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :straight t
   :bind ("C-x G" . gptel)
   :config                     ; These models below can be run at home
-  (let ((local-llms '("deepseek-coder-v2" "llama3" "stable-code")))
+  (let ((local-llms '("deepseek-coder-v2" "llama3.1" "stable-code")))
 	(gptel-make-ollama "Ollama@localhost"
       :stream t
       :models local-llms)
@@ -491,13 +491,13 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
       :stream t
       :models local-llms))
   (setq
-   gptel-model "llama3-70b-8192"
+   gptel-model "llama-3.1-70b-versatile"
    gptel-backend (gptel-make-openai "Groq"
 				   :host "api.groq.com"
 				   :endpoint "/openai/v1/chat/completions"
 				   :stream t
 				   :key (getenv "GROQ_API_KEY")
-				   :models '("llama3-70b-8192"
+				   :models '("llama-3.1-70b-versatile"
 							 "mixtral-8x7b-32768")))
   (gptel-make-anthropic "Claude"
   :stream t
