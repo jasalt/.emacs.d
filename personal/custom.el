@@ -491,6 +491,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
       :stream t
       :models local-llms))
   (setq
+   gptel-org-branching-context t
    gptel-model "llama-3.1-70b-versatile"
    gptel-backend (gptel-make-openai "Groq"
 				   :host "api.groq.com"
