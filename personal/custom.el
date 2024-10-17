@@ -501,7 +501,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 							 "mixtral-8x7b-32768")))
   (gptel-make-anthropic "Claude"
   :stream t
-  :key (getenv "CLAUDE_API_KEY")))
+  :key (getenv "CLAUDE_API_KEY")
+  :models '("claude-3-5-sonnet-20240620")))
 
 
 ;; TODO https://github.com/douo/magit-gptcommit
