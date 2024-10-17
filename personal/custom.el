@@ -478,7 +478,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; </dict>
 ;; </plist>
 
-(use-package org :pin gnu)
+(use-package org :pin gnu)  ; should get latest org-mode over built-in
 
 (use-package gptel ; https://github.com/karthink/gptel
   :straight t
