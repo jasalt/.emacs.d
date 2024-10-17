@@ -477,11 +477,13 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 ;; </dict>
 ;; </plist>
 
+(use-package org :pin gnu)
 
 (use-package gptel ; https://github.com/karthink/gptel
   :straight t
   :bind ("C-x G" . gptel)
-  :config                     ; These models below can be run at home
+  :config
+  ;; These models below can be run at home
   (let ((local-llms '("deepseek-coder-v2" "llama3.1" "stable-code")))
 	(gptel-make-ollama "Ollama@localhost"
       :stream t
