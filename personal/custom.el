@@ -135,6 +135,7 @@
             (local-set-key (kbd "C-S-v") 'yank)))
 
 (use-package blackout)  ; helps keeps modeline clean
+(use-package diminish)  ; helps keeps modeline clean (with use-package)
 (blackout 'eldoc-mode)
 (blackout 'which-key-mode)
 
