@@ -308,7 +308,9 @@
   ;; lsp-format does not handle {% %} {{ }} template tags
   :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
   :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
-  :config (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+  :config
+  (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+  ;; (setq sgml-basic-offset 4)
   )
 
 (comment ; disabled, indent was not compatible with template tags
