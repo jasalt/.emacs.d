@@ -236,6 +236,7 @@
 	  (forward-sexp)
 	  (cider-eval-last-sexp)))
   (cider-register-cljs-repl-type 'sci-js "(+ 1 2 3)")
+  :bind (("C-c C-c" . ed-clojure/eval-first-comment-sexp))
   :init
   (setq
    lsp-enable-indentation nil ; use cider indentation instead of lsp, less strict is ok
