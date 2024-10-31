@@ -456,6 +456,39 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package tramp)  ; depends on
 ;; give /path/to/.venv
 
+(use-package mistty
+  :bind (("C-c C-s" . mistty)))
+;; TODO https://stackoverflow.com/a/7053298?
+
+;; https://emacs.stackexchange.com/a/37889/42614
+(defun tws-region-to-process (arg beg end)
+  "Send the current region to a process buffer.
+The first time it's called, will prompt for the buffer to
+send to. Subsequent calls send to the same buffer, unless a
+prefix argument is used (C-u), or the buffer no longer has an
+active process."
+  (interactive "P\nr")
+  (if (or arg ;; user asks for selection
+          (not (boundp 'tws-process-target)) ;; target not set
+          ;; or target is not set to an active process:
+          (not (process-live-p (get-buffer-process
+                                tws-process-target))))
+      (setq tws-process-target
+            (completing-read
+             "Process: "
+             (seq-map (lambda (el) (buffer-name (process-buffer el)))
+                      (process-list)))))
+  (process-send-region tws-process-target beg end)
+
+  (with-current-buffer "*mistty*"
+	;;(call-interactively 'mistty-send-command)
+	(progn
+	  (call-interactively 'mistty-send-command)
+;;	  (end-of-buffer) ;;TODO
+	  )
+	  )
+  )
+
 
 ;; To set Mac Env vars that GUI Emacs (d12frosted/homebrew-emacs-plus) reads:
 ;; add to ~/Library/LaunchAgents/com.example.set-env-vars.plist
