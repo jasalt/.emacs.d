@@ -294,9 +294,17 @@
   :mode "\\.phel\\'"
   ;; TODO workaround for lsp-warning coming from lsp hooked to clojure-mode
   :config (setq lsp-warn-no-matched-clients nil)
+
+  ;; (defun ed-clojure/eval-first-comment-sexp-phel () ;; TODO
+  ;; 	(interactive)
+  ;; 	(save-excursion
+  ;; 	  (re-search-forward "^(comment")
+  ;; 	  (forward-sexp)
+  ;; 	  (cider-eval-last-sexp)))
+
+  :bind ("C-M-x" . send-region-to-process)
   ;; :hook (phel-mode . ilt-mode) ; TODO requires starting ilt server process manually
   )
-
 
 (use-package lua-mode)
 
