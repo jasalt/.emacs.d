@@ -165,10 +165,12 @@
   (setq lsp-pyright-disable-organize-imports t)  ; ruff does this
   ;; (setq lsp-pyright-auto-import-completions nil)  ; ruff does this too?
   ;; (setq lsp-pyright-typechecking-mode "strict") ; defaults to basic
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-			 ;; (require 'dap-python)
-                         (lsp)))) ; or lsp-deferred
+  ;; :hook (python-mode . (lambda ()
+  ;;                        (require 'lsp-pyright)
+  ;;                        (lsp)))
+  )
+;; or lsp-deferred
+;; (require 'dap-python)
 
 
 ;; NOTE if fails at start with type errors, go to ~/.emacs.d/elpa and run:
