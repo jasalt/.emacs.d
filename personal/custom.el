@@ -533,13 +533,13 @@ active process. -- https://emacs.stackexchange.com/a/37889/42614"
     :models '(qwen2.5-coder:14b qwen2.5-coder:14b-instruct-q5_1 deepseek-coder-v2 llama3.1))
   (setq
    gptel-org-branching-context t
-   gptel-model "llama-3.3-70b-versatile"
+   gptel-model 'llama-3.3-70b-versatile
    gptel-backend (gptel-make-openai "Groq"
 				   :host "api.groq.com"
 				   :endpoint "/openai/v1/chat/completions"
 				   :stream t
 				   :key (getenv "GROQ_API_KEY")
-				   :models '(llama-3.1-70b-versatile
+				   :models '(llama-3.3-70b-versatile
 							 mixtral-8x7b-32768)))
   (gptel-make-anthropic "Claude"
 	:stream t
