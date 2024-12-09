@@ -524,28 +524,27 @@ active process. -- https://emacs.stackexchange.com/a/37889/42614"
   :bind ("C-x G" . gptel)
   :config
   ;; These models below can be run at home
-  (let ((local-llms '("deepseek-coder-v2" "llama3.1" "stable-code")))
-	(gptel-make-ollama "Ollama@localhost"
-      :stream t
-      :models local-llms)
-	(gptel-make-ollama "Ollama@mbp14"
-      :host "mbp14:11434"
-      :stream t
-      :models local-llms))
+  (gptel-make-ollama "Ollama@localhost"
+    :stream t
+    :models '(deepseek-coder-v2 llama3.1 qwen2.5-coder:32b qwen2.5-coder:32b-instruct-q8_0))
+  (gptel-make-ollama "Ollama@mbp14"
+    :host "mbp14:11434"
+    :stream t
+    :models '(qwen2.5-coder:14b qwen2.5-coder:14b-instruct-q5_1 deepseek-coder-v2 llama3.1))
   (setq
    gptel-org-branching-context t
-   gptel-model "llama-3.1-70b-versatile"
+   gptel-model "llama-3.3-70b-versatile"
    gptel-backend (gptel-make-openai "Groq"
 				   :host "api.groq.com"
 				   :endpoint "/openai/v1/chat/completions"
 				   :stream t
 				   :key (getenv "GROQ_API_KEY")
-				   :models '("llama-3.1-70b-versatile"
-							 "mixtral-8x7b-32768")))
+				   :models '(llama-3.1-70b-versatile
+							 mixtral-8x7b-32768)))
   (gptel-make-anthropic "Claude"
-  :stream t
-  :key (getenv "CLAUDE_API_KEY")
-  :models '("claude-3-5-sonnet-20240620")))
+	:stream t
+	:key (getenv "CLAUDE_API_KEY")
+	:models '("claude-3-5-sonnet-20240620")))
 
 
 ;; TODO https://github.com/douo/magit-gptcommit

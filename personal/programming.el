@@ -360,20 +360,23 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
 
 
-(use-package copilot  ; TODO move to cp.el (WIP)
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+(comment
+ ;; Subscription on hold
+ (use-package copilot  ; TODO move to cp.el (WIP)
+   :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
 
-	   ;; :hook (prog-mode . copilot-mode)  ;; manual startup for now
-  :bind (("C-c M-f" . copilot-complete)
-	 :map copilot-completion-map
-	 ("C-g" . 'copilot-clear-overlay)
-	 ("M-p" . 'copilot-previous-completion)
-	 ("M-n" . 'copilot-next-completion)
-	 ("<tab>" . 'copilot-accept-completion)
-	 ("M-f" . 'copilot-accept-completion-by-word)
-	 ("M-<return>" . 'copilot-accept-completion-by-line))
-  :config
-  ; https://github.com/copilot-emacs/copilot.el/issues/249
-  (add-to-list
-	   'copilot-indentation-alist
-	   '(emacs-lisp-mode 2)))
+   ;; :hook (prog-mode . copilot-mode)  ;; manual startup for now
+   :bind (("C-c M-f" . copilot-complete)
+		  :map copilot-completion-map
+		  ("C-g" . 'copilot-clear-overlay)
+		  ("M-p" . 'copilot-previous-completion)
+		  ("M-n" . 'copilot-next-completion)
+		  ("<tab>" . 'copilot-accept-completion)
+		  ("M-f" . 'copilot-accept-completion-by-word)
+		  ("M-<return>" . 'copilot-accept-completion-by-line))
+   :config
+										; https://github.com/copilot-emacs/copilot.el/issues/249
+   (add-to-list
+	'copilot-indentation-alist
+	'(emacs-lisp-mode 2)))
+ )
