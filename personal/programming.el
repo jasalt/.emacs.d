@@ -158,11 +158,11 @@
 (use-package emacs
   :hook (python-ts-mode . lsp-deferred))
 
-(use-package lsp-pyright  ; https://emacs-lsp.github.io/lsp-pyright/
+(use-package lsp-pyright	; https://emacs-lsp.github.io/lsp-pyright/
   ;; :init
   ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
   :config
-  (setq lsp-pyright-disable-organize-imports t)  ; ruff does this
+  (setq lsp-pyright-disable-organize-imports t)	; ruff does this
   ;; (setq lsp-pyright-auto-import-completions nil)  ; ruff does this too?
   ;; (setq lsp-pyright-typechecking-mode "strict") ; defaults to basic
   ;; :hook (python-mode . (lambda ()
@@ -216,6 +216,18 @@
     (with-temp-file out-file (insert out-contents))))
 
 
+(use-package iedit)
+(use-package zoutline)
+(use-package lispy
+  :requires (iedit zoutline)
+  :bind (:map lispy-mode-map
+			  ("[" . 'self-insert-command)
+			  ("]" . 'self-insert-command)
+			  ("DEL" . 'delete-backward-char)))
+
+;;(define-key lispy-mode-map (kbd "[") 'self-insert-command)
+;; (define-key lispy-mode-map (kbd "]") 'self-insert-command)
+
 ;;;; Clojure
 
 ;; TODO https://clojure-lsp.io/features/#snippets
@@ -225,7 +237,7 @@
   :hook ((clojure-mode . lsp)
 		 (clojure-script-mode . lsp)
 		 (clojurec-mode . lsp))
-  :config (add-hook 'clojure-mode-hook 'lsp)  ;; HACK cause phel requires removing it
+  :config (add-hook 'clojure-mode-hook 'lsp) ;; HACK cause phel requires removing it
   )
 
 
