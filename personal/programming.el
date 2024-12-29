@@ -324,6 +324,9 @@
 
 
 ;;;;; HTML editing
+
+(setq css-indent-offset 2)
+
 ;; Using web-mode, and lsp-mode with html-lsp and emmet-ls
 
 (use-package web-mode
