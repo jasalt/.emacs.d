@@ -220,10 +220,14 @@
 (use-package zoutline)
 (use-package lispy
   :requires (iedit zoutline)
+  ;; Disable conflicting keymaps
   :bind (:map lispy-mode-map
-			  ("[" . 'self-insert-command)
-			  ("]" . 'self-insert-command)
-			  ("DEL" . 'delete-backward-char)))
+			  ;; TODO setting nil does not disable mode bindings (?)
+			  ("[" . 'self-insert-command)  ; lispy-backward
+			  ("]" . 'self-insert-command)  ; lispy-forward
+			  ("DEL" . 'delete-backward-char)
+			  ("M-d" . 'kill-word)  ; lispy-kill-word
+			  ))
 
 ;;(define-key lispy-mode-map (kbd "[") 'self-insert-command)
 ;; (define-key lispy-mode-map (kbd "]") 'self-insert-command)
