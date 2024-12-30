@@ -57,4 +57,6 @@
 		picture-self-insert
 		pixel-scroll-precision
 		pixel-scroll-start-momentum
+		winum-select-window-2
+		winum-select-window-3
 		))
