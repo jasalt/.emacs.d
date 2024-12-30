@@ -345,10 +345,14 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   )
 
 ;; Window splitting keys, same as Terminator / Konsole / iTerm
-(global-set-key (kbd "C-S-o") '(lambda () (interactive) (split-window-vertically nil)))
+(global-set-key (kbd "C-S-o") (lambda () (interactive) (split-window-vertically nil)))
 (global-set-key (kbd "C-M-o") '(lambda () (interactive) (split-window-horizontally nil)))
-(global-set-key (kbd "C-M-w") '(lambda () (interactive) (delete-window)))
-
+;; (global-set-key (kbd "C-M-w") '(lambda () (interactive) (delete-window)))
+(global-set-key (kbd "C-S-w")
+               (lambda () (interactive)
+                  (if (= (length (window-list)) 1)
+                      (delete-frame)
+                    (delete-window))))
 
 ;; TODO has problems with treemacs mode with
 ;; (treemacs--select-visible-window) failing
