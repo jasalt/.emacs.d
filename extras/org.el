@@ -170,6 +170,9 @@
 	   "* TODO %?\n%U\n%i\n%a")
 	  ;; Define a section
 	  ("w" "Work")
+	  ("ww" "Work journal" entry (file+datetree
+								  (lambda () (concat org-directory "work-log.org")))
+       "* Work log %U\n%?")
 	  ("wm" "Work meeting" entry (file+headline "work.org" "Meetings")
 	   "** TODO %?\n%U\n%i\n%a")
 	  ("wr" "Work report" entry (file+headline "work.org" "Reports")
@@ -185,6 +188,7 @@
 	      (todo)))
 	    ("w" "Work" agenda ""
 	     ((org-agenda-files '("work.org")))))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
