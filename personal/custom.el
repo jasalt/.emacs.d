@@ -469,13 +469,42 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
  (with-current-buffer "*mistty*"
    (mistty-send-string "(* 1 1)\n")))
 
+;; TODO
+;; - also process require_once / use-once statements same way
+;; - also delete everything on each line after # character
+
 (defun process-phel-source (code)
-  "Process Phel source code by removing ':' before 'require'."
+  "Prepare Phel source code to be evaluated by Phel REPL:
+  - Remove ns-form around require statements
+  - Remove ':' before 'require' forms (normally inside ns-form)"
   (with-temp-buffer
     (insert code)
+
+    ;; Remove (ns ...) form around require-statements
+	(goto-char (point-min))
+    (when (re-search-forward "^(ns\\s-+" nil t)
+	  (let ((start (match-beginning 0)))
+		;; Erase ending parenthesis
+		(goto-char start)
+		(forward-sexp)
+		(backward-char)
+		(delete-char 1)
+
+		;; Erase the ns-form line
+		(goto-char start)
+		(beginning-of-line)
+		(kill-line)))
+
+	;; TODO Convert :require-file to php/require_once
+    ;; (goto-char (point-min))
+    ;; (while (search-forward "(:require-file " nil t)
+    ;;   (replace-match "(php/require_once "))
+
+    ;; Remove ':' before 'require'
     (goto-char (point-min))
-    (while (search-forward "(:require" nil t)
-      (replace-match "(require"))
+    (while (search-forward "(:require " nil t)
+      (replace-match "(require "))
+
     (buffer-string)))
 
 (defun send-region-to-process (arg beg end)
