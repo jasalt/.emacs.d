@@ -469,8 +469,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
  (with-current-buffer "*mistty*"
    (mistty-send-string "(* 1 1)\n")))
 
-;; TODO
-;; - also delete everything on each line after # character
+
+# TODO Remove every comment-form
 
 (defun process-phel-source (code)
   "Prepare Phel source code to be evaluated by Phel REPL:
@@ -493,6 +493,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 		(goto-char start)
 		(beginning-of-line)
 		(kill-line)))
+
+	;; Delete everything on each line after # character
+	(goto-char (point-min))
+    (while (re-search-forward "#.*$" nil t)
+      (replace-match ""))
 
 	;; Convert :require-file to php/require_once
     (goto-char (point-min))
