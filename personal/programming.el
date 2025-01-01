@@ -3,6 +3,8 @@
 ;; Also refer to extras/dev.el which sets some Bedrock framework defaults
 ;; which might be merged with this file content at some point.
 
+;; Also see phel.el
+
 ;; TOC:
 ;; - General code editing UI stuff
 ;; - LSP-Mode general config
@@ -297,33 +299,6 @@
 ;; https://clojure-lsp.io/features/#project-tree
 ;; lsp-treemacs-call-hierarchy not working
 ;; https://clojure-lsp.io/features/#call-hierarchy
-
-
-;; Phel
-;; https://codeberg.org/mmontone/interactive-lang-tools/src/branch/master/backends/phel
-
-(add-to-list
- 'package-archives
- '("interactive-lang-tools" .
-   "https://codeberg.org/mmontone/interactive-lang-tools/raw/branch/master/archive/"))
-
-(use-package ilt-phel)
-(use-package phel-mode  ; derived from clojure-mode
-  :mode "\\.phel\\'"
-  ;; TODO workaround for lsp-warning coming from lsp hooked to clojure-mode
-  :config (setq lsp-warn-no-matched-clients nil)
-
-  ;; (defun ed-clojure/eval-first-comment-sexp-phel () ;; TODO
-  ;; 	(interactive)
-  ;; 	(save-excursion
-  ;; 	  (re-search-forward "^(comment")
-  ;; 	  (forward-sexp)
-  ;; 	  (cider-eval-last-sexp)))
-
-  :bind (("C-M-x" . send-phel-region-or-buffer-to-process)
-		 ("C-c C-e" . send-phel-region-or-buffer-to-process))
-  ;; :hook (phel-mode . ilt-mode) ; TODO requires starting ilt server process manually
-  )
 
 (use-package lua-mode)
 
