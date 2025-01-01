@@ -487,7 +487,21 @@ active process. -- https://emacs.stackexchange.com/a/37889/42614"
              (seq-map (lambda (el) (buffer-name (process-buffer el)))
                       (process-list)))))
 
-  (process-send-region process-target beg end)
+  ;;(process-send-region process-target beg end)
+
+  ;; Workaround Phel issue with REPL evaluating (:require) inside ns forms
+  ;; 
+  ;; Perform search-replace on the region
+  (let ((modified-region (buffer-substring-no-properties beg end)))
+    (with-temp-buffer
+      (insert modified-region)
+      (goto-char (point-min))
+      (while (search-forward "(:require" nil t)
+        (replace-match "(require"))
+      (setq modified-region (buffer-string)))
+
+    ;; Send the modified region to the process
+    (process-send-string process-target modified-region))
 
   ;; If target buffer is *mistty*, also evaluate sent region
   ;; by calling missty-send-command
