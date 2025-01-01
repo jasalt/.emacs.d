@@ -469,6 +469,15 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
  (with-current-buffer "*mistty*"
    (mistty-send-string "(* 1 1)\n")))
 
+(defun process-phel-source (code)
+  "Process Phel source code by removing ':' before 'require'."
+  (with-temp-buffer
+    (insert code)
+    (goto-char (point-min))
+    (while (search-forward "(:require" nil t)
+      (replace-match "(require"))
+    (buffer-string)))
+
 (defun send-region-to-process (arg beg end)
   "Send the current region to a process buffer.
 The first time it's called, will prompt for the buffer to
@@ -487,27 +496,18 @@ active process. -- https://emacs.stackexchange.com/a/37889/42614"
              (seq-map (lambda (el) (buffer-name (process-buffer el)))
                       (process-list)))))
 
-  ;;(process-send-region process-target beg end)
+  ;; (process-send-region process-target beg end)  ; This was v1
 
   ;; Workaround Phel issue with REPL evaluating (:require) inside ns forms
-  ;; 
-  ;; Perform search-replace on the region
-  (let ((modified-region (buffer-substring-no-properties beg end)))
-    (with-temp-buffer
-      (insert modified-region)
-      (goto-char (point-min))
-      (while (search-forward "(:require" nil t)
-        (replace-match "(require"))
-      (setq modified-region (buffer-string)))
-
-    ;; Send the modified region to the process
+  ;; https://github.com/phel-lang/phel-lang/issues/766
+  (let ((modified-region (process-phel-source (buffer-substring-no-properties beg end))))
     (process-send-string process-target modified-region))
 
   ;; If target buffer is *mistty*, also evaluate sent region
   ;; by calling missty-send-command
   (let ((buf-name (let ((str process-target))
-	  (setq parts (split-string str " " t))
-	  (car (last parts)))))  ; Extract "actual" buffer name
+					(setq parts (split-string str " " t))
+					(car (last parts)))))  ; Extract "actual" buffer name
 
 	(if (string= buf-name "*mistty*")
 		(with-current-buffer buf-name
