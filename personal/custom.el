@@ -470,7 +470,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    (mistty-send-string "(* 1 1)\n")))
 
 ;; TODO
-;; - also process require_once / use-once statements same way
 ;; - also delete everything on each line after # character
 
 (defun process-phel-source (code)
@@ -495,12 +494,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 		(beginning-of-line)
 		(kill-line)))
 
-	;; TODO Convert :require-file to php/require_once
-    ;; (goto-char (point-min))
-    ;; (while (search-forward "(:require-file " nil t)
-    ;;   (replace-match "(php/require_once "))
+	;; Convert :require-file to php/require_once
+    (goto-char (point-min))
+    (while (search-forward "(:require-file " nil t)
+      (replace-match "(php/require_once "))
 
-    ;; Remove ':' before 'require'
+    ;; Convert :require to require
     (goto-char (point-min))
     (while (search-forward "(:require " nil t)
       (replace-match "(require "))
