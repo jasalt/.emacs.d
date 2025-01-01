@@ -470,12 +470,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    (mistty-send-string "(* 1 1)\n")))
 
 
-# TODO Remove every comment-form
-
 (defun process-phel-source (code)
-  "Prepare Phel source code to be evaluated by Phel REPL:
-  - Remove ns-form around require statements
-  - Remove ':' before 'require' forms (normally inside ns-form)"
+  "Prepare Phel source code to be evaluated by Phel REPL
+   Workaround https://github.com/phel-lang/phel-lang/issues/766"
   (with-temp-buffer
     (insert code)
 
@@ -494,7 +491,15 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 		(beginning-of-line)
 		(kill-line)))
 
-	;; Delete everything on each line after # character
+	;; Remove comment forms
+	(goto-char (point-min))
+    (while (re-search-forward "(comment\\s-*\n" nil t)
+	  (let ((start (match-beginning 0)))
+        (goto-char start)
+        (forward-sexp)
+        (delete-region start (point))))
+
+	;; Delete comments (everything on each line after # character)
 	(goto-char (point-min))
     (while (re-search-forward "#.*$" nil t)
       (replace-match ""))
@@ -508,6 +513,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (goto-char (point-min))
     (while (search-forward "(:require " nil t)
       (replace-match "(require "))
+
+	;; TODO Delete all empty lines
 
     (buffer-string)))
 
