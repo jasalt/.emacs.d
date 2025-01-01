@@ -469,6 +469,16 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
  (with-current-buffer "*mistty*"
    (mistty-send-string "(* 1 1)\n")))
 
+(defun print-buffer-to-messages (&optional prefix)
+  "Print the current buffer's contents to the *Messages* buffer.
+If PREFIX is provided, it is inserted at the specified location in the message."
+  (interactive)
+  (let* ((buffer-contents (buffer-substring-no-properties (point-min) (point-max)))
+         (message-template "### Buffer contents ({prefix}):\n%s")
+         (message-text (if prefix
+                           (replace-regexp-in-string "{prefix}" prefix message-template)
+                         (replace-regexp-in-string " ({prefix})" "" message-template))))
+    (message message-text buffer-contents)))
 
 (defun process-phel-source (code)
   "Prepare Phel source code to be evaluated by Phel REPL
