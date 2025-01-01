@@ -476,8 +476,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (with-temp-buffer
     (insert code)
 
+	(print-buffer-to-messages "at input")
     ;; Remove (ns ...) form around require-statements
+	;; Workaround for https://github.com/phel-lang/phel-lang/issues/766
 	(goto-char (point-min))
+
     (when (re-search-forward "^(ns\\s-+" nil t)
 	  (let ((start (match-beginning 0)))
 		;; Erase ending parenthesis
@@ -490,6 +493,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 		(goto-char start)
 		(beginning-of-line)
 		(kill-line)))
+
+	(print-buffer-to-messages "after ns removal")
 
 	;; Remove comment forms
 	(goto-char (point-min))
@@ -514,18 +519,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     (while (search-forward "(:require " nil t)
       (replace-match "(require "))
 
+	(print-buffer-to-messages "before removing whitespace")
+
 	;; Delete all empty lines
 	(goto-char (point-min))
     (flush-lines "^\\s-*$")
 
     (buffer-string)))
 
-(defun send-region-to-process (arg beg end)
-  "Send the current region to a process buffer.
-The first time it's called, will prompt for the buffer to
-send to. Subsequent calls send to the same buffer, unless a
-prefix argument is used (C-u), or the buffer no longer has an
-active process. -- https://emacs.stackexchange.com/a/37889/42614"
+;; TODO C-M-x eval-defun style send-phel-defn-to-process
+
+(defun send-phel-region-or-buffer-to-process (arg &optional beg end)
+  "Send the current buffer or region to a process buffer. The first time it's
+  called, will prompt for the buffer to send to. Subsequent calls send to the
+  same buffer, unless a prefix argument is used (C-u), or the buffer no longer
+  has an active process. -- https://emacs.stackexchange.com/a/37889/42614"
   (interactive "P\nr")
   (if (or arg ;; user asks for selection
           (not (boundp 'process-target)) ;; target not set
@@ -540,44 +548,13 @@ active process. -- https://emacs.stackexchange.com/a/37889/42614"
 
   ;; (process-send-region process-target beg end)  ; This was v1
 
-  ;; Workaround Phel issue with REPL evaluating (:require) inside ns forms
-  ;; https://github.com/phel-lang/phel-lang/issues/766
-  (let ((modified-region (process-phel-source (buffer-substring-no-properties beg end))))
-    (process-send-string process-target modified-region))
-
-  ;; If target buffer is *mistty*, also evaluate sent region
-  ;; by calling missty-send-command
-  (let ((buf-name (let ((str process-target))
-					(setq parts (split-string str " " t))
-					(car (last parts)))))  ; Extract "actual" buffer name
-
-	(if (string= buf-name "*mistty*")
-		(with-current-buffer buf-name
-		  (call-interactively 'mistty-send-command)))))
-
-(defun send-buffer-to-process (arg &optional beg end)
-  "Send the current buffer to a process buffer.
-The first time it's called, will prompt for the buffer to
-send to. Subsequent calls send to the same buffer, unless a
-prefix argument is used (C-u), or the buffer no longer has an
-active process. -- https://emacs.stackexchange.com/a/37889/42614"
-  (interactive "P\nr")
-  (if (or arg ;; user asks for selection
-          (not (boundp 'process-target)) ;; target not set
-          ;; or target is not set to an active process:
-          (not (process-live-p (get-buffer-process
-                                process-target))))
-      (setq process-target
-            (completing-read
-             "Process: "
-             (seq-map (lambda (el) (buffer-name (process-buffer el)))
-                      (process-list)))))
-
-  ;; (process-send-region process-target beg end)  ; This was v1
-
-  ;; Workaround Phel issue with REPL evaluating (:require) inside ns forms
-  ;; https://github.com/phel-lang/phel-lang/issues/766
-  (let ((modified-region (process-phel-source (buffer-substring-no-properties (point-min) (point-max)))))
+  ;; Process Phel source-code to be REPL friendly before sending it to process
+  ;; TODO modify 'let' to set 'beg' and 'end' to be (point-min) (point-max) if they are not set
+  (let ((modified-region
+		 (process-phel-source
+		  (if (use-region-p)
+			  (buffer-substring-no-properties beg end)
+			(buffer-substring-no-properties (point-min) (point-max))))))
     (process-send-string process-target modified-region))
 
   ;; If target buffer is *mistty*, also evaluate sent region

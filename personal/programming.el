@@ -320,7 +320,8 @@
   ;; 	  (forward-sexp)
   ;; 	  (cider-eval-last-sexp)))
 
-  :bind ("C-M-x" . send-region-to-process)
+  :bind (("C-M-x" . send-phel-region-or-buffer-to-process)
+		 ("C-c C-e" . send-phel-region-or-buffer-to-process))
   ;; :hook (phel-mode . ilt-mode) ; TODO requires starting ilt server process manually
   )
 
