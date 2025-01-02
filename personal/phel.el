@@ -214,28 +214,37 @@
 
 ;; TODO if symbol has namespace / only select fn name without ns
 
+Here's the refactored version of the provided function:
+
 (defun phel-xref-find-definitions (&optional arg)
-  "Search defn or defn- form with symbol at point from current file and navigate to it
-   as with elisp xref-find-definitions, so that xref-go-back allows navigating
-   back.
-   When given universal argument, instead run rgrep for the '(defn symbol-name'
-   or '(defn- symbol-name' from parent directory containing docker-compose.yml
-   indicating it as the project root dir."
+  "Search defn or defn- form with symbol at point and navigate to it.
+When given universal argument, run rgrep for the definition instead.
+Uses xref for navigation and docker-compose.yml to determine project root."
   (interactive "P")
   (let* ((symbol (thing-at-point 'symbol t))
-         (project-root (locate-dominating-file default-directory "docker-compose.yml")))
+         (project-root (locate-dominating-file default-directory "docker-compose.yml"))
+         (defn-regex (concat "(defn\\(-\\)?\\s-+" (regexp-quote symbol))))
     (if arg
-        (when project-root
-          (let ((default-directory project-root))
-            (rgrep (concat "(defn\\(-\\)?\\s-+" symbol) "*.phel" ".")))
-      (let ((definition-point
-             (save-excursion
-               (goto-char (point-min))
-               (when (re-search-forward (concat "(defn\\(-\\)?\\s-+" (regexp-quote symbol)) nil t)
-                 (match-beginning 0)))))
-        (if definition-point
-            (progn
-              (xref-push-marker-stack)
-              (goto-char definition-point)
-              (recenter))
-          (message "Definition not found in current file."))))))
+        (phel-xref-find-definitions-with-rgrep symbol project-root)
+      (phel-xref-find-definitions-in-current-file symbol defn-regex))))
+
+(defun phel-xref-find-definitions-with-rgrep (symbol project-root)
+  "Run rgrep to find definition of SYMBOL in PROJECT-ROOT."
+  (if project-root
+      (let ((default-directory project-root))
+        (rgrep (concat "(defn\\(-\\)?\\s-+" symbol) "*.phel" "."))
+    (message "Project root not found. Cannot perform rgrep search.")))
+
+(defun phel-xref-find-definitions-in-current-file (symbol defn-regex)
+  "Find definition of SYMBOL in current file using DEFN-REGEX."
+  (let ((definition-point
+         (save-excursion
+           (goto-char (point-min))
+           (when (re-search-forward defn-regex nil t)
+             (match-beginning 0)))))
+    (if definition-point
+        (progn
+          (xref-push-marker-stack)
+          (goto-char definition-point)
+          (recenter))
+      (message "Definition not found in current file."))))
