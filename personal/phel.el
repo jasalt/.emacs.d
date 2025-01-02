@@ -105,6 +105,8 @@
 	(goto-char (point-min))
     (flush-lines "^\\s-*$")
 
+	(print-buffer-to-messages "after processing")
+
     (buffer-string)))
 
 (defun phel-get-or-set-process-target (arg)
@@ -144,7 +146,8 @@
         (call-interactively 'mistty-send-command)))))
 
 (defun phel-send-sexp-to-process ()
-  "Send the current Phel sexp to the process buffer."
+  "Send the Phel sexp at point to the process buffer.
+  TODO does not work properly with sexp inside comment block"
   (interactive)
   (save-excursion
     (end-of-defun)
@@ -153,14 +156,24 @@
       (let ((start (point)))
         (phel-send-text-to-process (buffer-substring-no-properties start end))))))
 
+
 (defun phel-send-first-comment-sexp-to-process ()
   "Evaluates first s-exp inside comment form e.g. for evaluating defn being
    written with pre-set args. Idea from ed at Clojurians Slack."
+
+;; TODO this works with:
+;; (comment
+;;   (+ 1 1 1))
+
+;; but fails with:
+;; (comment (+ 1 1 1)
+
+
   (interactive)
   (save-excursion
 	(re-search-forward "^(comment")
 	(forward-sexp)
-	(phel-send-defn-to-process)))
+	(phel-send-sexp-to-process)))
 
 
 (defun phel-read-project-setting (setting-key)
