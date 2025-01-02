@@ -1,5 +1,18 @@
 ;; Phel programming config
 
+;; Includes REPL interaction commands with bindings similar to Emacs Lisp
+;; a "basic" xref-find-definitions searching from file or project path using
+;; ripgrep, plus some utilies with similar bindings to Clojure Cider.
+
+;; Test runner 'phel-run-tests' and REPL startup command 'phel-repl' depend on
+;; project root (or upper level directory) having 'docker-compose.yml' with
+;; custom directives as following (avoiding to add separate file for now):
+
+;; x-phel-project-data:
+;;   test-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/woodoo-pos-sync wordpress vendor/bin/phel test --testdox
+;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/woodoo-pos-sync wordpress vendor/bin/phel repl
+
+
 (use-package phel-mode  ; derived from clojure-mode
   :mode "\\.phel\\'"
   ;; workaround for lsp-warning coming from lsp hooked to clojure-mode
@@ -17,6 +30,10 @@
          ("M-." . phel-xref-find-definitions)
          ("C-c M-j" . phel-repl)))
 
+;; Mistty is used for terminal hosting the REPL session which sometimes breaks
+;; a bit and needs to be restarted but mostly works. It is "reserved" for Phel
+;; usage for now so there may be some quirks when using it for different tasks.
+;; https://github.com/szermatt/mistty
 (use-package mistty
   :bind (("C-c C-s" . mistty)))
 
@@ -32,8 +49,8 @@
     (message message-text buffer-contents)))
 
 (defun phel-process-source (code)
-  "Prepare Phel source code to be evaluated by Phel REPL
-   Workaround https://github.com/phel-lang/phel-lang/issues/766"
+  "Prepare Phel source code to be evaluated in Phel REPL. Fixes some quirks and
+  cleans comments."
   (with-temp-buffer
     (insert code)
 	;;(print-buffer-to-messages "at input")
@@ -41,7 +58,6 @@
     ;; Remove (ns ...) form around require-statements
 	;; Workaround for https://github.com/phel-lang/phel-lang/issues/766
 	(goto-char (point-min))
-
     (when (re-search-forward "^(ns\\s-+" nil t)
 	  (let ((start (match-beginning 0)))
 		;; Erase ending parenthesis
@@ -70,12 +86,12 @@
     (while (re-search-forward "#.*$" nil t)
       (replace-match ""))
 
-	;; Convert :require-file to php/require_once
+	;; Convert :require-file to php/require_once (related to issue 766)
     (goto-char (point-min))
     (while (search-forward "(:require-file " nil t)
       (replace-match "(php/require_once "))
 
-    ;; Convert :require to require
+    ;; Convert :require to require (related to issue 766)
     (goto-char (point-min))
     (while (search-forward "(:require " nil t)
       (replace-match "(require "))
@@ -148,7 +164,7 @@
   "Read a project setting from docker-compose.yml.
    Traverses up the filesystem from the current buffer's file path
    to find the first docker-compose.yml containing the given setting-key
-   x-custom-data directive."
+   x-phel-project-data directive."
   (let ((file-path (buffer-file-name))
         (root-dir "/")
         (setting-value nil))
@@ -159,7 +175,7 @@
                              (with-temp-buffer
                                (insert-file-contents docker-compose-path)
                                (buffer-string))))
-                 (custom-data (gethash 'x-custom-data yaml-data)))
+                 (custom-data (gethash 'x-phel-project-data yaml-data)))
             (when custom-data
               (setq setting-value (gethash setting-key custom-data))
               (when setting-value
@@ -201,14 +217,13 @@
       (phel-send-text-to-process (phel-read-repl-command)))))
 
 
-;; - obtain relative path to current buffer file from project root path (containing docker-compose.yml)
-;; Could run quiet and show test result only if there's error
+;; TODO Could run quiet and show test result only if there's error
 
 (defun phel-run-tests (&optional run-all)
   "Run tests for file or project, printing results in messages buffer.
   Expects default Phel project structure and config in docker-compose.yml.
   By default runs tests for current file. If passed universal argument, runs all
-  tests for project. Opens results in new window."
+  tests for project. Opens results in new window for now."
   (interactive "P")
   (let* ((command (phel-read-test-command))
          (file (when (not run-all) (buffer-file-name)))
@@ -229,8 +244,7 @@
         (erase-buffer)
         (insert output)
         (make-frame '((buffer-predicate . (lambda (buf) (eq buf (current-buffer)))))))
-      (message "Tests completed. Results in *Phel Test Results* buffer.")))
-  )
+      (message "Tests completed. Results in *Phel Test Results* buffer."))))
 
 ;; Simplified go to definition
 
