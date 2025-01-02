@@ -231,8 +231,11 @@ Uses xref for navigation and docker-compose.yml to determine project root."
 (defun phel-xref-find-definitions-with-rgrep (symbol project-root)
   "Run rgrep to find definition of SYMBOL in PROJECT-ROOT."
   (if project-root
-      (let ((default-directory project-root))
-        (rgrep (concat "(defn\\(-\\)?\\s-+" symbol) "*.phel" "."))
+      (let* ((default-directory project-root)
+             (function-name (if (string-match-p "/" symbol)
+                                (car (last (split-string symbol "/")))
+                              symbol)))
+        (rgrep (concat "(defn\\(-\\)?\\s-+" (regexp-quote function-name)) "*.phel" "."))
     (message "Project root not found. Cannot perform rgrep search.")))
 
 (defun phel-xref-find-definitions-in-current-file (symbol defn-regex)
