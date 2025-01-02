@@ -127,8 +127,8 @@
   (interactive "P\nr")
   (phel-get-or-set-process-target arg)
 
-  (let ((text (if (and beg end)
-                  (buffer-substring-no-properties beg end)
+  (let ((text (if (use-region-p)
+				  (buffer-substring-no-properties beg end)
                 (buffer-substring-no-properties (point-min) (point-max)))))
     (phel-send-text-to-process text)))
 
