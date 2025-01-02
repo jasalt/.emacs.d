@@ -184,17 +184,19 @@
 
 
 (defun phel-repl ()
-  "Starts Phel REPL process in mistty in current window."
+  "Starts or opens existing Phel REPL process mistty buffer in current window.
+  Expects buffer name to be *mistty*"
   (interactive)
   (if (and (boundp 'mistty-buffer-name)
-           (stringp mistty-buffer-name)
-           (get-buffer mistty-buffer-name))
-      (message "phel-repl: reusing existing mistty buffer")
+           (get-buffer "*mistty*"))
+      (progn
+		;; (message "phel-repl: reusing existing *mistty* buffer")
+		(switch-to-buffer "*mistty*"))
     (progn
       (mistty)
       (setq process-target (buffer-name (current-buffer)))
-      (setq mistty-repl-command (phel-read-repl-command))
-      (message mistty-repl-command)
+      ;; (setq mistty-repl-command (phel-read-repl-command))
+      ;; (message mistty-repl-command)
       (phel-send-text-to-process (phel-read-repl-command)))))
 
 
