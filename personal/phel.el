@@ -132,7 +132,7 @@
     (let ((end (point)))
       (beginning-of-defun)
       (let ((start (point)))
-        (send-phel-region-or-buffer-to-process nil start end)))))
+        (phel-send-region-or-buffer-to-process nil start end)))))
 
 (defun phel-send-first-comment-sexp-to-process ()
   "Evaluates first s-exp inside comment form e.g. for evaluating defn being written
@@ -141,7 +141,7 @@
   (save-excursion
 	(re-search-forward "^(comment")
 	(forward-sexp)
-	(send-phel-defn-to-process)))
+	(phel-send-defn-to-process)))
 
 
 (defun phel-read-project-setting (setting-key)
