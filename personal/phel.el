@@ -211,17 +211,20 @@
       (message "Tests completed. Results in *Phel Test Results* buffer.")))
   )
 
-
 ;; Simplified go to definition
 
+(defvar phel-definition-regex
+  "(\\(defn\\(-\\)?\\|def\\|defmacro\\)\\s-?%s\\b"
+  "Regex template for finding Phel definitions. %s is replaced with the symbol name.")
+
 (defun phel-xref-find-definitions (&optional arg)
-  "Search defn or defn- form with symbol at point and navigate to it.
+  "Search for definition of symbol at point and navigate to it.
 When given universal argument, run rgrep for the definition instead.
 Uses xref for navigation and docker-compose.yml to determine project root."
   (interactive "P")
   (let* ((symbol (thing-at-point 'symbol t))
          (project-root (locate-dominating-file default-directory "docker-compose.yml"))
-         (defn-regex (concat "(defn\\(-\\)?\\s-+" (regexp-quote symbol))))
+         (defn-regex (format phel-definition-regex (regexp-quote symbol))))
     (if arg
         (phel-xref-find-definitions-with-consult-ripgrep symbol project-root)
       (phel-xref-find-definitions-in-current-file symbol defn-regex))))
@@ -233,7 +236,7 @@ Uses xref for navigation and docker-compose.yml to determine project root."
              (function-name (if (string-match-p "/" symbol)
                                 (car (last (split-string symbol "/")))
                               symbol))
-             (search-pattern (concat "(defn\\(-\\)?\\s " (regexp-quote function-name)))
+             (search-pattern (format phel-definition-regex (regexp-quote function-name)))
              (consult-ripgrep-args (concat consult-ripgrep-args " --no-ignore-vcs")))
         (xref-push-marker-stack)
         (consult-ripgrep default-directory search-pattern))
