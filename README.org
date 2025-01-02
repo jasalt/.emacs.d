@@ -1,6 +1,6 @@
 * Introduction
 
-Emacs 29+ config mainly focused in programming PHP, Clojure and Python, writing with org-mode and compatibility with GNU/Linux and MacOS.
+Emacs 29+ config mainly focused in programming PHP, Phel, Clojure and Python, writing with org-mode and compatibility with GNU/Linux and MacOS.
 
 #+html: <p align="center"><img src="screenshots/fork.png" /></p>
 
