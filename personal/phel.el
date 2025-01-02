@@ -10,6 +10,9 @@
 		 ("C-c C-e" . phel-send-region-or-buffer-to-process)
 		 ("C-c C-c" . phel-send-first-comment-sexp-to-process)
 		 ("C-c C-t" . phel-run-tests)
+		 ("C-c C-d C-p" . phel-phpdoc)
+		 ("C-c C-d C-w" . phel-wpdoc)
+		 ("C-c C-d C-d" . phel-doc)
 		 ("M-." . phel-xref-find-definitions)
 		 ))
 
@@ -229,13 +232,17 @@ Uses xref for navigation and docker-compose.yml to determine project root."
         (phel-xref-find-definitions-with-consult-ripgrep symbol project-root)
       (phel-xref-find-definitions-in-current-file symbol defn-regex))))
 
+(defun phel-extract-symbol-name (symbol)
+  "Extract SYMBOL name without namespace."
+  (if (string-match-p "/" symbol)
+      (car (last (split-string symbol "/")))
+    symbol))
+
 (defun phel-xref-find-definitions-with-consult-ripgrep (symbol project-root)
   "Run consult-ripgrep to find definition of SYMBOL in PROJECT-ROOT."
   (if project-root
       (let* ((default-directory project-root)
-             (function-name (if (string-match-p "/" symbol)
-                                (car (last (split-string symbol "/")))
-                              symbol))
+             (function-name (phel-extract-symbol-name symbol))
              (search-pattern (format phel-definition-regex (regexp-quote function-name)))
              (consult-ripgrep-args (concat consult-ripgrep-args " --no-ignore-vcs")))
         (xref-push-marker-stack)
@@ -255,3 +262,27 @@ Uses xref for navigation and docker-compose.yml to determine project root."
           (goto-char definition-point)
           (recenter))
       (message "Definition not found in current file."))))
+
+;; Documentation
+
+(defun phel-open-doc-url (url-format)
+  "Open documentation URL for the symbol at point."
+  (let* ((symbol (thing-at-point 'symbol t))
+         (function-name (phel-extract-symbol-name symbol))
+         (url (format url-format function-name)))
+    (browse-url url)))
+
+(defun phel-doc ()
+  "Navigate to PHP documentation for the symbol at point."
+  (interactive)
+  (phel-open-doc-url "https://phel-lang.org/documentation/api/#%s"))
+
+(defun phel-phpdoc ()
+  "Navigate to PHP documentation for the symbol at point."
+  (interactive)
+  (phel-open-doc-url "https://www.php.net/manual/en/function.%s.php"))
+
+(defun phel-wpdoc ()
+  "Navigate to WordPress documentation for the symbol at point."
+  (interactive)
+  (phel-open-doc-url "https://developer.wordpress.org/reference/functions/%s/"))
