@@ -1,41 +1,63 @@
-;; Phel programming config
+;; "Phel Cider Light" Phel programming config
 
-;; Includes REPL interaction commands with bindings similar to Emacs Lisp
-;; a "basic" xref-find-definitions searching from file or project path using
-;; ripgrep, plus some utilies with similar bindings to Clojure Cider.
+;; Written during two days during winter cold largely with Claude Sonnet 3.5 LLM
+;; and gptel.el. While surprisingly good experience for a quick proof of concept,
+;; may come with hidden defects that need to be smoothed out by hand during use.
 
-;; Test runner 'phel-run-tests' and REPL startup command 'phel-repl' depend on
-;; project root (or upper level directory) having 'docker-compose.yml' with
-;; custom directives as following (avoiding to add separate file for now):
+;; Attempts to emulate some useful Clojure and Elisp editing functionalities
+;; for a more frugal yet still very usable Lisp environment hosted on PHP.
+
+;; Differs in not being based on Nrepl but on basic stdio communication (comint)
+;; because Nrepl does not exist yet for Phel.
+
+;; Mistty is used for terminal hosting the REPL session which sometimes breaks
+;; a bit and needs to be restarted but mostly works. It is "reserved" for Phel
+;; usage for now so there may be some quirks when using it for different tasks.
+
+(use-package mistty) ;; https://github.com/szermatt/mistty
+
+;; Includes familiar 'clojure-mode' based major-mode and keybindings:
+
+(use-package phel-mode
+  :mode "\\.phel\\'"
+  :bind
+  (:map phel-mode-map
+		;; 'xref-find-definitions' style in-buffer or project source navigation
+		;; using regex search in-buffer and ripgrep for project and vendor libs
+		("M-." . phel-xref-find-definitions)
+
+		;; REPL startup command
+		("C-c M-j" . phel-repl)
+
+		;; REPL evaluation commands similar to Emacs Lisp
+        ("C-M-x"   . phel-send-sexp-to-process)
+        ("C-x C-e" . phel-send-sexp-to-process)
+        ("C-c C-e" . phel-send-region-or-buffer-to-process)
+
+		;; Custom binding for triggering functions while developing them in REPL
+        ("C-c C-c" . phel-send-first-comment-sexp-to-process)
+
+		;; Unit test runner with flexible development container setup
+        ("C-c C-t" . phel-run-tests)
+
+		;; Online documentation shortcuts
+        ("C-c C-d C-p" . phel-phpdoc)
+        ("C-c C-d C-w" . phel-wpdoc)
+        ("C-c C-d C-d" . phel-doc))
+
+  ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
+  :config (setq lsp-warn-no-matched-clients nil))
+
+
+;; Test runner 'phel-run-tests', REPL startup command 'phel-repl' and project
+;; root selection for search depend on 'docker-compose.yml' at project dir or
+;; it's parent dir, including custom directives as following (avoiding to add
+;; separate config file for them for now):
 
 ;; x-phel-project-data:
 ;;   test-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel test --testdox
 ;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel repl
 
-
-(use-package phel-mode  ; derived from clojure-mode
-  :mode "\\.phel\\'"
-  ;; workaround for lsp-warning coming from lsp hooked to clojure-mode
-  :config (setq lsp-warn-no-matched-clients nil)
-
-  :bind (:map phel-mode-map
-         ("C-M-x" . phel-send-sexp-to-process)
-         ("C-x C-e" . phel-send-sexp-to-process)
-         ("C-c C-e" . phel-send-region-or-buffer-to-process)
-         ("C-c C-c" . phel-send-first-comment-sexp-to-process)
-         ("C-c C-t" . phel-run-tests)
-         ("C-c C-d C-p" . phel-phpdoc)
-         ("C-c C-d C-w" . phel-wpdoc)
-         ("C-c C-d C-d" . phel-doc)
-         ("M-." . phel-xref-find-definitions)
-         ("C-c M-j" . phel-repl)))
-
-;; Mistty is used for terminal hosting the REPL session which sometimes breaks
-;; a bit and needs to be restarted but mostly works. It is "reserved" for Phel
-;; usage for now so there may be some quirks when using it for different tasks.
-;; https://github.com/szermatt/mistty
-(use-package mistty
-  :bind (("C-c C-s" . mistty)))
 
 (defun print-buffer-to-messages (&optional prefix)
   "Print the current buffer's contents to the *Messages* buffer for debugging.
@@ -112,7 +134,8 @@
     (buffer-string)))
 
 (defun phel-get-or-set-process-target (arg)
-  "Get the current process target or set a new one if needed."
+  "Get the current process target or set a new one if needed. Little bit
+  messy as of now."
   (if (or arg
           (not (boundp 'process-target))
           (not (process-live-p (get-buffer-process process-target))))
@@ -127,7 +150,9 @@
   "Send the current buffer or region to a process buffer. The first time it's
   called, will prompt for the buffer to send to. Subsequent calls send to the
   same buffer, unless a prefix argument is used (C-u), or the buffer no longer
-  has an active process."
+  has an active process. Some sources of inspiration:
+  - https://emacs.stackexchange.com/a/37889/42614
+  - https://stackoverflow.com/a/7053298"
   (interactive "P\nr")
   (phel-get-or-set-process-target arg)
 
@@ -137,7 +162,8 @@
     (phel-send-text-to-process (phel-process-source text))))
 
 (defun phel-send-text-to-process (text)
-  "Send the given text to the process buffer."
+  "Send the given text to the process buffer. Source source being sent to REPL
+  should be processed beforehand to avoid some quirks."
   (phel-get-or-set-process-target nil)
   (process-send-string process-target text)
 
@@ -147,8 +173,7 @@
         (call-interactively 'mistty-send-command)))))
 
 (defun phel-send-sexp-to-process ()
-  "Send the Phel sexp at point to the process buffer.
-  TODO does not work properly with sexp inside comment block"
+  "Send the Phel sexp at point to the process buffer."
   (interactive)
   (save-excursion
     (end-of-defun)
