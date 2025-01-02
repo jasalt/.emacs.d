@@ -5,16 +5,16 @@
   ;; workaround for lsp-warning coming from lsp hooked to clojure-mode
   :config (setq lsp-warn-no-matched-clients nil)
 
-  :bind (("C-M-x" . phel-send-sexp-to-process)
-		 ("C-x C-e" . phel-send-sexp-to-process)
-		 ("C-c C-e" . phel-send-region-or-buffer-to-process)
-		 ("C-c C-c" . phel-send-first-comment-sexp-to-process)
-		 ("C-c C-t" . phel-run-tests)
-		 ("C-c C-d C-p" . phel-phpdoc)
-		 ("C-c C-d C-w" . phel-wpdoc)
-		 ("C-c C-d C-d" . phel-doc)
-		 ("M-." . phel-xref-find-definitions)
-		 ))
+  :bind (:map phel-mode-map
+         ("C-M-x" . phel-send-sexp-to-process)
+         ("C-x C-e" . phel-send-sexp-to-process)
+         ("C-c C-e" . phel-send-region-or-buffer-to-process)
+         ("C-c C-c" . phel-send-first-comment-sexp-to-process)
+         ("C-c C-t" . phel-run-tests)
+         ("C-c C-d C-p" . phel-phpdoc)
+         ("C-c C-d C-w" . phel-wpdoc)
+         ("C-c C-d C-d" . phel-doc)
+         ("M-." . phel-xref-find-definitions)))
 
 (use-package mistty
   :bind (("C-c C-s" . mistty)))
