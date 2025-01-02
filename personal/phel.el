@@ -178,13 +178,38 @@
 	command))
 
 
-(comment
- (defun phel-run-test ()
-   "Run test for file or project
-   TODO"
-   (+ 1 1)
-   )
+;; TODO Improve defun phel-run-test
+;; - obtain test runner one-liner from phel-read-test-command
+;; - evaluate it echoing output to messages buffer
 
+
+
+;; - obtain relative path to current buffer file from project root path (containing docker-compose.yml)
+;; Could run quiet and show test result only if there's error
+
+(defun phel-run-test (&optional run-all)
+  "Run test for file or project, printing results in messages buffer.
+   By default runs test for current file. If passed universal argument, runs all
+   tests for project."
+  (interactive "P")
+  (let* ((command (phel-read-test-command))
+         (file (when (not run-all) (buffer-file-name)))
+         (docker-compose-dir (file-name-directory
+							  (locate-dominating-file (buffer-file-name) "docker-compose.yml")))
+         (relative-file (when file (file-relative-name file docker-compose-dir)))
+         (full-command (if relative-file
+                           (concat command " " relative-file)
+                         command)))
+    (message "Running tests...")
+    (let ((output (shell-command-to-string full-command)))
+      (with-current-buffer (get-buffer-create "*Phel Test Results*")
+        (erase-buffer)
+        (insert output)
+        (make-frame '((buffer-predicate . (lambda (buf) (eq buf (current-buffer)))))))
+      (message "Tests completed. Results in *Phel Test Results* buffer.")))
+  )
+
+(comment
  (defun phel-find-definition ()
    "Find defn for symbol at point from project path
    TODO"
