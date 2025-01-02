@@ -132,13 +132,12 @@
   (let ((text (if (use-region-p)
 				  (buffer-substring-no-properties beg end)
                 (buffer-substring-no-properties (point-min) (point-max)))))
-    (phel-send-text-to-process text)))
+    (phel-send-text-to-process (phel-process-source text))))
 
 (defun phel-send-text-to-process (text)
   "Send the given text to the process buffer."
   (phel-get-or-set-process-target nil)
-  (let ((modified-text (phel-process-source text)))
-    (process-send-string process-target modified-text))
+  (process-send-string process-target text)
 
   (let ((buf-name (car (last (split-string process-target " " t)))))
     (when (string= buf-name "*mistty*")
