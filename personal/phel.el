@@ -151,7 +151,7 @@
     (let ((end (point)))
       (beginning-of-defun)
       (let ((start (point)))
-        (phel-send-region-or-buffer-to-process nil start end)))))
+        (phel-send-text-to-process (buffer-substring-no-properties start end))))))
 
 (defun phel-send-first-comment-sexp-to-process ()
   "Evaluates first s-exp inside comment form e.g. for evaluating defn being
