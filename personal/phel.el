@@ -59,24 +59,36 @@
 ;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel repl
 
 
-(defun print-buffer-to-messages (&optional prefix)
-  "Print the current buffer's contents to the *Messages* buffer for debugging.
-  If PREFIX is provided, it is inserted at the specified location in the
-  message."
-  (interactive)
-  (let* ((buffer-contents (buffer-substring-no-properties
-						   (point-min) (point-max)))
-         (message-template "### Buffer contents ({prefix}):\n%s")
-         (message-text
-		  (if prefix
-              (replace-regexp-in-string "{prefix}" prefix message-template)
-            (replace-regexp-in-string " ({prefix})" "" message-template))))
-    (message message-text buffer-contents)))
+;; Interactive REPL evaluation setup inspired from:
+;; - https://emacs.stackexchange.com/a/37889/42614
+;; - https://stackoverflow.com/a/7053298
 
+(defun phel-get-or-set-process-target (arg)
+  "Get the current process target or set a new one if needed."
+  (if (or arg
+          (not (boundp 'process-target))
+          (not (process-live-p (get-buffer-process process-target))))
+      (setq process-target
+            (completing-read
+             "Process: "
+             (seq-map (lambda (el) (buffer-name (process-buffer el)))
+                      (process-list))))
+    process-target))
+
+(defun phel-send-text-to-process (text)
+  "Send the given text to the process buffer. Phel code being sent to REPL
+  should be processed beforehand to avoid some quirks."
+  (phel-get-or-set-process-target nil)
+  (process-send-string process-target text)
+
+  (let ((buf-name (car (last (split-string process-target " " t)))))
+    (when (string= buf-name "*mistty*")
+      (with-current-buffer buf-name
+        (call-interactively 'mistty-send-command)))))
 
 (defun phel-process-source (code)
   "Prepare Phel source code to be evaluated in Phel REPL. Fixes some quirks and
-  cleans comments."
+  cleans up comments."
   (with-temp-buffer
     (insert code)
 	;;(print-buffer-to-messages "at input")
@@ -133,26 +145,11 @@
 
     (buffer-string)))
 
-(defun phel-get-or-set-process-target (arg)
-  "Get the current process target or set a new one if needed. Little bit
-  messy as of now."
-  (if (or arg
-          (not (boundp 'process-target))
-          (not (process-live-p (get-buffer-process process-target))))
-      (setq process-target
-            (completing-read
-             "Process: "
-             (seq-map (lambda (el) (buffer-name (process-buffer el)))
-                      (process-list))))
-    process-target))
-
 (defun phel-send-region-or-buffer-to-process (arg &optional beg end)
   "Send the current buffer or region to a process buffer. The first time it's
   called, will prompt for the buffer to send to. Subsequent calls send to the
   same buffer, unless a prefix argument is used (C-u), or the buffer no longer
-  has an active process. Some sources of inspiration:
-  - https://emacs.stackexchange.com/a/37889/42614
-  - https://stackoverflow.com/a/7053298"
+  has an active process."
   (interactive "P\nr")
   (phel-get-or-set-process-target arg)
 
@@ -160,17 +157,6 @@
 				  (buffer-substring-no-properties beg end)
                 (buffer-substring-no-properties (point-min) (point-max)))))
     (phel-send-text-to-process (phel-process-source text))))
-
-(defun phel-send-text-to-process (text)
-  "Send the given text to the process buffer. Source source being sent to REPL
-  should be processed beforehand to avoid some quirks."
-  (phel-get-or-set-process-target nil)
-  (process-send-string process-target text)
-
-  (let ((buf-name (car (last (split-string process-target " " t)))))
-    (when (string= buf-name "*mistty*")
-      (with-current-buffer buf-name
-        (call-interactively 'mistty-send-command)))))
 
 (defun phel-send-sexp-to-process ()
   "Send the Phel sexp at point to the process buffer."
@@ -193,6 +179,7 @@
 	(forward-sexp)
 	(phel-send-sexp-to-process)))
 
+;; Test runner and REPL startup command setup
 
 (defun phel-read-project-setting (setting-key)
   "Read a project setting from docker-compose.yml.
@@ -222,7 +209,7 @@
     setting-value))
 
 (defun phel-read-project-command (setting-key)
-  "Read a project command for the given SETTING-KEY."
+  "Read a project command for the given 'setting-key'"
   (let ((command-data (phel-read-project-setting setting-key)))
     (when command-data
       (let ((project-path (car command-data))
@@ -230,17 +217,18 @@
         (concat "cd " project-path " && " command)))))
 
 (defun phel-read-repl-command ()
-  "Obtain the REPL command for the current project."
+  "Obtain the REPL command for the current project.
+  TODO repetition"
   (phel-read-project-command 'repl-command))
 
 (defun phel-read-test-command ()
-  "Obtain the test runner command for the current project."
+  "Obtain the test runner command for the current project.
+  TODO repetition"
   (phel-read-project-command 'test-command))
-
 
 (defun phel-repl ()
   "Starts or opens existing Phel REPL process mistty buffer in current window.
-  Expects buffer name to be *mistty*"
+  Expects buffer name to be '*mistty*'"
   (interactive)
   (if (and (boundp 'mistty-buffer-name)
            (get-buffer "*mistty*"))
@@ -254,14 +242,11 @@
       ;; (message mistty-repl-command)
       (phel-send-text-to-process (phel-read-repl-command)))))
 
-
-;; TODO Could run quiet and show test result only if there's error
-
 (defun phel-run-tests (&optional run-all)
   "Run tests for file or project, printing results in messages buffer.
-  Expects default Phel project structure and config in docker-compose.yml.
+  Expects default Phel project structure and config in 'docker-compose.yml'.
   By default runs tests for current file. If passed universal argument, runs all
-  tests for project. Opens results in new window for now."
+  tests for project. Opens results in new window for now, room for improvement."
   (interactive "P")
   (let* ((command (phel-read-test-command))
          (file (when (not run-all) (buffer-file-name)))
@@ -286,16 +271,17 @@
 		 '((buffer-predicate . (lambda (buf) (eq buf (current-buffer)))))))
       (message "Tests completed. Results in *Phel Test Results* buffer."))))
 
-;; Simplified go to definition
+;; Simplified go-to definition
 
 (defvar phel-definition-regex
   "(\\(defn\\(-\\)?\\|def\\|defmacro\\)\\s-?%s\\b"
-  "Regex template for Phel definitions. %s is replaced with the symbol name.")
+  "Format string regex template for some Phel functions/macros creating top
+  level bindings. '%s' is replaced with the symbol name.")
 
 (defun phel-xref-find-definitions (&optional arg)
   "Search for definition of symbol at point and navigate to it.
-When given universal argument, run rgrep for the definition instead.
-Uses xref for navigation and docker-compose.yml to determine project root."
+  When given universal argument, run 'ripgrep' for the definition instead.
+  Uses xref for navigation and 'docker-compose.yml' to determine project root."
   (interactive "P")
   (let* ((symbol (thing-at-point 'symbol t))
          (project-root (locate-dominating-file
@@ -306,13 +292,13 @@ Uses xref for navigation and docker-compose.yml to determine project root."
       (phel-xref-find-definitions-in-current-file symbol defn-regex))))
 
 (defun phel-extract-symbol-name (symbol)
-  "Extract SYMBOL name without namespace."
+  "Extract 'symbol' name without namespace."
   (if (string-match-p "/" symbol)
       (car (last (split-string symbol "/")))
     symbol))
 
 (defun phel-xref-find-definitions-with-consult-ripgrep (symbol project-root)
-  "Run consult-ripgrep to find definition of SYMBOL in PROJECT-ROOT."
+  "Run consult-ripgrep to find definition of 'symbol' in 'project-root'"
   (if project-root
       (let* ((default-directory project-root)
              (function-name (phel-extract-symbol-name symbol))
@@ -325,7 +311,7 @@ Uses xref for navigation and docker-compose.yml to determine project root."
     (message "Project root not found. Cannot perform ripgrep search.")))
 
 (defun phel-xref-find-definitions-in-current-file (symbol defn-regex)
-  "Find definition of SYMBOL in current file using DEFN-REGEX."
+  "Find definition of 'symbol' in current file using 'defn-regex'"
   (let ((definition-point
          (save-excursion
            (goto-char (point-min))
@@ -361,3 +347,19 @@ Uses xref for navigation and docker-compose.yml to determine project root."
   "Navigate to WordPress documentation for the symbol at point."
   (interactive)
   (phel-open-doc-url "https://developer.wordpress.org/reference/functions/%s/"))
+
+;; Misc
+
+(defun print-buffer-to-messages (&optional prefix)
+  "Print the current buffer's contents to the *Messages* buffer for debugging.
+  If 'prefix' is provided, it is inserted at the specified location in the
+  message."
+  (interactive)
+  (let* ((buffer-contents (buffer-substring-no-properties
+						   (point-min) (point-max)))
+         (message-template "### Buffer contents ({prefix}):\n%s")
+         (message-text
+		  (if prefix
+              (replace-regexp-in-string "{prefix}" prefix message-template)
+            (replace-regexp-in-string " ({prefix})" "" message-template))))
+    (message message-text buffer-contents)))
