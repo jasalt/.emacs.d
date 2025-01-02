@@ -142,7 +142,7 @@
 	(send-phel-defn-to-process)))
 
 
-(defun read-test-command ()
+(defun phel-read-test-command ()
   "Obtains test runner command by traversing up in filesystem from buffer
   file path and reading it from first docker-compose.yml containing it as
   x-custom-data directive as following:
@@ -152,24 +152,30 @@
    volumes:
      ...
    x-custom-data:
-     test-command: <the test runner command>"
+     test-command: <the test runner command>
+
+  Command is returned with 'cd' to the abspath of the docker-compose.yml:
+  cd /home/user/sites/my-project/ && <the test runner command>"
   (interactive)
   (let ((file-path (buffer-file-name))
-        (root-dir "/")
-        (command nil))
-    (while (and file-path (not (string= file-path root-dir)) (not command))
+		(root-dir "/")
+		(command nil))
+	(while (and file-path (not (string= file-path root-dir)) (not command))
       (let ((docker-compose-path (expand-file-name "docker-compose.yml" file-path)))
-        (when (file-exists-p docker-compose-path)
+		(when (file-exists-p docker-compose-path)
           (let* ((yaml-data (yaml-parse-string
-                             (with-temp-buffer
+							 (with-temp-buffer
                                (insert-file-contents docker-compose-path)
                                (buffer-string))))
-                 (custom-data (gethash 'x-custom-data yaml-data)))
-            (when custom-data
-              (setq command (gethash 'test-command custom-data)))))
-        (setq file-path (file-name-directory (directory-file-name file-path)))))
-	(print command)
-    command))
+				 (custom-data (gethash 'x-custom-data yaml-data)))
+			(when custom-data
+              (setq command (gethash 'test-command custom-data))
+              (when command
+				(setq command (concat "cd " (file-name-directory docker-compose-path) " && " command))))))
+		(setq file-path (file-name-directory (directory-file-name file-path)))))
+	(message "Test command:")
+	(message command)
+	command))
 
 
 (comment
