@@ -9,6 +9,7 @@
 		 ("C-x C-e" . phel-send-sexp-to-process)
 		 ("C-c C-e" . phel-send-region-or-buffer-to-process)
 		 ("C-c C-c" . phel-send-first-comment-sexp-to-process)
+		 ("C-c C-t" . phel-run-tests)
 		 ))
 
 (use-package mistty
@@ -178,18 +179,14 @@
 	command))
 
 
-;; TODO Improve defun phel-run-test
-;; -
-
-
-
 ;; - obtain relative path to current buffer file from project root path (containing docker-compose.yml)
 ;; Could run quiet and show test result only if there's error
 
-(defun phel-run-test (&optional run-all)
-  "Run test for file or project, printing results in messages buffer.
-   By default runs test for current file. If passed universal argument, runs all
-   tests for project."
+(defun phel-run-tests (&optional run-all)
+  "Run tests for file or project, printing results in messages buffer.
+  Expects default Phel project structure and config in docker-compose.yml.
+  By default runs tests for current file. If passed universal argument, runs all
+  tests for project. Opens results in new window."
   (interactive "P")
   (let* ((command (phel-read-test-command))
          (file (when (not run-all) (buffer-file-name)))
