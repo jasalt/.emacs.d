@@ -234,6 +234,7 @@ Uses xref for navigation and docker-compose.yml to determine project root."
                                 (car (last (split-string symbol "/")))
                               symbol))
              (search-pattern (concat "(defn\\(-\\)?\\s " (regexp-quote function-name))))
+        (xref-push-marker-stack)
         (consult-ripgrep default-directory search-pattern))
     (message "Project root not found. Cannot perform ripgrep search.")))
 
