@@ -10,6 +10,7 @@
 		 ("C-c C-e" . phel-send-region-or-buffer-to-process)
 		 ("C-c C-c" . phel-send-first-comment-sexp-to-process)
 		 ("C-c C-t" . phel-run-tests)
+		 ("M-." . phel-xref-find-definitions)
 		 ))
 
 (use-package mistty
@@ -210,10 +211,29 @@
       (message "Tests completed. Results in *Phel Test Results* buffer.")))
   )
 
-(comment
- (defun phel-find-definition ()
-   "Find defn for symbol at point from project path
-   TODO"
-   (+ 1 1)
-   )
- )
+
+(defun phel-xref-find-definitions (&optional arg)
+  "Search defn form with symbol at point from current file and navigate to it
+   as with elisp xref-find-definitions, so that xref-go-back allows navigating
+   back.
+   When given universal argument, instead run rgrep for the '(defn symbol-name'
+   from parent directory containing docker-compose.yml indicating it as the
+   project root dir."
+  (interactive "P")
+
+  (let* ((symbol (thing-at-point 'symbol t))
+         (project-root (locate-dominating-file default-directory "docker-compose.yml")))
+    (if arg
+        (when project-root
+          (let ((default-directory project-root))
+            (rgrep (concat "(defn " symbol) "*.phel" ".")))
+      (save-excursion
+        (goto-char (point-min))
+        (if (re-search-forward (concat "(defn\\s-+" (regexp-quote symbol)) nil t)
+            (progn
+              (goto-char (match-beginning 0))
+              (xref-push-marker-stack)
+              (push-mark)
+              (goto-char (match-beginning 0)))
+          (message "Definition not found in current file.")))))
+  )
