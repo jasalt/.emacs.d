@@ -87,45 +87,41 @@
 
     (buffer-string)))
 
-(defun phel-send-region-or-buffer-to-process (arg &optional beg end)
-  "Send the current buffer or region to a process buffer. The first time it's
-  called, will prompt for the buffer to send to. Subsequent calls send to the
-  same buffer, unless a prefix argument is used (C-u), or the buffer no longer
-  has an active process. Ref:
-  - https://emacs.stackexchange.com/a/37889/42614
-  - https://stackoverflow.com/a/7053298"
-  (interactive "P\nr")
-  (if (or arg ;; user asks for selection
-          (not (boundp 'process-target)) ;; target not set
-          ;; or target is not set to an active process:
-          (not (process-live-p (get-buffer-process
-                                process-target))))
+(defun phel-get-or-set-process-target (arg)
+  "Get the current process target or set a new one if needed."
+  (if (or arg
+          (not (boundp 'process-target))
+          (not (process-live-p (get-buffer-process process-target))))
       (setq process-target
             (completing-read
              "Process: "
              (seq-map (lambda (el) (buffer-name (process-buffer el)))
-                      (process-list)))))
+                      (process-list))))
+    process-target))
 
-  ;; (process-send-region process-target beg end)  ; This was v1
+(defun phel-send-region-or-buffer-to-process (arg &optional beg end)
+  "Send the current buffer or region to a process buffer. The first time it's
+  called, will prompt for the buffer to send to. Subsequent calls send to the
+  same buffer, unless a prefix argument is used (C-u), or the buffer no longer
+  has an active process."
+  (interactive "P\nr")
+  (phel-get-or-set-process-target arg)
 
-  ;; Process Phel source-code to be REPL friendly before sending it to process
-  ;; TODO modify 'let' to set 'beg' and 'end' to be (point-min) (point-max) if they are not set
-  (let ((modified-region
-		 (process-phel-source
-		  (if (and beg end)
-			  (buffer-substring-no-properties beg end)
-			(buffer-substring-no-properties (point-min) (point-max))))))
-    (process-send-string process-target modified-region))
+  (let ((text (if (and beg end)
+                  (buffer-substring-no-properties beg end)
+                (buffer-substring-no-properties (point-min) (point-max)))))
+    (phel-send-text-to-process text)))
 
-  ;; If target buffer is *mistty*, also evaluate sent region
-  ;; by calling missty-send-command
-  (let ((buf-name (let ((str process-target))
-					(setq parts (split-string str " " t))
-					(car (last parts)))))  ; Extract "actual" buffer name
+(defun phel-send-text-to-process (text)
+  "Send the given text to the process buffer."
+  (phel-get-or-set-process-target nil)
+  (let ((modified-text (phel-process-source text)))
+    (process-send-string process-target modified-text))
 
-	(if (string= buf-name "*mistty*")
-		(with-current-buffer buf-name
-		  (call-interactively 'mistty-send-command)))))
+  (let ((buf-name (car (last (split-string process-target " " t)))))
+    (when (string= buf-name "*mistty*")
+      (with-current-buffer buf-name
+        (call-interactively 'mistty-send-command)))))
 
 (defun phel-send-sexp-to-process ()
   "Send the current Phel sexp to the process buffer."
@@ -147,40 +143,59 @@
 	(send-phel-defn-to-process)))
 
 
-(defun phel-read-test-command ()
-  "Obtains test runner command by traversing up in filesystem from buffer
-  file path and reading it from first docker-compose.yml containing it as
-  x-custom-data directive as following:
-
-   services:
-     ...
-   volumes:
-     ...
-   x-custom-data:
-     test-command: <the test runner command>
-
-  Command is returned with 'cd' to the abspath of the docker-compose.yml:
-  cd /home/user/sites/my-project/ && <the test runner command>"
-  (interactive)
+(defun phel-read-project-setting (setting-key)
+  "Read a project setting from docker-compose.yml.
+   Traverses up the filesystem from the current buffer's file path
+   to find the first docker-compose.yml containing the given setting-key
+   x-custom-data directive."
   (let ((file-path (buffer-file-name))
-		(root-dir "/")
-		(command nil))
-	(while (and file-path (not (string= file-path root-dir)) (not command))
+        (root-dir "/")
+        (setting-value nil))
+    (while (and file-path (not (string= file-path root-dir)) (not setting-value))
       (let ((docker-compose-path (expand-file-name "docker-compose.yml" file-path)))
-		(when (file-exists-p docker-compose-path)
+        (when (file-exists-p docker-compose-path)
           (let* ((yaml-data (yaml-parse-string
-							 (with-temp-buffer
+                             (with-temp-buffer
                                (insert-file-contents docker-compose-path)
                                (buffer-string))))
-				 (custom-data (gethash 'x-custom-data yaml-data)))
-			(when custom-data
-              (setq command (gethash 'test-command custom-data))
-              (when command
-				(setq command (concat "cd " (file-name-directory docker-compose-path) " && " command))))))
-		(setq file-path (file-name-directory (directory-file-name file-path)))))
-	(message "Test command:")
-	(message command)
-	command))
+                 (custom-data (gethash 'x-custom-data yaml-data)))
+            (when custom-data
+              (setq setting-value (gethash setting-key custom-data))
+              (when setting-value
+                (setq setting-value (cons (file-name-directory docker-compose-path) setting-value))))))
+        (setq file-path (file-name-directory (directory-file-name file-path)))))
+    setting-value))
+
+(defun phel-read-project-command (setting-key)
+  "Read a project command for the given SETTING-KEY."
+  (let ((command-data (phel-read-project-setting setting-key)))
+    (when command-data
+      (let ((project-path (car command-data))
+            (command (cdr command-data)))
+        (concat "cd " project-path " && " command)))))
+
+(defun phel-read-repl-command ()
+  "Obtain the REPL command for the current project."
+  (phel-read-project-command 'repl-command))
+
+(defun phel-read-test-command ()
+  "Obtain the test runner command for the current project."
+  (phel-read-project-command 'test-command))
+
+
+(defun phel-repl ()
+  "Starts Phel REPL process in mistty in current window."
+  (interactive)
+  (if (and (boundp 'mistty-buffer-name)
+           (stringp mistty-buffer-name)
+           (get-buffer mistty-buffer-name))
+      (message "phel-repl: reusing existing mistty buffer")
+    (progn
+      (mistty)
+      (setq process-target (buffer-name (current-buffer)))
+      (setq mistty-repl-command (phel-read-repl-command))
+      (message mistty-repl-command)
+      (phel-send-text-to-process (phel-read-repl-command)))))
 
 
 ;; - obtain relative path to current buffer file from project root path (containing docker-compose.yml)
