@@ -179,8 +179,7 @@
 
 
 ;; TODO Improve defun phel-run-test
-;; - obtain test runner one-liner from phel-read-test-command
-;; - evaluate it echoing output to messages buffer
+;; -
 
 
 
@@ -196,11 +195,16 @@
          (file (when (not run-all) (buffer-file-name)))
          (docker-compose-dir (file-name-directory
 							  (locate-dominating-file (buffer-file-name) "docker-compose.yml")))
-         (relative-file (when file (file-relative-name file docker-compose-dir)))
+         (relative-file (when file
+                          (replace-regexp-in-string
+                           "src/"
+                           "tests/"
+                           (file-relative-name file docker-compose-dir))))
          (full-command (if relative-file
                            (concat command " " relative-file)
                          command)))
-    (message "Running tests...")
+    (message "Running tests with command:")
+	(message full-command)
     (let ((output (shell-command-to-string full-command)))
       (with-current-buffer (get-buffer-create "*Phel Test Results*")
         (erase-buffer)
