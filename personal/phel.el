@@ -9,8 +9,8 @@
 ;; custom directives as following (avoiding to add separate file for now):
 
 ;; x-phel-project-data:
-;;   test-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/woodoo-pos-sync wordpress vendor/bin/phel test --testdox
-;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/woodoo-pos-sync wordpress vendor/bin/phel repl
+;;   test-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel test --testdox
+;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel repl
 
 
 (use-package phel-mode  ; derived from clojure-mode
@@ -39,7 +39,8 @@
 
 (defun print-buffer-to-messages (&optional prefix)
   "Print the current buffer's contents to the *Messages* buffer for debugging.
-  If PREFIX is provided, it is inserted at the specified location in the message."
+  If PREFIX is provided, it is inserted at the specified location in the
+  message."
   (interactive)
   (let* ((buffer-contents (buffer-substring-no-properties (point-min) (point-max)))
          (message-template "### Buffer contents ({prefix}):\n%s")
