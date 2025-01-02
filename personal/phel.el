@@ -42,7 +42,8 @@
   If PREFIX is provided, it is inserted at the specified location in the
   message."
   (interactive)
-  (let* ((buffer-contents (buffer-substring-no-properties (point-min) (point-max)))
+  (let* ((buffer-contents (buffer-substring-no-properties
+						   (point-min) (point-max)))
          (message-template "### Buffer contents ({prefix}):\n%s")
          (message-text
 		  (if prefix
