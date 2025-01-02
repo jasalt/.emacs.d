@@ -212,9 +212,7 @@
   )
 
 
-;; TODO if symbol has namespace / only select fn name without ns
-
-Here's the refactored version of the provided function:
+;; Simplified go to definition
 
 (defun phel-xref-find-definitions (&optional arg)
   "Search defn or defn- form with symbol at point and navigate to it.
@@ -225,18 +223,19 @@ Uses xref for navigation and docker-compose.yml to determine project root."
          (project-root (locate-dominating-file default-directory "docker-compose.yml"))
          (defn-regex (concat "(defn\\(-\\)?\\s-+" (regexp-quote symbol))))
     (if arg
-        (phel-xref-find-definitions-with-rgrep symbol project-root)
+        (phel-xref-find-definitions-with-consult-ripgrep symbol project-root)
       (phel-xref-find-definitions-in-current-file symbol defn-regex))))
 
-(defun phel-xref-find-definitions-with-rgrep (symbol project-root)
-  "Run rgrep to find definition of SYMBOL in PROJECT-ROOT."
+(defun phel-xref-find-definitions-with-consult-ripgrep (symbol project-root)
+  "Run consult-ripgrep to find definition of SYMBOL in PROJECT-ROOT."
   (if project-root
       (let* ((default-directory project-root)
              (function-name (if (string-match-p "/" symbol)
                                 (car (last (split-string symbol "/")))
-                              symbol)))
-        (rgrep (concat "(defn\\(-\\)?\\s-+" (regexp-quote function-name)) "*.phel" "."))
-    (message "Project root not found. Cannot perform rgrep search.")))
+                              symbol))
+             (search-pattern (concat "(defn\\(-\\)?\\s " (regexp-quote function-name))))
+        (consult-ripgrep default-directory search-pattern))
+    (message "Project root not found. Cannot perform ripgrep search.")))
 
 (defun phel-xref-find-definitions-in-current-file (symbol defn-regex)
   "Find definition of SYMBOL in current file using DEFN-REGEX."
