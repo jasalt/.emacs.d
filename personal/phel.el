@@ -140,3 +140,48 @@
 	(re-search-forward "^(comment")
 	(forward-sexp)
 	(send-phel-defn-to-process)))
+
+
+(defun read-test-command ()
+  "Obtains test runner command by traversing up in filesystem from buffer
+  file path and reading it from first docker-compose.yml containing it as
+  x-custom-data directive as following:
+
+   services:
+     ...
+   volumes:
+     ...
+   x-custom-data:
+     test-command: <the test runner command>"
+  (interactive)
+  (let ((file-path (buffer-file-name))
+        (root-dir "/")
+        (command nil))
+    (while (and file-path (not (string= file-path root-dir)) (not command))
+      (let ((docker-compose-path (expand-file-name "docker-compose.yml" file-path)))
+        (when (file-exists-p docker-compose-path)
+          (let* ((yaml-data (yaml-parse-string
+                             (with-temp-buffer
+                               (insert-file-contents docker-compose-path)
+                               (buffer-string))))
+                 (custom-data (gethash 'x-custom-data yaml-data)))
+            (when custom-data
+              (setq command (gethash 'test-command custom-data)))))
+        (setq file-path (file-name-directory (directory-file-name file-path)))))
+	(print command)
+    command))
+
+
+(comment
+ (defun phel-run-test ()
+   "Run test for file or project
+   TODO"
+   (+ 1 1)
+   )
+
+ (defun phel-find-definition ()
+   "Find defn for symbol at point from project path
+   TODO"
+   (+ 1 1)
+   )
+ )
