@@ -51,6 +51,7 @@
             (replace-regexp-in-string " ({prefix})" "" message-template))))
     (message message-text buffer-contents)))
 
+
 (defun phel-process-source (code)
   "Prepare Phel source code to be evaluated in Phel REPL. Fixes some quirks and
   cleans comments."
@@ -76,7 +77,8 @@
 
 	;; (print-buffer-to-messages "after ns removal")
 
-	;; Remove comment forms
+	;; Remove comment forms, TODO does not take into account comment lines not
+	;; having newline right after comment symbol
 	(goto-char (point-min))
     (while (re-search-forward "(comment\\s-*\n" nil t)
 	  (let ((start (match-beginning 0)))
@@ -105,7 +107,7 @@
 	(goto-char (point-min))
     (flush-lines "^\\s-*$")
 
-	(print-buffer-to-messages "after processing")
+	;; (print-buffer-to-messages "after processing")
 
     (buffer-string)))
 
@@ -153,24 +155,16 @@
     (let ((end (point)))
       (beginning-of-defun)
       (let ((start (point)))
-        (phel-send-text-to-process (buffer-substring-no-properties start end))))))
-
+        (phel-send-text-to-process
+		 (phel-process-source (buffer-substring-no-properties start end)))))))
 
 (defun phel-send-first-comment-sexp-to-process ()
   "Evaluates first s-exp inside comment form e.g. for evaluating defn being
-   written with pre-set args. Idea from ed at Clojurians Slack."
-
-;; TODO this works with:
-;; (comment
-;;   (+ 1 1 1))
-
-;; but fails with:
-;; (comment (+ 1 1 1)
-
-
+  written with pre-set args. Idea from ed at Clojurians Slack. Requires form
+  to be placed on newline after comment symbol."
   (interactive)
   (save-excursion
-	(re-search-forward "^(comment")
+	(re-search-forward "(comment\\s-*\n")  ; TODO allow comment without newline
 	(forward-sexp)
 	(phel-send-sexp-to-process)))
 
