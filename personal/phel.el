@@ -14,7 +14,8 @@
          ("C-c C-d C-p" . phel-phpdoc)
          ("C-c C-d C-w" . phel-wpdoc)
          ("C-c C-d C-d" . phel-doc)
-         ("M-." . phel-xref-find-definitions)))
+         ("M-." . phel-xref-find-definitions)
+         ("C-c M-j" . phel-repl)))
 
 (use-package mistty
   :bind (("C-c C-s" . mistty)))
