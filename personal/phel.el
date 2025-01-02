@@ -43,9 +43,10 @@
   (interactive)
   (let* ((buffer-contents (buffer-substring-no-properties (point-min) (point-max)))
          (message-template "### Buffer contents ({prefix}):\n%s")
-         (message-text (if prefix
-                           (replace-regexp-in-string "{prefix}" prefix message-template)
-                         (replace-regexp-in-string " ({prefix})" "" message-template))))
+         (message-text
+		  (if prefix
+              (replace-regexp-in-string "{prefix}" prefix message-template)
+            (replace-regexp-in-string " ({prefix})" "" message-template))))
     (message message-text buffer-contents)))
 
 (defun phel-process-source (code)
@@ -151,8 +152,8 @@
         (phel-send-region-or-buffer-to-process nil start end)))))
 
 (defun phel-send-first-comment-sexp-to-process ()
-  "Evaluates first s-exp inside comment form e.g. for evaluating defn being written
-   with pre-set args. Idea from ed at Clojurians Slack."
+  "Evaluates first s-exp inside comment form e.g. for evaluating defn being
+   written with pre-set args. Idea from ed at Clojurians Slack."
   (interactive)
   (save-excursion
 	(re-search-forward "^(comment")
@@ -168,8 +169,10 @@
   (let ((file-path (buffer-file-name))
         (root-dir "/")
         (setting-value nil))
-    (while (and file-path (not (string= file-path root-dir)) (not setting-value))
-      (let ((docker-compose-path (expand-file-name "docker-compose.yml" file-path)))
+    (while (and file-path (not (string= file-path root-dir))
+				(not setting-value))
+      (let ((docker-compose-path
+			 (expand-file-name "docker-compose.yml" file-path)))
         (when (file-exists-p docker-compose-path)
           (let* ((yaml-data (yaml-parse-string
                              (with-temp-buffer
@@ -179,7 +182,9 @@
             (when custom-data
               (setq setting-value (gethash setting-key custom-data))
               (when setting-value
-                (setq setting-value (cons (file-name-directory docker-compose-path) setting-value))))))
+                (setq setting-value
+					  (cons (file-name-directory docker-compose-path)
+							setting-value))))))
         (setq file-path (file-name-directory (directory-file-name file-path)))))
     setting-value))
 
@@ -228,7 +233,8 @@
   (let* ((command (phel-read-test-command))
          (file (when (not run-all) (buffer-file-name)))
          (docker-compose-dir (file-name-directory
-							  (locate-dominating-file (buffer-file-name) "docker-compose.yml")))
+							  (locate-dominating-file
+							   (buffer-file-name) "docker-compose.yml")))
          (relative-file (when file
                           (replace-regexp-in-string
                            "src/"
@@ -243,14 +249,15 @@
       (with-current-buffer (get-buffer-create "*Phel Test Results*")
         (erase-buffer)
         (insert output)
-        (make-frame '((buffer-predicate . (lambda (buf) (eq buf (current-buffer)))))))
+        (make-frame
+		 '((buffer-predicate . (lambda (buf) (eq buf (current-buffer)))))))
       (message "Tests completed. Results in *Phel Test Results* buffer."))))
 
 ;; Simplified go to definition
 
 (defvar phel-definition-regex
   "(\\(defn\\(-\\)?\\|def\\|defmacro\\)\\s-?%s\\b"
-  "Regex template for finding Phel definitions. %s is replaced with the symbol name.")
+  "Regex template for Phel definitions. %s is replaced with the symbol name.")
 
 (defun phel-xref-find-definitions (&optional arg)
   "Search for definition of symbol at point and navigate to it.
@@ -258,7 +265,8 @@ When given universal argument, run rgrep for the definition instead.
 Uses xref for navigation and docker-compose.yml to determine project root."
   (interactive "P")
   (let* ((symbol (thing-at-point 'symbol t))
-         (project-root (locate-dominating-file default-directory "docker-compose.yml"))
+         (project-root (locate-dominating-file
+						default-directory "docker-compose.yml"))
          (defn-regex (format phel-definition-regex (regexp-quote symbol))))
     (if arg
         (phel-xref-find-definitions-with-consult-ripgrep symbol project-root)
@@ -275,8 +283,10 @@ Uses xref for navigation and docker-compose.yml to determine project root."
   (if project-root
       (let* ((default-directory project-root)
              (function-name (phel-extract-symbol-name symbol))
-             (search-pattern (format phel-definition-regex (regexp-quote function-name)))
-             (consult-ripgrep-args (concat consult-ripgrep-args " --no-ignore-vcs")))
+             (search-pattern (format phel-definition-regex
+									 (regexp-quote function-name)))
+             (consult-ripgrep-args (concat consult-ripgrep-args
+										   " --no-ignore-vcs")))
         (xref-push-marker-stack)
         (consult-ripgrep default-directory search-pattern))
     (message "Project root not found. Cannot perform ripgrep search.")))
