@@ -36,8 +36,8 @@
    Workaround https://github.com/phel-lang/phel-lang/issues/766"
   (with-temp-buffer
     (insert code)
+	;;(print-buffer-to-messages "at input")
 
-	(print-buffer-to-messages "at input")
     ;; Remove (ns ...) form around require-statements
 	;; Workaround for https://github.com/phel-lang/phel-lang/issues/766
 	(goto-char (point-min))
