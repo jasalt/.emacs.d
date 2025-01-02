@@ -212,28 +212,30 @@
   )
 
 
+;; TODO if symbol has namespace / only select fn name without ns
+
 (defun phel-xref-find-definitions (&optional arg)
-  "Search defn form with symbol at point from current file and navigate to it
+  "Search defn or defn- form with symbol at point from current file and navigate to it
    as with elisp xref-find-definitions, so that xref-go-back allows navigating
    back.
    When given universal argument, instead run rgrep for the '(defn symbol-name'
-   from parent directory containing docker-compose.yml indicating it as the
-   project root dir."
+   or '(defn- symbol-name' from parent directory containing docker-compose.yml
+   indicating it as the project root dir."
   (interactive "P")
-
   (let* ((symbol (thing-at-point 'symbol t))
          (project-root (locate-dominating-file default-directory "docker-compose.yml")))
     (if arg
         (when project-root
           (let ((default-directory project-root))
-            (rgrep (concat "(defn " symbol) "*.phel" ".")))
-      (save-excursion
-        (goto-char (point-min))
-        (if (re-search-forward (concat "(defn\\s-+" (regexp-quote symbol)) nil t)
+            (rgrep (concat "(defn\\(-\\)?\\s-+" symbol) "*.phel" ".")))
+      (let ((definition-point
+             (save-excursion
+               (goto-char (point-min))
+               (when (re-search-forward (concat "(defn\\(-\\)?\\s-+" (regexp-quote symbol)) nil t)
+                 (match-beginning 0)))))
+        (if definition-point
             (progn
-              (goto-char (match-beginning 0))
               (xref-push-marker-stack)
-              (push-mark)
-              (goto-char (match-beginning 0)))
-          (message "Definition not found in current file.")))))
-  )
+              (goto-char definition-point)
+              (recenter))
+          (message "Definition not found in current file."))))))
