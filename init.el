@@ -260,7 +260,7 @@ If the new path's directories does not exist, create them."
 (load-file (expand-file-name "personal/custom.el" user-emacs-directory))
 
 (load-file (expand-file-name "personal/programming.el" user-emacs-directory))
-(load-file (expand-file-name "personal/phel.el" user-emacs-directory))
+
 (load-file (expand-file-name "personal/rare-packages/acme-search.el" user-emacs-directory))
 
 ;; Load some private configs if they exists
@@ -280,7 +280,7 @@ If the new path's directories does not exist, create them."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default))
+   '("fee7287586b17efbfda432f05539b58e86e059e78006ce9237b8732fde991b4c" "00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default))
  '(package-selected-packages '(evil which-key))
  '(safe-local-variable-values
    '((cider-ns-refresh-after-fn . "integrant.repl/resume")

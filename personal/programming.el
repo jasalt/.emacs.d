@@ -1,5 +1,8 @@
 ;; Programming related config
 
+(load-file (expand-file-name "personal/phel.el" user-emacs-directory))
+(load-file (expand-file-name "personal/php.el" user-emacs-directory))
+
 ;; Also refer to extras/dev.el which sets some Bedrock framework defaults
 ;; which might be merged with this file content at some point.
 
@@ -332,25 +335,6 @@
   ))
 
 
-;; PHP
-
-;; Follow readme and install grammar at ~/.emacs.d/tree-sitter/
-;; https://github.com/emacs-php/php-ts-mode
-;; TODO check that .so file exists so this won't error at start without it
-;; TODO update
-(use-package php-ts-mode
-  :straight (php-ts-mode :type git :host github :repo "emacs-php/php-ts-mode")
-  :config
-  (setq
-   lsp-intelephense-format-braces "k&r"
-   ;; Intelephense WP stubs https://marioyepes.com/blog/intelephense-wordpress-acf-genesis-conf/
-   lsp-intelephense-stubs ["apache" "bcmath" "bz2" "calendar" "com_dotnet" "Core" "ctype" "curl" "date" "dba" "dom" "enchant" "exif" "fileinfo" "filter" "fpm" "ftp" "gd" "hash" "iconv" "imap" "interbase" "intl" "json" "ldap" "libxml" "mbstring" "mcrypt" "meta" "mssql" "mysqli" "oci8" "odbc" "openssl" "pcntl" "pcre" "PDO" "pdo_ibm" "pdo_mysql" "pdo_pgsql" "pdo_sqlite" "pgsql" "Phar" "posix" "pspell" "readline" "recode" "Reflection" "regex" "session" "shmop" "SimpleXML" "snmp" "soap" "sockets" "sodium" "SPL" "sqlite3" "standard" "superglobals" "sybase" "sysvmsg" "sysvsem" "sysvshm" "tidy" "tokenizer" "wddx" "xml" "xmlreader" "xmlrpc" "xmlwriter" "Zend OPcache" "zip" "zlib" "wordpress"])
-  :hook (php-ts-mode . (lambda () (require 'dap-php) (lsp))))
-
-;; NOTE If getting startup error and "Cannot find module ... phpDebug.js"
-;; when installing vscode ext with (dap-php-setup) in *Listen for XDebug stderr* output,
-;; copy extension from another editor eg:
-;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
 
 ;; Javascript
 
