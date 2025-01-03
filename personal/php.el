@@ -42,12 +42,32 @@
 ;; NOTE If getting startup error and "Cannot find module ... phpDebug.js"
 ;; when installing vscode ext with (dap-php-setup) in *Listen for XDebug stderr* output,
 ;; copy extension from another editor eg:
-;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension ~/.emacs.d/.extension/vscode/xdebug.php-debug/
+;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension \
+;;    ~/.emacs.d/.extension/vscode/xdebug.php-debug/
 
 ;; Hacky REPL setup copied from phel.el
 
+;; NOTE Function definitions cannot be changed by default, triggering
+;; PHP Fatal error:  Cannot redeclare asdf() (previously declared in php shell code...
+
+;; So REPL process needs a restart or outdated runkit7 PHP mod needs to be used
+;; for redefining functions:
+;; https://www.php.net/manual/en/function.runkit7-function-redefine.php
+;; Docs: https://www.php.net/runkit7 / https://github.com/runkit7/runkit7
+
+;; Failed install attempt:
+;; pecl channel-update pecl.php.net
+;; sudo pecl install runkit7-alpha
+;; echo "extension=runkit7.so" >> /etc/php/8.2/cli/php.ini
+
+;; Should return the type but does ot find declaration yet:
+;; php -a
+;; echo gettype(runkit7_function_redefine);
+
+
 (defun php-get-or-set-process-target (arg)
-  "Get the current process target or set a new one if needed."
+  "Get the current process target or set a new one if needed.
+   TODO duplicate of phel-get-or-set-process-target"
   (if (or arg
           (not (boundp 'process-target))
           (not (process-live-p (get-buffer-process process-target))))
