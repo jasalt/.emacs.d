@@ -1,4 +1,9 @@
-;; "Phel Cider Light" Phel programming config
+;; MVP interactive Phel development config influenced by Clojure Cider
+;; https://github.com/clojure-emacs/cider
+
+;; Possibly replaced in future with actual Cider compatibility, ref:
+;; - https://docs.cider.mx/cider/platforms/overview.html
+;; - https://docs.cider.mx/cider/platforms/basilisp.html
 
 ;; TODO local vs container setup in progress, test / repl commands broken
 
