@@ -214,22 +214,30 @@
     setting-value))
 
 (defun phel-read-project-command (setting-key)
-  "Read a project command for the given 'setting-key'"
+  "Read a project command for the given 'setting-key' example:
+   (phel-read-project-command 'repl-command)
+   (phel-read-project-command 'test-command)"
   (let ((command-data (phel-read-project-setting setting-key)))
     (when command-data
       (let ((project-path (car command-data))
             (command (cdr command-data)))
         (concat "cd " project-path " && " command)))))
 
+(defun phel-find-project-root ()
+  "Find the root directory of the Phel project."
+  (locate-dominating-file (buffer-file-name) "phel-config.php"))
+
 (defun phel-read-repl-command ()
-  "Obtain the REPL command for the current project.
-  TODO repetition"
-  (phel-read-project-command 'repl-command))
+  "Get the REPL command for the current Phel project."
+  (let ((root (phel-find-project-root)))
+    (when root
+      (concat "cd " root " && ./vendor/bin/phel repl"))))
 
 (defun phel-read-test-command ()
-  "Obtain the test runner command for the current project.
-  TODO repetition"
-  (phel-read-project-command 'test-command))
+  "Get the test runner command for the current Phel project."
+  (let ((root (phel-find-project-root)))
+    (when root
+      (concat "cd " root " && ./vendor/bin/phel test"))))
 
 (defun phel-repl ()
   "Starts or opens existing Phel REPL process mistty buffer in current window.
@@ -257,7 +265,7 @@
          (file (when (not run-all) (buffer-file-name)))
          (docker-compose-dir (file-name-directory
 							  (locate-dominating-file
-							   (buffer-file-name) "docker-compose.yml")))
+							   (buffer-file-name) "docker-compose.yml"))) ;; TODO change to phel-config.php
          (relative-file (when file
                           (replace-regexp-in-string
                            "src/"
