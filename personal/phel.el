@@ -162,6 +162,12 @@
 
     (buffer-string)))
 
+(defun phel-blink-region (start end)
+  "Make the text between START and END blink."
+  (let ((overlay (make-overlay start end)))
+    (overlay-put overlay 'face 'success)
+    (run-at-time 0.1 nil 'delete-overlay overlay)))
+
 (defun phel-send-region-or-buffer-to-process (arg &optional beg end)
   "Send the current buffer or region to a process buffer. The first time it's
   called, will prompt for the buffer to send to. Subsequent calls send to the
@@ -171,8 +177,12 @@
   (phel-get-or-set-process-target arg)
 
   (let ((text (if (use-region-p)
-				  (buffer-substring-no-properties beg end)
-                (buffer-substring-no-properties (point-min) (point-max)))))
+				  (progn
+					(phel-blink-region beg end)
+					(buffer-substring-no-properties beg end))
+                (progn
+				  (phel-blink-region (point-min) (point-max))
+				  (buffer-substring-no-properties (point-min) (point-max))))))
     (phel-send-text-to-process (phel-process-source text))))
 
 (defun phel-send-sexp-to-process ()
@@ -183,6 +193,7 @@
     (let ((end (point)))
       (beginning-of-defun)
       (let ((start (point)))
+		(phel-blink-region)
         (phel-send-text-to-process
 		 (phel-process-source (buffer-substring-no-properties start end)))))))
 
