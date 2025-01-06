@@ -43,8 +43,8 @@
   "Move the mouse pointer to point in the current window."
   (let* ((coords (posn-col-row (posn-at-point)))
 	 (window-coords (window-inside-edges))
-	 (x (+ (car coords) (car window-coords) -1)) ;the fringe is 0
-	 (y (+ (cdr coords) (cadr window-coords)
+	 (x (+ (car coords) (car window-coords) -2)) ;the fringe is 0
+	 (y (+ (cdr coords) (cadr window-coords) ;; 1 works better here sometimes
 	       (if (header-line-active-p)
 		   -1
 		 0))))
