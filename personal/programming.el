@@ -363,7 +363,8 @@
  )
 
 
-(use-package tabnine
+(comment
+ (use-package tabnine
   :commands (tabnine-start-process)
   ;; :hook (prog-mode . tabnine-mode)
   :straight t
@@ -383,4 +384,4 @@
 	 ("M-<return>" . tabnine-accept-completion-by-line)
 	 ("C-g" . tabnine-clear-overlay)
 	 ("M-[" . tabnine-previous-completion)
-	 ("M-]" . tabnine-next-completion)))
+	 ("M-]" . tabnine-next-completion))))
