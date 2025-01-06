@@ -153,6 +153,11 @@
 	(goto-char (point-min))
     (flush-lines "^\\s-*$")
 
+	;; If the last character is newline, remove it
+	(goto-char (point-max))
+	(if (eq (char-before) ?\n)
+		(delete-char -1))
+
 	;; (print-buffer-to-messages "after processing")
 
     (buffer-string)))
