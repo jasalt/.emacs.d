@@ -1,5 +1,8 @@
 ;; Not loaded
 
+;; TODO rename to compose-yml or something as this is maybe needed still
+
+
 ;; Using docker-compose.yml for parsing project specific commands which might
 ;; be useful in some cases
 

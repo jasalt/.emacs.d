@@ -1,5 +1,7 @@
 ;; "Phel Cider Light" Phel programming config
 
+;; TODO local vs container setup in progress, test / repl commands broken
+
 ;; Written during two days during winter cold largely with Claude Sonnet 3.5 LLM
 ;; and gptel.el. While surprisingly good experience for a quick proof of concept,
 ;; may come with hidden defects that need to be smoothed out by hand during use.
@@ -50,13 +52,8 @@
 
 
 ;; Test runner 'phel-run-tests', REPL startup command 'phel-repl' and project
-;; root selection for search depend on 'docker-compose.yml' at project dir or
-;; it's parent dir, including custom directives as following (avoiding to add
-;; separate config file for them for now):
-
-;; x-phel-project-data:
-;;   test-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel test --testdox
-;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel repl
+;; root selection for search depend on 'phel-config.php' at project dir or
+;; it's parent dir
 
 
 ;; Interactive REPL evaluation setup inspired from:
@@ -218,9 +215,10 @@
       ;; (message mistty-repl-command)
       (phel-send-text-to-process (phel-read-repl-command)))))
 
+;; TODO does not work locally (only with container)
 (defun phel-run-tests (&optional run-all)
   "Run tests for file or project, printing results in messages buffer.
-  Expects default Phel project structure and config in 'docker-compose.yml'.
+  Expects default Phel project structure having 'phel-config.php'.
   By default runs tests for current file. If passed universal argument, runs all
   tests for project. Opens results in new window for now, room for improvement."
   (interactive "P")
