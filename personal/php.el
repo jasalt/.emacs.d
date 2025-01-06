@@ -1,6 +1,6 @@
 ;; PHP programming config
 
-;; Rever to lsp-mode setting in programming.el
+;; Refer to lsp-mode setting in programming.el
 
 
 ;; Follow readme and install grammar at ~/.emacs.d/tree-sitter/
@@ -45,7 +45,9 @@
 ;; cp ~/.local/share/nvim/mason/packages/php-debug-adapter/extension \
 ;;    ~/.emacs.d/.extension/vscode/xdebug.php-debug/
 
-;; Hacky REPL setup copied from phel.el
+;; Currently broken REPL setup attempt (copy-paste from phel.el)
+
+;; ###############   CODE BENEATH HERE DOES NOT WORK  ################
 
 ;; NOTE Function definitions cannot be changed by default, triggering
 ;; PHP Fatal error:  Cannot redeclare asdf() (previously declared in php shell code...
