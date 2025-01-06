@@ -186,43 +186,6 @@
 
 ;; Test runner and REPL startup command setup
 
-(defun phel-read-project-setting (setting-key)
-  "Read a project setting from docker-compose.yml.
-   Traverses up the filesystem from the current buffer's file path
-   to find the first docker-compose.yml containing the given setting-key
-   x-phel-project-data directive."
-  (let ((file-path (buffer-file-name))
-        (root-dir "/")
-        (setting-value nil))
-    (while (and file-path (not (string= file-path root-dir))
-				(not setting-value))
-      (let ((docker-compose-path
-			 (expand-file-name "docker-compose.yml" file-path)))
-        (when (file-exists-p docker-compose-path)
-          (let* ((yaml-data (yaml-parse-string
-                             (with-temp-buffer
-                               (insert-file-contents docker-compose-path)
-                               (buffer-string))))
-                 (custom-data (gethash 'x-phel-project-data yaml-data)))
-            (when custom-data
-              (setq setting-value (gethash setting-key custom-data))
-              (when setting-value
-                (setq setting-value
-					  (cons (file-name-directory docker-compose-path)
-							setting-value))))))
-        (setq file-path (file-name-directory (directory-file-name file-path)))))
-    setting-value))
-
-(defun phel-read-project-command (setting-key)
-  "Read a project command for the given 'setting-key' example:
-   (phel-read-project-command 'repl-command)
-   (phel-read-project-command 'test-command)"
-  (let ((command-data (phel-read-project-setting setting-key)))
-    (when command-data
-      (let ((project-path (car command-data))
-            (command (cdr command-data)))
-        (concat "cd " project-path " && " command)))))
-
 (defun phel-find-project-root ()
   "Find the root directory of the Phel project."
   (locate-dominating-file (buffer-file-name) "phel-config.php"))
