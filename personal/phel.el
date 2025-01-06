@@ -135,6 +135,11 @@
     (while (search-forward "(:require " nil t)
       (replace-match "(require "))
 
+	;; .. same for :use
+    (goto-char (point-min))
+    (while (search-forward "(:use " nil t)
+      (replace-match "(use "))
+
 	;; (print-buffer-to-messages "before removing whitespace")
 
 	;; Delete all empty lines
