@@ -137,6 +137,11 @@
     (while (search-forward "(:use " nil t)
       (replace-match "(use "))
 
+	;; Replace tab characters triggering shell auto-complete
+	(goto-char (point-min))
+    (while (search-forward "\t" nil t)
+      (replace-match " "))
+
 	;; (print-buffer-to-messages "before removing whitespace")
 
 	;; Delete all empty lines
