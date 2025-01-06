@@ -83,45 +83,50 @@
   (setq dap-auto-configure-features '(locals controls tooltip sessions expressions breakpoints)) ; repl
   :config (dap-ui-mode 1)
   (setq dap-ui-buffer-configurations
-	'(("*dap-ui-locals*"
-	  (side . right)
-	  (slot . 1)
-	  ;;(window-height . 0.6)
-	  (window-width . 0.25))
-	  ("*dap-ui-sessions*"
-	   (side . right)
-	   (slot . 3)
-	   ;;(window-width . 0.2)
-	   (window-height . 0.1))
-	  ("*dap-ui-expressions*"
-	   (side . right)  ;; default right
-	   (slot . 2)
-	   (window-height . 0.1)
-	   )
-	 ("*dap-ui-breakpoints*"
-	  (side . right)  ;; defaults to left
-	  (slot . 4)
-	  (window-height . 0.2)
-	  ;;(window-width . 26)
-	  )
-	 ("*debug-window*"
-	  (side . bottom)
-	  (slot . 2)
-	  (window-width . 0.2))
-	 ("*dap-ui-repl*"
-	  (side . bottom)
-	  (slot . 1)
-	  (window-height . 0.10))))
+		'(("*dap-ui-locals*"
+		   (side . right)
+		   (slot . 1)
+		   ;;(window-height . 0.6)
+		   (window-width . 0.25))
+		  ("*dap-ui-sessions*"
+		   (side . right)
+		   (slot . 3)
+		   ;;(window-width . 0.2)
+		   (window-height . 0.1))
+		  ("*dap-ui-expressions*"
+		   (side . right)  ;; default right
+		   (slot . 2)
+		   (window-height . 0.1)
+		   )
+		  ("*dap-ui-breakpoints*"
+		   (side . right)  ;; defaults to left
+		   (slot . 4)
+		   (window-height . 0.2)
+		   ;;(window-width . 26)
+		   )
+		  ("*debug-window*"
+		   (side . bottom)
+		   (slot . 2)
+		   (window-width . 0.2))
+		  ("*dap-ui-repl*"
+		   (side . bottom)
+		   (slot . 1)
+		   (window-height . 0.10))))
 
-  :bind (("<f5>" . dap-continue) ;; TODO (dap--get-sessions) (dap--cur-session-or-die)
-	 ("C-<f5>" . dap-debug)
-	 ("S-<f5>" . dap-debug-restart)
-	 ("<f10>" . dap-next)
-	 ("C-M-n" . dap-next)      ; cider
-	 ("C-M-c" . dap-continue)  ; cider
-	 ("C-c C-e" . dap-eval-thing-at-point)
-	 ("C-M-x" . dap-eval-region)
-	 )  ; todo activate also? if php, use default profile
+  ;; TODO does this actually make sense
+  ;; :bind
+  ;; (:map
+  ;;  dap-mode-map
+  ;;  ("<f5>" . dap-continue) ;; TODO (dap--get-sessions) (dap--cur-session-or-die)
+  ;;  ("C-<f5>" . dap-debug)
+  ;;  ("S-<f5>" . dap-debug-restart)
+  ;;  ("<f10>" . dap-next)
+  ;;  ("C-M-n" . dap-next)      ; cider
+  ;;  ("C-M-c" . dap-continue)  ; cider
+  ;;  ("C-c C-e" . dap-eval-thing-at-point)
+  ;;  ("C-M-x" . dap-eval-region)
+  ;;  )  ; todo activate also? if php, use default profile
+
   :custom (dap-ui-controls-screen-position 'posframe-poshandler-frame-bottom-right-corner)
   (dap-ui-locals-expand-depth t)  ; TODO not working?
   ;; (setq dap-print-io t) ; print debug info into *Messages*
