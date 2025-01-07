@@ -292,7 +292,7 @@
           (concat "cd " project-path " && " command))
 	  (let ((root (phel-find-project-root)))
 		(when root
-		  (concat "cd " root " && ./vendor/bin/phel test"))))))
+		  (concat "cd " root " && ./vendor/bin/phel test --testdox"))))))
 
 ;; TODO local vs container setup in progress, test / repl commands broken
 ;; TODO how to make work with different scenarios, e.g. WordPress plugin project
