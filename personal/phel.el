@@ -1,11 +1,7 @@
-;; MVP interactive Phel development config influenced by Clojure Cider
-;; https://github.com/clojure-emacs/cider
+;; Interactive Phel development config influenced by Emacs Cider
 
-;; Possibly replaced in future with actual Cider compatibility, ref:
-;; - https://docs.cider.mx/cider/platforms/overview.html
-;; - https://docs.cider.mx/cider/platforms/basilisp.html
-
-;; TODO local vs container setup in progress, test / repl commands broken
+;; Status: mostly works with some rough edges and testing setup is in progress,
+;;         see TODO items
 
 ;; Written during two days during winter cold largely with Claude Sonnet 3.5 LLM
 ;; and gptel.el. While surprisingly good experience for a quick proof of concept,
@@ -13,6 +9,10 @@
 
 ;; Attempts to emulate some useful Clojure and Elisp editing functionalities
 ;; for a more frugal yet still very usable Lisp environment hosted on PHP.
+
+;; Possibly replaced in future with actual Cider compatibility, ref:
+;; - https://docs.cider.mx/cider/platforms/overview.html
+;; - https://docs.cider.mx/cider/platforms/basilisp.html
 
 ;; Differs in not being based on Nrepl but on basic stdio communication (comint)
 ;; because Nrepl does not exist yet for Phel.
@@ -242,6 +242,10 @@
       (phel-send-text-to-process (phel-read-repl-command)))))
 
 ;; TODO does not work locally (only with container)
+;; TODO local vs container setup in progress, test / repl commands broken
+;; TODO how to make work with different scenarios, e.g. WordPress plugin project
+;; should have independent test suite, while it's useful to have separate
+;; full production WP site environment for development and integration testing.
 (defun phel-run-tests (&optional run-all)
   "Run tests for file or project, printing results in messages buffer.
   Expects default Phel project structure having 'phel-config.php'.
@@ -252,7 +256,7 @@
          (file (when (not run-all) (buffer-file-name)))
          (phel-config-dir (file-name-directory
 							  (locate-dominating-file
-							   (buffer-file-name) "phel-config.php"))) ;; TODO change to phel-config.php
+							   (buffer-file-name) "phel-config.php")))
          (relative-file (when file
                           (replace-regexp-in-string
                            "src/"
