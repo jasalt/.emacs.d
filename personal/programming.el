@@ -5,6 +5,7 @@
 
 
 ;; Flashing evaluated region (elisp)
+;; Partially generated code warning
 
 (defun flash-region (start end)
   "Make the text between START and END blink."
@@ -14,18 +15,18 @@
 
 (defun beginning-of-top-level-form-p ()
   "Return t if point is at the beginning of a top-level form."
-  (and (= (point) (line-beginning-position))
-       (null (nth 8 (syntax-ppss)))))
+  (and (bolp)                        ; beginning of line
+	   (null (nth 8 (syntax-ppss)))  ; is inside form
+	   (not (looking-at-p "\\s-")))) ; not in whitespace in middle of form
 
 (defun eval-defun-advice (orig-fun &rest args)
   "Advice to blink region after eval-defun."
   (let* ((current-prefix-arg (car args))
 		 (start
 		  (save-excursion
-            (when
-				;; avoid jumping to previous sexp
+            (when  ; avoid jumping to previous sexp
 				(not (beginning-of-top-level-form-p)) (beginning-of-defun))
-            (point)))
+			(point)))
 		 (end (save-excursion
 				(end-of-defun)
 				(point)))
