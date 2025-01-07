@@ -5,9 +5,6 @@
 
 
 ;; Flashing evaluated region (elisp)
-;; TODO beginning-of-defun-p does not take into account advice-add et.al.
-;; would be better to use other method.
-;; e.g. if point is beginning of line and if the character is (
 
 (defun flash-region (start end)
   "Make the text between START and END blink."
@@ -15,24 +12,26 @@
     (overlay-put overlay 'face 'success)
     (run-at-time 0.1 nil 'delete-overlay overlay)))
 
-(defun beginning-of-defun-p ()
-  "Return t if point is at the beginning of a defun, nil otherwise."
-  (save-excursion
-    (beginning-of-line)
-    (looking-at-p "\\s-*(defun\\|defmacro\\|defvar\\|defconst\\|defcustom")))
+(defun beginning-of-top-level-form-p ()
+  "Return t if point is at the beginning of a top-level form."
+  (and (= (point) (line-beginning-position))
+       (null (nth 8 (syntax-ppss)))))
 
 (defun eval-defun-advice (orig-fun &rest args)
   "Advice to blink region after eval-defun."
   (let* ((current-prefix-arg (car args))
-         (start (save-excursion
-                  (when (not (beginning-of-defun-p)) (beginning-of-defun))
-                  (point)))
-         (end (save-excursion
-                (end-of-defun)
-                (point)))
-         (eval-defun-result (apply orig-fun args)))
-    (flash-region start end)
-    eval-defun-result))
+		 (start
+		  (save-excursion
+            (when
+				;; avoid jumping to previous sexp
+				(not (beginning-of-top-level-form-p)) (beginning-of-defun))
+            (point)))
+		 (end (save-excursion
+				(end-of-defun)
+				(point)))
+		 (eval-defun-result (apply orig-fun args)))
+	(flash-region start end)
+	eval-defun-result))
 
 (defun elisp-eval-region-or-buffer-advice (orig-fun &rest args)
   "Advice to blink region after elisp-eval-region-or-buffer."
