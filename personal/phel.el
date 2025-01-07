@@ -250,14 +250,14 @@
   (interactive "P")
   (let* ((command (phel-read-test-command))
          (file (when (not run-all) (buffer-file-name)))
-         (docker-compose-dir (file-name-directory
+         (phel-config-dir (file-name-directory
 							  (locate-dominating-file
-							   (buffer-file-name) "docker-compose.yml"))) ;; TODO change to phel-config.php
+							   (buffer-file-name) "phel-config.php"))) ;; TODO change to phel-config.php
          (relative-file (when file
                           (replace-regexp-in-string
                            "src/"
                            "tests/"
-                           (file-relative-name file docker-compose-dir))))
+                           (file-relative-name file phel-config-dir))))
          (full-command (if relative-file
                            (concat command " " relative-file)
                          command)))
