@@ -193,7 +193,7 @@
     (let ((end (point)))
       (beginning-of-defun)
       (let ((start (point)))
-		(phel-blink-region)
+		(phel-blink-region start end)
         (phel-send-text-to-process
 		 (phel-process-source (buffer-substring-no-properties start end)))))))
 
