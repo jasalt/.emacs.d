@@ -255,9 +255,14 @@
 
 (defun phel-read-repl-command ()
   "Get the REPL command for the current Phel project."
-  (let ((root (phel-find-project-root)))
-    (when root
-      (concat "cd " root " && ./vendor/bin/phel repl"))))
+  (let ((compose-setting-command (phel-read-compose-setting "repl-command")))
+    (if compose-setting-command
+		(let ((project-path (car compose-setting-command))
+              (command (cdr compose-setting-command)))
+          (concat "cd " project-path " && " command))
+	  (let ((root (phel-find-project-root)))
+		(when root
+		  (concat "cd " root " && ./vendor/bin/phel repl"))))))
 
 (defun phel-repl ()
   "Starts or opens existing Phel REPL process mistty buffer in current window.
