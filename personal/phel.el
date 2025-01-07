@@ -242,22 +242,17 @@
       ;; (message mistty-repl-command)
       (phel-send-text-to-process (phel-read-repl-command)))))
 
-
 (defun phel-switch-test-ns ()
-  "Attempts to switch to according test namespace or back to source namespace.
-   TODO functions unimplemented prefixed with todo-"
+  "Attempts to switch to according test namespace or back to source namespace."
   (interactive)
   (let* ((current-file (buffer-file-name))
-		 (file-to-switch-to (if (todo-check-if-current-file-includes "/test/")
-							 (replace-regexp-in-string "/tests/" "/src/" current-file)
-							 (replace-regexp-in-string "/src/" "/tests/" current-file))))
-
-	(message "Attempting to switch" file-to-switch-to)
-
-	(if (todo-check-if-file-exists file-to-switch-to)
-		(todo-switch-to-file-or-buffer file-to-switch-to)
-	  (message "Did not found test / src file to switch to."))))
-
+         (file-to-switch-to (if (string-match-p "/tests/" current-file)
+                                (replace-regexp-in-string "/tests/" "/src/" current-file)
+                              (replace-regexp-in-string "/src/" "/tests/" current-file))))
+    (message "Switching to %s" file-to-switch-to)
+    (if (file-exists-p file-to-switch-to)
+        (find-file file-to-switch-to)
+      (message "Did not find test / src file to switch to."))))
 
 ;; TODO local vs container setup in progress, test / repl commands broken
 ;; TODO how to make work with different scenarios, e.g. WordPress plugin project
