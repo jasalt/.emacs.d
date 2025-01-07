@@ -61,6 +61,14 @@
 ;; root selection for search depend on 'phel-config.php' at project dir or
 ;; it's parent dir
 
+;; Test runner 'phel-run-tests', REPL startup command 'phel-repl' use default
+;; Phel commands by default and can be overridden on project basis by setting
+;; custom x-phel-project-data directives in  'docker-compose.yml' as following:
+
+;; x-phel-project-data:
+;;   test-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel test --testdox
+;;   repl-command: docker compose exec -w /opt/bitnami/wordpress/wp-content/plugins/my-plugin wordpress vendor/bin/phel repl
+
 
 ;; Interactive REPL evaluation setup inspired from:
 ;; - https://emacs.stackexchange.com/a/37889/42614
@@ -214,17 +222,42 @@
   "Find the root directory of the Phel project."
   (locate-dominating-file (buffer-file-name) "phel-config.php"))
 
+(defun phel-read-compose-setting (setting-key)
+  "Read a project setting from docker-compose.yml.
+   Traverses up the filesystem from the current buffer's file path
+   to find the first docker-compose.yml containing the given setting-key
+   x-project-data directive.
+   Returns tuple '(docker-compose-path setting-value) when found."
+  ;; (message (concat "read setting val for " setting-key))
+  (let ((file-path (buffer-file-name))
+        (root-dir "/")
+        (setting-value nil))
+    (while (and file-path (not (string= file-path root-dir))
+				(not setting-value))
+      (let ((docker-compose-path
+			 (expand-file-name "docker-compose.yml" file-path)))
+        (when (file-exists-p docker-compose-path)
+		  ;; (message (concat "at " docker-compose-path))
+          (let* ((yaml-data (yaml-parse-string
+                             (with-temp-buffer
+                               (insert-file-contents docker-compose-path)
+                               (buffer-string))))
+                 (custom-data (gethash 'x-phel-project-data yaml-data)))
+            (when custom-data
+              (setq setting-value (gethash (intern setting-key) custom-data))
+              (when setting-value
+				;;(message "found setting-val")
+                (setq setting-value
+					  (cons (file-name-directory docker-compose-path)
+							setting-value))))))
+        (setq file-path (file-name-directory (directory-file-name file-path)))))
+    setting-value))
+
 (defun phel-read-repl-command ()
   "Get the REPL command for the current Phel project."
   (let ((root (phel-find-project-root)))
     (when root
       (concat "cd " root " && ./vendor/bin/phel repl"))))
-
-(defun phel-read-test-command ()
-  "Get the test runner command for the current Phel project."
-  (let ((root (phel-find-project-root)))
-    (when root
-      (concat "cd " root " && ./vendor/bin/phel test"))))
 
 (defun phel-repl ()
   "Starts or opens existing Phel REPL process mistty buffer in current window.
@@ -242,17 +275,24 @@
       ;; (message mistty-repl-command)
       (phel-send-text-to-process (phel-read-repl-command)))))
 
-(defun phel-switch-test-ns ()
-  "Attempts to switch to according test namespace or back to source namespace."
-  (interactive)
-  (let* ((current-file (buffer-file-name))
-         (file-to-switch-to (if (string-match-p "/tests/" current-file)
-                                (replace-regexp-in-string "/tests/" "/src/" current-file)
-                              (replace-regexp-in-string "/src/" "/tests/" current-file))))
-    (message "Switching to %s" file-to-switch-to)
-    (if (file-exists-p file-to-switch-to)
-        (find-file file-to-switch-to)
-      (message "Did not find test / src file to switch to."))))
+(defun phel-read-test-command ()
+  "Get the test runner command for the current Phel project."
+
+  ;; add condition that if there's docker-compose.yml (here or upper level)
+  ;; that has the custom directive
+  ;; use that as test command (allowing container tests)
+  ;; otherwise use default
+
+  ;; TODO if current file is test file?
+
+  (let ((compose-setting-command (phel-read-compose-setting "test-command")))
+    (if compose-setting-command
+		(let ((project-path (car compose-setting-command))
+              (command (cdr compose-setting-command)))
+          (concat "cd " project-path " && " command))
+	  (let ((root (phel-find-project-root)))
+		(when root
+		  (concat "cd " root " && ./vendor/bin/phel test"))))))
 
 ;; TODO local vs container setup in progress, test / repl commands broken
 ;; TODO how to make work with different scenarios, e.g. WordPress plugin project
@@ -286,6 +326,18 @@
         (make-frame
 		 '((buffer-predicate . (lambda (buf) (eq buf (current-buffer)))))))
       (message "Tests completed. Results in *Phel Test Results* buffer."))))
+
+(defun phel-switch-test-ns ()
+  "Attempts to switch to according test namespace or back to source namespace."
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (file-to-switch-to (if (string-match-p "/tests/" current-file)
+                                (replace-regexp-in-string "/tests/" "/src/" current-file)
+                              (replace-regexp-in-string "/src/" "/tests/" current-file))))
+    (message "Switching to %s" file-to-switch-to)
+    (if (file-exists-p file-to-switch-to)
+        (find-file file-to-switch-to)
+      (message "Did not find test / src file to switch to."))))
 
 ;; Simplified go-to definition
 
