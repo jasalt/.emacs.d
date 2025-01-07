@@ -46,6 +46,7 @@
 
 		;; Unit test runner with flexible development container setup
         ("C-c C-t" . phel-run-tests)
+        ("C-c M-t" . phel-switch-test-ns)
 
 		;; Online documentation shortcuts
         ("C-c C-d C-p" . phel-phpdoc)
@@ -241,7 +242,23 @@
       ;; (message mistty-repl-command)
       (phel-send-text-to-process (phel-read-repl-command)))))
 
-;; TODO does not work locally (only with container)
+
+(defun phel-switch-test-ns ()
+  "Attempts to switch to according test namespace or back to source namespace.
+   TODO functions unimplemented prefixed with todo-"
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+		 (file-to-switch-to (if (todo-check-if-current-file-includes "/test/")
+							 (replace-regexp-in-string "/tests/" "/src/" current-file)
+							 (replace-regexp-in-string "/src/" "/tests/" current-file))))
+
+	(message "Attempting to switch" file-to-switch-to)
+
+	(if (todo-check-if-file-exists file-to-switch-to)
+		(todo-switch-to-file-or-buffer file-to-switch-to)
+	  (message "Did not found test / src file to switch to."))))
+
+
 ;; TODO local vs container setup in progress, test / repl commands broken
 ;; TODO how to make work with different scenarios, e.g. WordPress plugin project
 ;; should have independent test suite, while it's useful to have separate
