@@ -4,6 +4,11 @@
 (load-file (expand-file-name "personal/php.el" user-emacs-directory))
 
 
+;; Flashing evaluated region (elisp)
+;; TODO beginning-of-defun-p does not take into account advice-add et.al.
+;; would be better to use other method.
+;; e.g. if point is beginning of line and if the character is (
+
 (defun flash-region (start end)
   "Make the text between START and END blink."
   (let ((overlay (make-overlay start end)))
@@ -29,7 +34,16 @@
     (flash-region start end)
     eval-defun-result))
 
+(defun elisp-eval-region-or-buffer-advice (orig-fun &rest args)
+  "Advice to blink region after elisp-eval-region-or-buffer."
+  (let* ((start (if (use-region-p) (region-beginning) (point-min)))
+         (end (if (use-region-p) (region-end) (point-max)))
+         (eval-result (apply orig-fun args)))
+	(flash-region start end)
+    eval-result))
+
 (advice-add 'eval-defun :around #'eval-defun-advice)
+(advice-add 'elisp-eval-region-or-buffer :around #'elisp-eval-region-or-buffer-advice)
 
 
 ;; Also refer to extras/dev.el which sets some Bedrock framework defaults
