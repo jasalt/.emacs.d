@@ -27,11 +27,14 @@
 
 (use-package phel-mode
   :mode "\\.phel\\'"
+  :hook (phel-mode . hs-minor-mode)
   :bind
   (:map phel-mode-map
 		;; 'xref-find-definitions' style in-buffer or project source navigation
 		;; using regex search in-buffer and ripgrep for project and vendor libs
 		("M-." . phel-xref-find-definitions)
+		("C-S-<tab>" . hs-toggle-hiding)
+		("C-S-<iso-lefttab>" . hs-toggle-hiding)
 
 		;; REPL startup command
 		("C-c M-j" . phel-repl)
