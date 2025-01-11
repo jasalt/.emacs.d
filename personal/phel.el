@@ -182,10 +182,13 @@
   called, will prompt for the buffer to send to. Subsequent calls send to the
   same buffer, unless a prefix argument is used (C-u), or the buffer no longer
   has an active process."
-  (interactive "P\nr")
+  (interactive (list current-prefix-arg
+					 (when (use-region-p) (region-beginning))
+					 (when (use-region-p) (region-end))))
+
   (phel-get-or-set-process-target arg)
 
-  (let ((text (if (use-region-p)
+  (let ((text (if (and (region-active-p) (use-region-p))
 				  (progn
 					(phel-blink-region beg end)
 					(buffer-substring-no-properties beg end))
