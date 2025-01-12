@@ -25,7 +25,7 @@
 
 ;; Includes familiar 'clojure-mode' based major-mode and keybindings:
 
-(use-package phel-mode
+(use-package phel-mode  ; TODO ditch mostly useless phel-mode.el and start from scratch
   :mode "\\.phel\\'"
   :hook (phel-mode . hs-minor-mode)
   :bind
@@ -56,8 +56,12 @@
         ("C-c C-d C-w" . phel-wpdoc)
         ("C-c C-d C-d" . phel-doc))
 
+  :config
   ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
-  :config (setq lsp-warn-no-matched-clients nil))
+  (setq lsp-warn-no-matched-clients nil)
+  ;; Change clojure-mode comment character ';' to Phel '#'
+  (modify-syntax-entry ?# "<" clojure-mode-syntax-table)
+  (modify-syntax-entry ?\; "." clojure-mode-syntax-table))
 
 ;; Useful clojure-mode default bindings
 ;; C-:         clojure-toggle-keyword-string
