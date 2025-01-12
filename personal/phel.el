@@ -59,6 +59,30 @@
   ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
   :config (setq lsp-warn-no-matched-clients nil))
 
+;; Useful clojure-mode default bindings
+;; C-:         clojure-toggle-keyword-string
+;; C-c SPC     clojure-align
+;; C-c C-r s i clojure-introduce-let
+;; C-c C-r s f clojure-let-forward-slurp-sexp
+;; C-c C-r s b clojure-let-backward-slurp-sexp
+;; C-c C-r s m clojure-move-to-let
+;; C-c C-r [   clojure-convert-collection-to-vector
+;; C-c C-r (   clojure-convert-collection-to-list
+;; C-c C-r #   clojure-convert-collection-to-set
+;; C-c C-r {   clojure-convert-collection-to-map
+;; C-c C-r '   clojure-convert-collection-to-quoted-list
+;; C-c C-r f clojure-thread-first-all
+;; C-c C-r l clojure-thread-last-all
+;; C-c C-r p clojure-cycle-privacy
+;; C-c C-r i clojure-cycle-if (change if to if-not or back)
+;; C-c C-r i clojure-cycle-when (change when to when-not or back)
+;; C-c C-r o clojure-cycle-not (add or remove not around form)
+
+;; Unbound:
+;; clojure-unwind-all
+;; clojure-forward-logical-sexp
+;; clojure-backward-logical-sexp
+
 
 ;; Test runner 'phel-run-tests', REPL startup command 'phel-repl' and project
 ;; root selection for search depend on 'phel-config.php' at project dir or
@@ -228,6 +252,8 @@
   "Find the root directory of the Phel project."
   (locate-dominating-file (buffer-file-name) "phel-config.php"))
 
+
+;; TODO if there are multiple possibilities, allow user ask which to use
 (defun phel-read-compose-setting (setting-key)
   "Read a project setting from docker-compose.yml.
    Traverses up the filesystem from the current buffer's file path
