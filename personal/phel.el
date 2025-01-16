@@ -3,6 +3,9 @@
 ;; Status: mostly works with some rough edges and testing setup is in progress,
 ;;         see TODO items
 
+;; TODO research usage with project.el and compare to
+;;      https://github.com/licht1stein/babashka.el/blob/master/babashka.el
+
 ;; Written during two days during winter cold largely with Claude Sonnet 3.5 LLM
 ;; and gptel.el. While surprisingly good experience for a quick proof of concept,
 ;; may come with hidden defects that need to be smoothed out by hand during use.
