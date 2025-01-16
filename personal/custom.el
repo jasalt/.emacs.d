@@ -491,11 +491,11 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   ;; These models below can be run at home
   (gptel-make-ollama "Ollama@localhost"
     :stream t
-    :models '(deepseek-coder-v2 llama3.1 qwen2.5-coder:32b qwen2.5-coder:32b-instruct-q8_0))
+    :models '(phi4 deepseek-coder-v2 llama3.1 qwen2.5-coder:32b qwen2.5-coder:32b-instruct-q8_0))
   (gptel-make-ollama "Ollama@mbp14"
     :host "mbp14:11434"
     :stream t
-    :models '(qwen2.5-coder:14b qwen2.5-coder:14b-instruct-q5_1 deepseek-coder-v2 llama3.1))
+    :models '(phi4 qwen2.5-coder:14b qwen2.5-coder:14b-instruct-q5_1 deepseek-coder-v2 llama3.1))
   (setq
    gptel-org-branching-context t
    gptel-model 'llama-3.3-70b-versatile
