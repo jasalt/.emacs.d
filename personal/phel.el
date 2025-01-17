@@ -32,10 +32,12 @@
   :mode "\\.phel\\'"
   :hook
   (phel-mode . hs-minor-mode)
-  (phel-mode .
-          (lambda ()
-            (setq-local comment-start "# ")
-            (set (make-variable-buffer-local 'comment-column) 0)))
+
+  ;; (phel-mode .
+  ;;         (lambda ()                         ; start # comment from column 0
+  ;;           (setq-local comment-start "# ")  ; disabled for now, complicated
+  ;;           (set (make-variable-buffer-local 'comment-column) 0)))
+
   :bind
   (:map phel-mode-map
 		;; 'xref-find-definitions' style in-buffer or project source navigation
