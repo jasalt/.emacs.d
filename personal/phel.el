@@ -30,7 +30,12 @@
 
 (use-package phel-mode  ; TODO ditch mostly useless phel-mode.el and start from scratch
   :mode "\\.phel\\'"
-  :hook (phel-mode . hs-minor-mode)
+  :hook
+  (phel-mode . hs-minor-mode)
+  (phel-mode .
+          (lambda ()
+            (setq-local comment-start "# ")
+            (set (make-variable-buffer-local 'comment-column) 0)))
   :bind
   (:map phel-mode-map
 		;; 'xref-find-definitions' style in-buffer or project source navigation
