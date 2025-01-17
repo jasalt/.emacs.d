@@ -68,8 +68,8 @@
   ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
   (setq lsp-warn-no-matched-clients nil)
   ;; Change clojure-mode comment character ';' to Phel '#'
-  (modify-syntax-entry ?# "<" clojure-mode-syntax-table)
-  (modify-syntax-entry ?\; "." clojure-mode-syntax-table))
+  (modify-syntax-entry ?# "<" phel-mode-syntax-table)
+  (modify-syntax-entry ?\; "." phel-mode-syntax-table))
 
 ;; Useful clojure-mode default bindings
 ;; C-:         clojure-toggle-keyword-string
