@@ -379,7 +379,8 @@
       (message "Tests completed. Results in *Phel Test Results* buffer."))))
 
 (defun phel-switch-test-ns ()
-  "Attempts to switch to according test namespace or back to source namespace."
+  "Attempts to switch to according test namespace or back to source namespace.
+  If according test namespace is missing, one is created with initial namespace declaration."
   (interactive)
   (let* ((current-file (buffer-file-name))
          (is-test-file (string-match-p "/tests/" current-file))
@@ -388,16 +389,25 @@
                               (replace-regexp-in-string "/src/" "/tests/" current-file)))
          (ns-path (replace-regexp-in-string "^.*/\\(src\\|tests\\)/" ""
                                             (file-name-sans-extension file-to-switch-to)))
-         (ns-name (replace-regexp-in-string "/" "\\" ns-path t t)))
+         (ns-name (replace-regexp-in-string "/" "\\" ns-path t t))
+         (parent-dir (let ((dir (file-name-directory current-file)))
+                       (while (and dir (not (or (file-exists-p (concat dir "src"))
+                                                (file-exists-p (concat dir "tests")))))
+                         (setq dir (file-name-directory (directory-file-name dir))))
+                       (when dir
+                         (file-name-nondirectory (directory-file-name dir)))))
+         (module-name (file-name-nondirectory (file-name-sans-extension file-to-switch-to))))
     (message "Switching to %s" file-to-switch-to)
     (if (file-exists-p file-to-switch-to)
         (find-file file-to-switch-to)
       (progn
         (find-file file-to-switch-to)
         (goto-char (point-min))
-        (insert (if (not is-test-file)              ; 👇 this looks bit weird but seems to work
-                    (format "(ns <todo-insert-parent-folder-name-here>\\%s\\test\\%s\n  (:require phel\\test :refer [deftest is thrown?])\n  (:require <todo-insert-src-ns-here> :as <todo-insert-package-name-here>))\n\n" (file-name-nondirectory (directory-file-name (file-name-directory current-file))) ns-name)
-                  (format "(ns %s\\src\\%s)\n\n" (file-name-nondirectory (directory-file-name (file-name-directory current-file))) ns-name)))
+        (when (= (point-min) (point-max)) ; buffer empty?
+		  (insert (if (not is-test-file)
+                    (format "(ns %s\\tests\\%s\n  (:require phel\\test :refer [deftest is thrown?])\n  (:require %s\\src\\%s :as %s))\n\n"
+                            parent-dir ns-name parent-dir ns-name module-name)
+                  (format "(ns %s\\src\\%s)\n\n" parent-dir ns-name))))
         (message "Created and switched to new file: %s" file-to-switch-to)))))
 
 ;; Simplified go-to definition
