@@ -32,6 +32,8 @@
   :mode "\\.phel\\'"
   :hook
   (phel-mode . hs-minor-mode)
+  ;; (phel-mode . paredit-mode) ; TODO
+  ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
 
   ;; (phel-mode .
   ;;         (lambda ()                         ; start # comment from column 0
@@ -69,6 +71,11 @@
   :config
   ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
   (setq lsp-warn-no-matched-clients nil)
+  ; TODO don't set globally but just for Phel
+  ;; (setq paredit-comment-char ?#)   ; TODO not working?
+  (setq paredit-comment-prefix-margin "#")
+  (setq paredit-comment-prefix-code "## ")
+  (setq paredit-comment-prefix-toplevel "### ")
   ;; Change clojure-mode comment character ';' to Phel '#'
   (modify-syntax-entry ?# "<" phel-mode-syntax-table)
   (modify-syntax-entry ?\; "." phel-mode-syntax-table))

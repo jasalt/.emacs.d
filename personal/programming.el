@@ -46,6 +46,9 @@
 (advice-add 'elisp-eval-region-or-buffer :around #'elisp-eval-region-or-buffer-advice)
 
 
+(use-package paredit)
+
+
 ;; Also refer to extras/dev.el which sets some Bedrock framework defaults
 ;; which might be merged with this file content at some point.
 
