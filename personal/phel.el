@@ -382,13 +382,23 @@
   "Attempts to switch to according test namespace or back to source namespace."
   (interactive)
   (let* ((current-file (buffer-file-name))
-         (file-to-switch-to (if (string-match-p "/tests/" current-file)
+         (is-test-file (string-match-p "/tests/" current-file))
+         (file-to-switch-to (if is-test-file
                                 (replace-regexp-in-string "/tests/" "/src/" current-file)
-                              (replace-regexp-in-string "/src/" "/tests/" current-file))))
+                              (replace-regexp-in-string "/src/" "/tests/" current-file)))
+         (ns-path (replace-regexp-in-string "^.*/\\(src\\|tests\\)/" ""
+                                            (file-name-sans-extension file-to-switch-to)))
+         (ns-name (replace-regexp-in-string "/" "\\" ns-path t t)))
     (message "Switching to %s" file-to-switch-to)
     (if (file-exists-p file-to-switch-to)
         (find-file file-to-switch-to)
-      (message "Did not find test / src file to switch to."))))
+      (progn
+        (find-file file-to-switch-to)
+        (goto-char (point-min))
+        (insert (if (not is-test-file)              ; 👇 this looks bit weird but seems to work
+                    (format "(ns <todo-insert-parent-folder-name-here>\\%s\\test\\%s\n  (:require phel\\test :refer [deftest is thrown?])\n  (:require <todo-insert-src-ns-here> :as <todo-insert-package-name-here>))\n\n" (file-name-nondirectory (directory-file-name (file-name-directory current-file))) ns-name)
+                  (format "(ns %s\\src\\%s)\n\n" (file-name-nondirectory (directory-file-name (file-name-directory current-file))) ns-name)))
+        (message "Created and switched to new file: %s" file-to-switch-to)))))
 
 ;; Simplified go-to definition
 
