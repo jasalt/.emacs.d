@@ -520,6 +520,37 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :after gptel magit)
 
 
+;; WIP code completion
+;; TODO receives response but fails processing while response visible in *minuet*
+(use-package minuet
+  :straight (:host github :repo "milanglacier/minuet-ai.el" :type git)
+  :bind
+  (("M-i" . #'minuet-show-suggestion)
+   :map minuet-active-mode-map
+   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+   ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
+   ;; Accept the first line of completion, or N lines with a numeric-prefix:
+   ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
+   ("M-a" . #'minuet-accept-suggestion-line)
+   ("M-e" . #'minuet-dismiss-suggestion)
+   )
+  :config
+  (setq minuet-provider 'openai-fim-compatible)
+  (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
+  (setq minuet-context-window 512)
+  (plist-put minuet-openai-fim-compatible-options :end-point "http://mbp14:11434/api/generate")
+  ;; an arbitrary non-null environment variable as placeholder
+  (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+  (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+  ;;(plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256)
+  )
+
+
 ;;;; MISC UI STUFF
 
 (use-package git-gutter  ; https://github.com/emacsorphanage/git-gutter
