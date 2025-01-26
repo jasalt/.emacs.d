@@ -112,6 +112,8 @@
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
+(global-set-key (kbd "C-x F") 'project-find-file)
+
 ;; re-mapped to consult-line in extras/base.el
 (global-set-key (kbd "C-S-s") 'isearch-forward)
 
