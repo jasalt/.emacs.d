@@ -559,7 +559,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (setq minuet-provider 'openai-fim-compatible)
   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
   (setq minuet-context-window 512)
-  (plist-put minuet-openai-fim-compatible-options :end-point "http://mbp14:11434/api/generate")
+  (plist-put minuet-openai-fim-compatible-options :end-point "http://mbp14:11434/v1/completions")
   ;; an arbitrary non-null environment variable as placeholder
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
