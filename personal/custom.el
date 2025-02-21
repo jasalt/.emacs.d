@@ -497,7 +497,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (gptel-make-ollama "Ollama@mbp14"
     :host "mbp14:11434"
     :stream t
-    :models '(phi4 qwen2.5-coder:14b qwen2.5-coder:14b-instruct-q5_1 deepseek-coder-v2 llama3.1))
+    :models '(phi4 deepseek-r1:7b-qwen-distill-q4_K_M qwen2.5-coder:14b llama3.1))
   (setq
    gptel-org-branching-context t
    gptel-model 'llama-3.3-70b-versatile
@@ -506,13 +506,32 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 				   :endpoint "/openai/v1/chat/completions"
 				   :stream t
 				   :key (getenv "GROQ_API_KEY")
-				   :models '(llama-3.3-70b-versatile
+				   :models '(deepseek-r1-distill-llama-70b
+							 llama-3.3-70b-versatile
 							 mixtral-8x7b-32768)))
   (gptel-make-anthropic "Claude"
 	:stream t
 	:key (getenv "CLAUDE_API_KEY")
 	:models '("claude-3-5-sonnet-20240620")))
 
+;; TODO
+(defun my-gptel-deepseek-remove-think-block (beg end)
+  "Delete an HTML block tag named 'think' and its content."
+  (unless gptel-mode
+    (save-excursion
+      (goto-char beg)
+      ;; Find the opening <think> tag
+      (when (re-search-forward "^<think>" end t)
+        (let* ((start (line-beginning-position))
+               (end-pos (progn (forward-line 1) (search-forward "</think>") (point))))
+          ;; Delete from start of opening tag to end of closing tag
+          (delete-region start end-pos))))
+    (save-excursion
+      (goto-char beg)
+      (delete-region
+       (point) (progn (skip-syntax-backward " ")
+                      (point))))))
+(add-hook 'gptel-post-response-functions #'my-gptel-deepseek-remove-think-block)
 
 ;; TODO https://github.com/douo/magit-gptcommit
 (use-package magit-gptcommit
