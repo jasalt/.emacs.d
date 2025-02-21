@@ -28,57 +28,101 @@
 
 ;; Includes familiar 'clojure-mode' based major-mode and keybindings:
 
-(use-package phel-mode  ; TODO ditch mostly useless phel-mode.el and start from scratch
-  :mode "\\.phel\\'"
-  :hook
-  (phel-mode . hs-minor-mode)
-  ;; (phel-mode . paredit-mode) ; TODO
-  ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
+(define-derived-mode phel-mode clojure-mode "Phel"
+  "Major mode for editing Phel language source files."
 
-  ;; (phel-mode .
-  ;;         (lambda ()                         ; start # comment from column 0
-  ;;           (setq-local comment-start "# ")  ; disabled for now, complicated
-  ;;           (set (make-variable-buffer-local 'comment-column) 0)))
+  (setq-local comment-start "#")
 
-  :bind
-  (:map phel-mode-map
-		;; 'xref-find-definitions' style in-buffer or project source navigation
-		;; using regex search in-buffer and ripgrep for project and vendor libs
-		("M-." . phel-xref-find-definitions)
-		("C-S-<tab>" . hs-toggle-hiding)
-		("C-S-<iso-lefttab>" . hs-toggle-hiding)
+  (add-hook 'phel-mode-hook 'hs-minor-mode)
 
-		;; REPL startup command
-		("C-c M-j" . phel-repl)
+  (define-key phel-mode-map (kbd "M-.") 'phel-xref-find-definitions)
+  (define-key phel-mode-map (kbd "C-S-<tab>") 'hs-toggle-hiding)
+  (define-key phel-mode-map (kbd "C-S-<iso-lefttab>") 'hs-toggle-hiding)
 
-		;; REPL evaluation commands similar to Emacs Lisp
-        ("C-M-x"   . phel-send-sexp-to-process)
-        ("C-x C-e" . phel-send-sexp-to-process)
-        ("C-c C-e" . phel-send-region-or-buffer-to-process)
+  (define-key phel-mode-map (kbd "C-c M-j") 'phel-repl)
 
-		;; Custom binding for triggering functions while developing them in REPL
-        ("C-c C-c" . phel-send-first-comment-sexp-to-process)
+  (define-key phel-mode-map (kbd "C-M-x") 'phel-send-sexp-to-process)
+  (define-key phel-mode-map (kbd "C-x C-e") 'phel-send-sexp-to-process)
+  (define-key phel-mode-map (kbd "C-c C-e") 'phel-send-region-or-buffer-to-process)
 
-		;; Unit test runner with flexible development container setup
-        ("C-c C-t" . phel-run-tests)
-        ("C-c M-t" . phel-switch-test-ns)
+  (define-key phel-mode-map (kbd "C-c C-c") 'phel-send-first-comment-sexp-to-process)
 
-		;; Online documentation shortcuts
-        ("C-c C-d C-p" . phel-phpdoc)
-        ("C-c C-d C-w" . phel-wpdoc)
-        ("C-c C-d C-d" . phel-doc))
+  (define-key phel-mode-map (kbd "C-c C-t") 'phel-run-tests)
+  (define-key phel-mode-map (kbd "C-c M-t") 'phel-switch-test-ns)
 
-  :config
-  ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
+  (define-key phel-mode-map (kbd "C-c C-d C-p") 'phel-phpdoc)
+  (define-key phel-mode-map (kbd "C-c C-d C-w") 'phel-wpdoc)
+  (define-key phel-mode-map (kbd "C-c C-d C-d") 'phel-doc)
+
   (setq lsp-warn-no-matched-clients nil)
-  ; TODO don't set globally but just for Phel
-  ;; (setq paredit-comment-char ?#)   ; TODO not working?
+
   (setq paredit-comment-prefix-margin "#")
   (setq paredit-comment-prefix-code "## ")
   (setq paredit-comment-prefix-toplevel "### ")
-  ;; Change clojure-mode comment character ';' to Phel '#'
+
   (modify-syntax-entry ?# "<" phel-mode-syntax-table)
-  (modify-syntax-entry ?\; "." phel-mode-syntax-table))
+  (modify-syntax-entry ?\; "." phel-mode-syntax-table)
+
+  )
+
+(comment
+ ;; DISABLED and going to be trashed
+
+ ;; The phel-mode package has disappeared and it didn't do more than add derived
+ ;; mode anyways, which is now set up above.
+
+ (use-package phel-mode  ; TODO ditch mostly useless phel-mode.el and start from scratch
+   :mode "\\.phel\\'"
+   :hook
+   (phel-mode . hs-minor-mode)
+   ;; (phel-mode . paredit-mode) ; TODO
+   ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
+
+   ;; (phel-mode .
+   ;;         (lambda ()                         ; start # comment from column 0
+   ;;           (setq-local comment-start "# ")  ; disabled for now, complicated
+   ;;           (set (make-variable-buffer-local 'comment-column) 0)))
+
+   :bind
+   (:map phel-mode-map
+		 ;; 'xref-find-definitions' style in-buffer or project source navigation
+		 ;; using regex search in-buffer and ripgrep for project and vendor libs
+		 ("M-." . phel-xref-find-definitions)
+		 ("C-S-<tab>" . hs-toggle-hiding)
+		 ("C-S-<iso-lefttab>" . hs-toggle-hiding)
+
+		 ;; REPL startup command
+		 ("C-c M-j" . phel-repl)
+
+		 ;; REPL evaluation commands similar to Emacs Lisp
+         ("C-M-x"   . phel-send-sexp-to-process)
+         ("C-x C-e" . phel-send-sexp-to-process)
+         ("C-c C-e" . phel-send-region-or-buffer-to-process)
+
+		 ;; Custom binding for triggering functions while developing them in REPL
+         ("C-c C-c" . phel-send-first-comment-sexp-to-process)
+
+		 ;; Unit test runner with flexible development container setup
+         ("C-c C-t" . phel-run-tests)
+         ("C-c M-t" . phel-switch-test-ns)
+
+		 ;; Online documentation shortcuts
+         ("C-c C-d C-p" . phel-phpdoc)
+         ("C-c C-d C-w" . phel-wpdoc)
+         ("C-c C-d C-d" . phel-doc))
+
+   :config
+   ;; Workaround for lsp-warning coming from LSP hooked via clojure-mode
+   (setq lsp-warn-no-matched-clients nil)
+										; TODO don't set globally but just for Phel
+   ;; (setq paredit-comment-char ?#)   ; TODO not working?
+   (setq paredit-comment-prefix-margin "#")
+   (setq paredit-comment-prefix-code "## ")
+   (setq paredit-comment-prefix-toplevel "### ")
+   ;; Change clojure-mode comment character ';' to Phel '#'
+   (modify-syntax-entry ?# "<" phel-mode-syntax-table)
+   (modify-syntax-entry ?\; "." phel-mode-syntax-table))
+)
 
 ;; Useful clojure-mode default bindings
 ;; C-:         clojure-toggle-keyword-string
