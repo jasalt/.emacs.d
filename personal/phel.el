@@ -134,6 +134,11 @@
                       (process-list))))
     process-target))
 
+
+;; TODO research https://github.com/szermatt/mistty/blob/master/test/mistty-test.el
+;; - use mistty--send-string or mistty--enqueue-str (?)
+;;   https://github.com/szermatt/mistty/blob/master/mistty-queue.el
+
 (defun phel-send-text-to-process (text)
   "Send the given text to the process buffer. Phel code being sent to REPL
   should be processed beforehand to avoid some quirks."
