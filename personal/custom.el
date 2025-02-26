@@ -512,7 +512,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (gptel-make-anthropic "Claude"
 	:stream t
 	:key (getenv "CLAUDE_API_KEY")
-	:models '("claude-3-5-sonnet-20240620")))
+	:models '("claude-3-7-sonnet-20250219")))
 
 ;; TODO
 (defun my-gptel-deepseek-remove-think-block (beg end)
