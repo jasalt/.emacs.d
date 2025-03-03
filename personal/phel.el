@@ -65,6 +65,9 @@
 
   )
 
+(add-to-list 'auto-mode-alist '("\\.phel\\'" . phel-mode))
+
+
 (comment
  ;; DISABLED and going to be trashed
 
