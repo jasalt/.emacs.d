@@ -532,10 +532,24 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 				   :models '(deepseek-r1-distill-llama-70b
 							 llama-3.3-70b-versatile
 							 mixtral-8x7b-32768)))
-  (gptel-make-anthropic "Claude"
-	:stream t
-	:key (getenv "CLAUDE_API_KEY")
-	:models '("claude-3-7-sonnet-20250219")))
+  (gptel-make-anthropic "Claude 3.5"
+  	:stream t
+  	:key (getenv "CLAUDE_API_KEY")
+  	:models '("claude-3-5-sonnet-20240620"))
+
+  ;; WIP Claude with thinking
+  (gptel-make-anthropic "claude-3-5-sonnet-20240620-thinking"
+  :key (getenv "CLAUDE_API_KEY")
+  :stream t
+  :models '(claude-3-7-sonnet-20250219)
+  :header (lambda () (when-let* ((key (gptel--get-api-key)))
+                  `(("x-api-key" . ,key)
+                    ("anthropic-version" . "2023-06-01")
+                    ("anthropic-beta" . "pdfs-2024-09-25")
+                    ("anthropic-beta" . "output-128k-2025-02-19")
+                    ("anthropic-beta" . "prompt-caching-2024-07-31"))))
+  :request-params '(:thinking (:type "enabled" :budget_tokens 2048)
+                    :max_tokens 4096)))
 
 ;; TODO
 (defun my-gptel-deepseek-remove-think-block (beg end)
