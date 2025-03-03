@@ -13,11 +13,27 @@
    Source: https://robjohnson.dev/posts/elisp-cheat-sheet-for-clojure-devs/."
   nil)
 
-(defmacro progn-on (platform &rest body)
-  "Evaluate given expressions if running on given platform.
-   Platform can be darwin, gnu/linux or winnt."
-  (if (string-equal system-type platform)
-      (cons 'progn body)))
+(defmacro when-linux (&rest body)
+  "Evaluate BODY only when the system type is GNU/Linux."
+  `(when (string-equal system-type "gnu/linux")
+     ,@body))
+
+(defmacro when-mac (&rest body)
+  "Evaluate BODY only when the system type is GNU/Linux."
+  `(when (string-equal system-type "darwing")
+     ,@body))
+
+(defmacro when-*nix (&rest body)
+  "Evaluate BODY only when the system type is GNU/Linux."
+  `(when (or (string-equal system-type "gnu/linux")
+			 (string-equal system-type "darwin"))
+     ,@body))
+
+(defmacro when-windows (&rest body)
+  "Evaluate BODY only when the system type is GNU/Linux."
+  `(when (string-equal system-type "winnt")
+     ,@body))
+
 
 ;; UPDATE CONFIG
 (comment
@@ -47,8 +63,7 @@
 			  (add-to-list 'exec-path-from-shell-variables var))
 			(exec-path-from-shell-initialize)))
 
-(progn-on
- "darwin"
+(when-mac
  (setq ns-use-native-fullscreen nil)
  (setq mac-option-modifier 'nil
        mac-command-modifier 'meta
@@ -61,8 +76,8 @@
  (global-set-key (kbd " ") 'just-one-space)
  )
 
-(progn-on
- "gnu/linux"
+(when-linux
+
  (custom-set-faces
   '(default ((t (:height 105 :family "Hack")))))
 
