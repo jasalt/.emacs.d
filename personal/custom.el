@@ -122,7 +122,15 @@
 			 'magit-insert-unpulled-from-pushremote)
  )
 
-;;;;; General 
+;;;;; General
+(when-linux
+ (defun paste-from-selection ()
+   "Paste from X11 primary selection as if pressing middle mouse button.
+    TODO for Wayland maybe use (insert (string-trim (shell-command-to-string \"wl-paste\")))"
+   (interactive)
+   (insert (x-get-selection 'PRIMARY)))
+
+ (global-set-key (kbd "C-M-y") 'paste-from-selection))
 
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
