@@ -485,6 +485,12 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package tramp)  ; depends on
 ;; give /path/to/.venv
 
+;; Fork https://github.com/jasalt/docker-nrepl.el
+(use-package docker-nrepl
+  :straight (:host github :repo "jasalt/docker-nrepl.el")
+  :after cider
+  :config
+  (docker-nrepl-setup))
 
 ;; To set Mac Env vars that GUI Emacs (d12frosted/homebrew-emacs-plus) reads:
 ;; add to ~/Library/LaunchAgents/com.example.set-env-vars.plist

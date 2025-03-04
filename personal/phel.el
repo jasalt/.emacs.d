@@ -28,9 +28,11 @@
 
 ;; Includes familiar 'clojure-mode' based major-mode and keybindings:
 
+;; Avoid picking up graphql-lsp that gets suggested automatically
+(add-to-list 'lsp-disabled-clients '(phel-mode . graphql-lsp))
+
 (define-derived-mode phel-mode clojure-mode "Phel"
   "Major mode for editing Phel language source files."
-
   (setq-local comment-start "#")
 
   (add-hook 'phel-mode-hook 'hs-minor-mode)
