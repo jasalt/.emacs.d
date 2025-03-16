@@ -28,12 +28,13 @@
 
 ;; Includes familiar 'clojure-mode' based major-mode and keybindings:
 
-;; Avoid picking up graphql-lsp that gets suggested automatically
-(add-to-list 'lsp-disabled-clients '(phel-mode . graphql-lsp))
 
 (define-derived-mode phel-mode clojure-mode "Phel"
   "Major mode for editing Phel language source files."
   (setq-local comment-start "#")
+
+  ;; Avoid picking up graphql-lsp that gets suggested automatically
+  (add-to-list 'lsp-disabled-clients '(phel-mode . graphql-lsp))
 
   (add-hook 'phel-mode-hook 'hs-minor-mode)
 
@@ -56,16 +57,26 @@
   (define-key phel-mode-map (kbd "C-c C-d C-w") 'phel-wpdoc)
   (define-key phel-mode-map (kbd "C-c C-d C-d") 'phel-doc)
 
-  (setq lsp-warn-no-matched-clients nil)
-
-  (setq paredit-comment-prefix-margin "#")
-  (setq paredit-comment-prefix-code "## ")
-  (setq paredit-comment-prefix-toplevel "### ")
-
   (modify-syntax-entry ?# "<" phel-mode-syntax-table)
   (modify-syntax-entry ?\; "." phel-mode-syntax-table)
 
+  ;; TODO correct load order for everything after this?
+  :after
+  (setq-local lsp-warn-no-matched-clients nil)
+
+  (setq-local paredit-comment-prefix-margin "#")
+  (setq-local paredit-comment-prefix-code "## ")
+  (setq-local paredit-comment-prefix-toplevel "### ")
+
+  ;; Phel nREPL (WIP) setup
+  (setq-local nrepl-log-messages t)
+  (setq-local cider-repl-init-code "")
+  (setq-local cider-info-form "")
   )
+
+;; TODO ethan-whitespace conflict with:
+;;personal/programming.el
+;;65:  (setq mode-require-final-newline nil)
 
 (add-to-list 'auto-mode-alist '("\\.phel\\'" . phel-mode))
 
