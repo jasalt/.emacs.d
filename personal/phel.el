@@ -69,9 +69,11 @@
   (setq-local paredit-comment-prefix-toplevel "### ")
 
   ;; Phel nREPL (WIP) setup
-  (setq-local nrepl-log-messages t)
-  (setq-local cider-repl-init-code "")
-  (setq-local cider-info-form "")
+  (setq nrepl-log-messages t)
+  ;; These have to be global, not buffer local
+  (setq cider-repl-init-code "")
+
+  ;;(setq cider-info-form "")  # added lookup / info ops and this is not needed
   )
 
 ;; TODO ethan-whitespace conflict with:
