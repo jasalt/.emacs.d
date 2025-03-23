@@ -20,6 +20,10 @@ The original Bedrock project, Prelude or some other config distribution is proba
 
 * Supported IDE features by language
 
+Repo currently includes my custom Phel mode with interactive programming support at =personal/phel.el= which might find it's place in separate package some time.
+
+Following info maybe out of date now..
+
 | Language | LSP | DAP | Tree-sitter | TS "auto build" |
 |----------+-----+-----+-------------+-----------------|
 | PHP      | x   | x   | x*          |                 |
@@ -74,8 +78,6 @@ Performance-wise it seems also fine for debugging eg. a large web-app, such as f
 ** Environment variables
 Set API keys or other environment variables in shell config, eg. `~/.zshrc` or `~/.bashrc` and then set which ones to read on Emacs startup by `exec-path-from-shell` on startup in `personal/custom.el` also on GUI Emacs started from KDE Plasma Shell menu (or MacOS app icon).
 
-** Copilot
-=M-x copilot-login=
 
 * Background
 
