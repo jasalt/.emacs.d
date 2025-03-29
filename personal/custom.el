@@ -89,6 +89,7 @@
 
 (comment
  (use-package guess-language         ; WIP Automatically detect language for Flyspell
+   ;; TODO replace with https://github.com/minad/jinx
    :ensure t
    :defer t
    :init (add-hook 'text-mode-hook #'guess-language-mode)
@@ -130,10 +131,38 @@
    (interactive)
    (insert (x-get-selection 'PRIMARY)))
 
- (global-set-key (kbd "C-M-y") 'paste-from-selection))
+(global-set-key (kbd "C-M-y") 'paste-from-selection))
+
 
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
+
+(defun increase-text-and-pane ()
+  "Increase text size and adjust window width proportionally."
+  (interactive)
+  (let* ((orig-scale (or (car (get 'text-scale-mode-amount 'customized-value))
+                        text-scale-mode-amount))
+         (new-scale (+ orig-scale 1))
+         (scale-factor (/ (float (expt text-scale-mode-step new-scale))
+                          (float (expt text-scale-mode-step orig-scale)))))
+    (text-scale-increase 1)
+    (enlarge-window-horizontally (round (* (window-width) (- scale-factor 1))))))
+
+(global-set-key (kbd "C-M-+") 'increase-text-and-pane)
+
+(defun decrease-text-and-pane ()
+  "Decrease text size and adjust window width proportionally."
+  (interactive)
+  (let* ((orig-scale (or (car (get 'text-scale-mode-amount 'customized-value))
+                        text-scale-mode-amount))
+         (new-scale (- orig-scale 1))
+         (scale-factor (/ (float (expt text-scale-mode-step new-scale))
+                          (float (expt text-scale-mode-step orig-scale)))))
+    (text-scale-decrease 1)
+    (shrink-window-horizontally (round (* (window-width) (- 1 scale-factor))))))
+
+(global-set-key (kbd "C-M-_") 'decrease-text-and-pane)
+
 
 (global-set-key (kbd "C-x F") 'project-find-file)
 
