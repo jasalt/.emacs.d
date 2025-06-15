@@ -629,7 +629,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :straight (:host github :repo "tninja/aider.el")
   :config
   ;; For latest claude sonnet model
-  (setq aider-args '("--model" "openrouter/deepseek/deepseek-chat-v3-0324:free" "--no-auto-accept-architect"))
+  (setq aider-args '("--model" "openrouter/deepseek/deepseek-chat-v3-0324:free" "--no-auto-accept-architect"
+					 "--no-auto-commits"))
   ;; (setenv "ANTHROPIC_API_KEY" anthropic-api-key) ;; requ?
   ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
   ;; ;;
