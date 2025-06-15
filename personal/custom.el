@@ -611,7 +611,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :demand t
   :after magit
   :init (require 'llm-openai)
-  :config (setq llm-warn-on-nonfree t)
+  :config (setq llm-warn-on-nonfree nil)
   :custom
   (magit-gptcommit-llm-provider
    (make-llm-openai-compatible
