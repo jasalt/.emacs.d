@@ -8,6 +8,12 @@
 
 ;; TODO split Prelude stuff to it's own file
 
+(use-package auto-package-update
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+
 (defmacro comment (&rest body)
   "Clojure-like comment function.
    Source: https://robjohnson.dev/posts/elisp-cheat-sheet-for-clojure-devs/."
