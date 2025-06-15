@@ -46,6 +46,9 @@
         ;; ("C-c C-d C-d" . phel-doc)
 		))
 
+;; Auto-associate .php files with php-ts-mode
+(add-to-list 'auto-mode-alist '("\\.php\\'" . php-ts-mode))
+
 ;; NOTE If getting startup error and "Cannot find module ... phpDebug.js"
 ;; when installing vscode ext with (dap-php-setup) in *Listen for XDebug stderr* output,
 ;; copy extension from another editor eg:
