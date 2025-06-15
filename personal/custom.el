@@ -544,11 +544,13 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 			  (add-to-list 'exec-path-from-shell-variables var))
 			(exec-path-from-shell-initialize)))
 
+
 (use-package gptel ; https://github.com/karthink/gptel
   :straight t
   :bind ("C-x G" . gptel)
   :config
 
+  (setq gptel-track-media t) ;; TODO works?
   ;; Local models
 
   (gptel-make-ollama "localhost"
@@ -558,7 +560,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (gptel-make-ollama "mbp14"
     :host "js-mbp14:11434"
     :stream t
-    :models '(qwen3:14b gemma3:12b-it-qat))
+    :models '(qwen3:14b gemma3:12b-it-qat)
+	)
 
   ;; Default / Openrouter
   (setq gptel-model 'deepseek/deepseek-chat-v3-0324:free
@@ -580,12 +583,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
   (gptel-make-gemini "Gemini" :key (getenv "GEMINI_API_KEY") :stream t))
 
-(comment
-
- (message "ENV: %s" (getenv "OPENROUTER_API_KEY"))
- (message "ENV: %s" (getenv "CLAUDE_API_KEY"))
- (message "ENV: %s" (getenv))
- )
 
 ;; TODO
 (defun my-gptel-deepseek-remove-think-block (beg end)
@@ -611,7 +608,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :demand t
   :after gptel magit)
 
-(use-package aidermacs
+(use-package aider
+  :straight (:host github :repo "tninja/aider.el")
+  :config
+  ;; For latest claude sonnet model
+  (setq aider-args '("--model" "openrouter/deepseek/deepseek-chat-v3-0324:free" "--no-auto-accept-architect"))
+  ;; (setenv "ANTHROPIC_API_KEY" anthropic-api-key) ;; requ?
+  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+  ;; ;;
+  ;; Optional: Set a key binding for the transient menu
+  (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
+  ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
+  (aider-magit-setup-transients)) ;; add aider magit function to magit menu
+
+(comment
+ (use-package aidermacs
   :bind (("C-c a" . aidermacs-transient-menu))
   :config
   ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
@@ -621,37 +632,82 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :custom
   ; See the Configuration section below
   (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "sonnet"))
+  (aidermacs-default-model "sonnet")))
 
 ;; WIP code completion
-;; TODO receives response but fails processing while response visible in *minuet*
+
 (use-package minuet
   :straight (:host github :repo "milanglacier/minuet-ai.el" :type git)
-  :bind
-  (("M-i" . #'minuet-show-suggestion)
-   :map minuet-active-mode-map
-   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
-   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
-   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
-   ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
-   ;; Accept the first line of completion, or N lines with a numeric-prefix:
-   ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
-   ("M-a" . #'minuet-accept-suggestion-line)
-   ("M-e" . #'minuet-dismiss-suggestion)
-   )
   :config
+
   (setq minuet-provider 'openai-fim-compatible)
   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
+  ;; I recommend beginning with a small context window size and incrementally
+  ;; expanding it, depending on your local computing power. A context window
+  ;; of 512, serves as an good starting point to estimate your computing
+  ;; power. Once you have a reliable estimate of your local computing power,
+  ;; you should adjust the context window to a larger value.
   (setq minuet-context-window 512)
-  (plist-put minuet-openai-fim-compatible-options :end-point "http://mbp14:11434/v1/completions")
-  ;; an arbitrary non-null environment variable as placeholder
+  (plist-put minuet-openai-fim-compatible-options :end-point "http://js-mbp14:11434/v1/completions")
+  ;; an arbitrary non-null environment variable as placeholder.
+  ;; For Windows users, TERM may not be present in environment variables.
+  ;; Consider using APPDATA instead.
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  ;;(plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b") ;; 14b
 
-  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256)
-  )
+
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56)
+
+  ;; Deepseek / Openrouter
+  (comment
+    (setq minuet-provider 'openai-compatible)
+    (setq minuet-request-timeout 2.5)
+    (setq minuet-auto-suggestion-throttle-delay 1.5) ;; Increase to reduce costs and avoid rate limits
+    (setq minuet-auto-suggestion-debounce-delay 0.6) ;; Increase to reduce costs and avoid rate limits
+
+    (plist-put minuet-openai-compatible-options :end-point "https://openrouter.ai/api/v1/chat/completions")
+    (plist-put minuet-openai-compatible-options :api-key "OPENROUTER_API_KEY")
+    (plist-put minuet-openai-compatible-options :model "deepseek/deepseek-chat-v3-0324:free")
+
+
+    ;; Prioritize throughput for faster completion
+    (minuet-set-optional-options minuet-openai-compatible-options :provider '(:sort "throughput"))
+    (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 56)
+    (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
+	)
+
+	:bind
+	(("M-i" . #'minuet-show-suggestion)
+	 :map minuet-active-mode-map
+	 ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+	 ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+	 ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+	 ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
+	 ;; Accept the first line of completion, or N lines with a numeric-prefix:
+	 ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
+	 ("M-a" . #'minuet-accept-suggestion-line)
+	 ("M-e" . #'minuet-dismiss-suggestion)
+
+	 )
+	)
+
+;; (use-package minuet
+;;   :straight (:host github :repo "milanglacier/minuet-ai.el" :type git)
+
+;;   :config
+;;   (setq minuet-provider 'openai-fim-compatible)
+;;   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
+;;   (setq minuet-context-window 512)
+;;   (plist-put minuet-openai-fim-compatible-options :end-point "http://mbp14:11434/v1/completions")
+;;   ;; an arbitrary non-null environment variable as placeholder
+;;   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+;;   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+;;   ;;(plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+;;   (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
+
+;;   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256)
+;;   )
 
 
 ;;;; MISC UI STUFF
