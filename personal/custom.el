@@ -549,29 +549,41 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :straight t
   :bind ("C-x G" . gptel)
   :config
-  ;; These models below can be run at home
+
   (gptel-make-ollama "Ollama@localhost"
     :stream t
-    :models '(phi4 deepseek-coder-v2 llama3.1 qwen2.5-coder:32b qwen2.5-coder:32b-instruct-q8_0))
-  (gptel-make-ollama "Ollama@mbp14"
-    :host "mbp14:11434"
+    :models '(qwen3:4b gemma3:4b-it-qat))
+
+  (gptel-make-ollama "Ollama@js-mbp14"
+    :host "js-mbp14:11434"
     :stream t
-    :models '(phi4 deepseek-r1:7b-qwen-distill-q4_K_M qwen2.5-coder:14b llama3.1))
-  (setq
-   gptel-org-branching-context t
-   gptel-model 'llama-3.3-70b-versatile
-   gptel-backend (gptel-make-openai "Groq"
-				   :host "api.groq.com"
-				   :endpoint "/openai/v1/chat/completions"
-				   :stream t
-				   :key (getenv "GROQ_API_KEY")
-				   :models '(deepseek-r1-distill-llama-70b
-							 llama-3.3-70b-versatile
-							 mixtral-8x7b-32768)))
+    :models '(qwen3:14b gemma3:12b-it-qat))
+
+  ;; (setq
+  ;;  gptel-org-branching-context t
+  ;;  gptel-model 'llama-3.3-70b-versatile
+  ;;  gptel-backend (gptel-make-openai "Groq"
+  ;; 				   :host "api.groq.com"
+  ;; 				   :endpoint "/openai/v1/chat/completions"
+  ;; 				   :stream t
+  ;; 				   :key (getenv "GROQ_API_KEY")
+  ;; 				   :models '(deepseek-r1-distill-llama-70b
+  ;; 							 llama-3.3-70b-versatile
+  ;; 							 mixtral-8x7b-32768)))
+
+  (setq gptel-model   'deepseek/deepseek-chat-v3-0324:free
+		gptel-backend
+		(gptel-make-openai "OpenRouter"               ;Any name you want
+          :host "openrouter.ai"
+          :endpoint "/api/v1/chat/completions"
+          :stream t
+          :key (getenv "OPENROUTER_API_KEY")
+          :models '(deepseek/deepseek-chat-v3-0324:free deepseek/deepseek-r1-0528:free)))
   (gptel-make-anthropic "Anthropic"
   	:stream t
   	:key (getenv "CLAUDE_API_KEY")
-  	:models '("claude-3-5-sonnet-20240620" "claude-3-7-sonnet-20250219")))
+  	:models '("claude-3-5-sonnet-20240620" "claude-3-7-sonnet-20250219"))
+  (gptel-make-gemini "Gemini" :key (getenv "GEMINI_API_KEY") :stream t))
 
 ;; TODO
 (defun my-gptel-deepseek-remove-think-block (beg end)
@@ -597,6 +609,17 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :demand t
   :after gptel magit)
 
+(use-package aidermacs
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
+  (setenv "ANTHROPIC_API_KEY" (getenv "CLAUDE_API_KEY"))
+  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
+  ;;(setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
+  :custom
+  ; See the Configuration section below
+  (aidermacs-use-architect-mode t)
+  (aidermacs-default-model "sonnet"))
 
 ;; WIP code completion
 ;; TODO receives response but fails processing while response visible in *minuet*
@@ -804,3 +827,10 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    :config (lsp-treemacs-sync-mode 1)
    ) ; TODO
  )
+
+(add-hook 'php-mode-hook 'tree-sitter-mode)
+(add-hook 'php-mode-hook 'web-mode)
+
+(setq require-final-newline nil)
+
+(add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
