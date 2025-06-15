@@ -15,6 +15,7 @@
 		cycle-spacing
 		electric-newline-and-maybe-indent
 		electric-pair-delete-pair
+		end-of-buffer
 		end-of-visual-line
 		forward-sexp
 		indent-for-tab-command
@@ -24,15 +25,18 @@
 		jump-char-forward
 		jump-char-process-char
 		kill-region
+		markdown-end-of-line
 		markdown-outdent-or-delete
 		mc--insert-letter-and-increase
 		mc--insert-number-and-increase
 		org-cycle
 		org-delete-char
 		org-end-of-line
+		org-force-self-insert
 		org-return-and-maybe-indent
 		org-self-insert-command
 		org-shiftleft
+		org-shifttab
 		org-yank
 		overwrite-mode
 		search-forward
@@ -57,6 +61,8 @@
 		picture-self-insert
 		pixel-scroll-precision
 		pixel-scroll-start-momentum
+		text-scale-decrease
+		text-scale-increase
 		winum-select-window-2
 		winum-select-window-3
 		))
