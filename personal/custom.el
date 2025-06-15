@@ -603,10 +603,21 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
                       (point))))))
 (add-hook 'gptel-post-response-functions #'my-gptel-deepseek-remove-think-block)
 
-;; TODO https://github.com/douo/magit-gptcommit
+(use-package llm
+  :straight (:host github :repo "ahyatt/llm"))
+
 (use-package magit-gptcommit
+  :straight t
   :demand t
-  :after gptel magit)
+  :after magit
+  :init (require 'llm-openai)
+  :config (setq llm-warn-on-nonfree t)
+  :custom
+  (magit-gptcommit-llm-provider
+   (make-llm-openai-compatible
+    :key (getenv "OPENROUTER_API_KEY")
+    :url "https://openrouter.ai/api/v1/"
+    :chat-model "deepseek/deepseek-chat-v3-0324:free")))
 
 (use-package aider
   :straight (:host github :repo "tninja/aider.el")
@@ -620,21 +631,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
   ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
   (aider-magit-setup-transients)) ;; add aider magit function to magit menu
-
-(comment
- (use-package aidermacs
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :config
-  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
-  (setenv "ANTHROPIC_API_KEY" (getenv "CLAUDE_API_KEY"))
-  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
-  ;;(setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
-  :custom
-  ; See the Configuration section below
-  (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "sonnet")))
-
-;; WIP code completion
 
 (use-package minuet
   :straight (:host github :repo "milanglacier/minuet-ai.el" :type git)
@@ -691,23 +687,6 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 	 )
 	)
-
-;; (use-package minuet
-;;   :straight (:host github :repo "milanglacier/minuet-ai.el" :type git)
-
-;;   :config
-;;   (setq minuet-provider 'openai-fim-compatible)
-;;   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
-;;   (setq minuet-context-window 512)
-;;   (plist-put minuet-openai-fim-compatible-options :end-point "http://mbp14:11434/v1/completions")
-;;   ;; an arbitrary non-null environment variable as placeholder
-;;   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
-;;   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-;;   ;;(plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
-;;   (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b")
-
-;;   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256)
-;;   )
 
 
 ;;;; MISC UI STUFF
@@ -885,10 +864,5 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    :config (lsp-treemacs-sync-mode 1)
    ) ; TODO
  )
-
-(add-hook 'php-mode-hook 'tree-sitter-mode)
-(add-hook 'php-mode-hook 'web-mode)
-
-(setq require-final-newline nil)
 
 (add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
