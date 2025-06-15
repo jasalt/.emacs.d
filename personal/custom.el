@@ -56,13 +56,6 @@
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
 
-;; Read environment values from shell environment
-(use-package exec-path-from-shell
-  :config (when (memq window-system '(mac ns x))
-			(dolist (var '("ANONYMIZE_KEY" "GROQ_API_KEY" "CLAUDE_API_KEY"))
-			  (add-to-list 'exec-path-from-shell-variables var))
-			(exec-path-from-shell-initialize)))
-
 (when-mac
  (setq ns-use-native-fullscreen nil)
  (setq mac-option-modifier 'nil
@@ -544,46 +537,55 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 (use-package org :pin gnu)  ; should get latest org-mode over built-in
 
+;; Read environment values from shell environment
+(use-package exec-path-from-shell
+  :config (when (memq window-system '(mac ns x))
+			(dolist (var '("ANONYMIZE_KEY" "GROQ_API_KEY" "CLAUDE_API_KEY" "OPENROUTER_API_KEY"))
+			  (add-to-list 'exec-path-from-shell-variables var))
+			(exec-path-from-shell-initialize)))
 
 (use-package gptel ; https://github.com/karthink/gptel
   :straight t
   :bind ("C-x G" . gptel)
   :config
 
-  (gptel-make-ollama "Ollama@localhost"
+  ;; Local models
+
+  (gptel-make-ollama "localhost"
     :stream t
     :models '(qwen3:4b gemma3:4b-it-qat))
 
-  (gptel-make-ollama "Ollama@js-mbp14"
+  (gptel-make-ollama "mbp14"
     :host "js-mbp14:11434"
     :stream t
     :models '(qwen3:14b gemma3:12b-it-qat))
 
-  ;; (setq
-  ;;  gptel-org-branching-context t
-  ;;  gptel-model 'llama-3.3-70b-versatile
-  ;;  gptel-backend (gptel-make-openai "Groq"
-  ;; 				   :host "api.groq.com"
-  ;; 				   :endpoint "/openai/v1/chat/completions"
-  ;; 				   :stream t
-  ;; 				   :key (getenv "GROQ_API_KEY")
-  ;; 				   :models '(deepseek-r1-distill-llama-70b
-  ;; 							 llama-3.3-70b-versatile
-  ;; 							 mixtral-8x7b-32768)))
-
-  (setq gptel-model   'deepseek/deepseek-chat-v3-0324:free
+  ;; Default / Openrouter
+  (setq gptel-model 'deepseek/deepseek-chat-v3-0324:free
 		gptel-backend
-		(gptel-make-openai "OpenRouter"               ;Any name you want
+		(gptel-make-openai "OpenRouter"
           :host "openrouter.ai"
           :endpoint "/api/v1/chat/completions"
           :stream t
           :key (getenv "OPENROUTER_API_KEY")
-          :models '(deepseek/deepseek-chat-v3-0324:free deepseek/deepseek-r1-0528:free)))
+          :models '(deepseek/deepseek-chat-v3-0324:free
+					deepseek/deepseek-r1-0528:free
+					openrouter/google/gemini-2.5-pro-preview)))
+
+  ;; Claude
   (gptel-make-anthropic "Anthropic"
   	:stream t
   	:key (getenv "CLAUDE_API_KEY")
-  	:models '("claude-3-5-sonnet-20240620" "claude-3-7-sonnet-20250219"))
+  	:models '("claude-4-sonnet-20250514" "claude-3-7-sonnet-20250219"))
+
   (gptel-make-gemini "Gemini" :key (getenv "GEMINI_API_KEY") :stream t))
+
+(comment
+
+ (message "ENV: %s" (getenv "OPENROUTER_API_KEY"))
+ (message "ENV: %s" (getenv "CLAUDE_API_KEY"))
+ (message "ENV: %s" (getenv))
+ )
 
 ;; TODO
 (defun my-gptel-deepseek-remove-think-block (beg end)
