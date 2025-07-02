@@ -566,7 +566,13 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (gptel-make-ollama "mbp14"
     :host "js-mbp14:11434"
     :stream t
-    :models '(qwen3:14b gemma3:12b-it-qat)
+    :models '(gemma3n:e4b-it-fp16 qwen3:14b gemma3:12b-it-qat deepseek-coder-v2:16b qwen2.5-coder:14b qwen2.5-coder:3b)
+	)
+
+  (gptel-make-ollama "x13"
+    :host "mx-x13:11434"
+    :stream t
+    :models '(qwen3:32b gemma3:27b)
 	)
 
   ;; Default / Openrouter
@@ -579,6 +585,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
           :key (getenv "OPENROUTER_API_KEY")
           :models '(deepseek/deepseek-chat-v3-0324:free
 					deepseek/deepseek-r1-0528:free
+					moonshotai/kimi-dev-72b:free
 					openrouter/google/gemini-2.5-pro-preview)))
 
   ;; Claude
