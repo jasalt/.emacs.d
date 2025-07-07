@@ -2,6 +2,7 @@
 
 (load-file (expand-file-name "personal/phel.el" user-emacs-directory))
 (load-file (expand-file-name "personal/php.el" user-emacs-directory))
+(load-file (expand-file-name "personal/rust.el" user-emacs-directory))
 
 
 ;; Flashing evaluated region (elisp)
