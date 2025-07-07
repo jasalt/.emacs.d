@@ -5,6 +5,8 @@
       '(
 		apply-operation-to-number-at-point
 		backward-sexp
+		c-electric-delete-forward
+		c-electric-star
 		comment-or-uncomment-region
 		consult-line
 		consult-yank-pop
@@ -25,6 +27,7 @@
 		jump-char-forward
 		jump-char-process-char
 		kill-region
+		kmacro-end-or-call-macro
 		markdown-end-of-line
 		markdown-outdent-or-delete
 		mc--insert-letter-and-increase
