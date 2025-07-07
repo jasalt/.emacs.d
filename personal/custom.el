@@ -566,7 +566,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   (gptel-make-ollama "mbp14"
     :host "js-mbp14:11434"
     :stream t
-    :models '(gemma3n:e4b-it-fp16 qwen3:14b gemma3:12b-it-qat deepseek-coder-v2:16b qwen2.5-coder:14b qwen2.5-coder:3b)
+    :models '(gemma3n:e4b-it-fp16 qwen3:14b gemma3:12b-it-qat hf.co/mradermacher/Llama-Poro-2-8B-Instruct-GGUF deepseek-coder-v2:16b qwen2.5-coder:14b qwen2.5-coder:3b)
 	)
 
   (gptel-make-ollama "x13"
