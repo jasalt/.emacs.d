@@ -374,15 +374,31 @@
     setting-value))
 
 (defun phel-read-repl-command ()
-  "Get the REPL command for the current Phel project."
-  (let ((compose-setting-command (phel-read-compose-setting "repl-command")))
-    (if compose-setting-command
-		(let ((project-path (car compose-setting-command))
-              (command (cdr compose-setting-command)))
-          (concat "cd " project-path " && " command))
-	  (let ((root (phel-find-project-root)))
-		(when root
-		  (concat "cd " root " && ./vendor/bin/phel repl"))))))
+  "Get the REPL command for the current Phel project either from repl.sh or
+   custom docker-compose.yml config directive (TODO refactor):
+   - x-phel-project-data:
+     - repl-command: <command>"
+  (let ((repl-sh-path (locate-dominating-file (buffer-file-name) "repl.sh")))
+    (if repl-sh-path
+        ;; Read command from repl.sh, skipping comments
+        (with-temp-buffer
+          (insert-file-contents (concat repl-sh-path "repl.sh"))
+          (goto-char (point-min))
+          ;; Remove all comment lines and empty lines
+          (flush-lines "^\\s-*#.*$")
+          (flush-lines "^\\s-*$")
+          ;; Get the remaining content as the command
+          (let ((command (string-trim (buffer-string))))
+            (when (not (string-empty-p command))
+              (concat "cd " repl-sh-path " && " command))))
+      (let ((compose-setting-command (phel-read-compose-setting "repl-command")))
+        (if compose-setting-command
+            (let ((project-path (car compose-setting-command))
+                  (command (cdr compose-setting-command)))
+              (concat "cd " project-path " && " command))
+          (let ((root (phel-find-project-root)))
+            (when root
+              (concat "cd " root " && ./vendor/bin/phel repl"))))))))
 
 (defun phel-repl ()
   "Starts or opens existing Phel REPL process mistty buffer in current window.
