@@ -182,7 +182,6 @@
           (with-selected-window window
             (text-scale-decrease 1))))))
 
-(define-key undo-tree-map (kbd "M-_") nil)
 (global-set-key (kbd "M-_") 'decrease-text-in-all-frames-windows)
 
 (global-set-key (kbd "C-x F") 'project-find-file)
@@ -390,7 +389,10 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	  (setq undo-tree-history-directory-alist
 		`((".*" . ,temporary-file-directory)))
 	  (global-undo-tree-mode))
-  :config (diminish 'undo-tree-mode)
+  :config
+  (diminish 'undo-tree-mode)
+  ;; Overlaps binding for 'decrease-text-in-all-frames-windows
+  (define-key undo-tree-map (kbd "M-_") nil)
   :bind ("C-x u" . undo-tree-visualize)
   )
 
