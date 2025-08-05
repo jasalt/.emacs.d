@@ -162,6 +162,28 @@
 
 (global-set-key (kbd "C-M-_") 'decrease-text-and-pane)
 
+(defun increase-text-in-all-frames-windows ()
+  "Increase text size in all windows."
+  (interactive)
+  (dolist (frame (frame-list))
+    (with-selected-frame frame
+      (dolist (window (window-list))
+        (with-selected-window window
+          (text-scale-increase 1))))))
+
+(global-set-key (kbd "M-+") 'increase-text-in-all-frames-windows)
+
+(defun decrease-text-in-all-frames-windows ()
+  "Decrease text size in all windows."
+  (interactive)
+  (dolist (frame (frame-list))
+      (with-selected-frame frame
+        (dolist (window (window-list))
+          (with-selected-window window
+            (text-scale-decrease 1))))))
+
+(define-key undo-tree-map (kbd "M-_") nil)
+(global-set-key (kbd "M-_") 'decrease-text-in-all-frames-windows)
 
 (global-set-key (kbd "C-x F") 'project-find-file)
 
