@@ -580,23 +580,26 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   :bind ("C-x G" . gptel)
   :config
 
+  ;; Don't create new window
+  (setq gptel-display-buffer-action '(display-buffer-same-window))
+
   (setq gptel-track-media t) ;; TODO works?
   ;; Local models
 
   (gptel-make-ollama "localhost"
     :stream t
-    :models '(qwen3:4b gemma3:4b-it-qat))
+    :models '(qwen3-coder gemma3:4b-it-qat))
 
   (gptel-make-ollama "mbp14"
     :host "js-mbp14:11434"
     :stream t
-    :models '(gemma3n:e4b-it-fp16 qwen3:14b gemma3:12b-it-qat hf.co/mradermacher/Llama-Poro-2-8B-Instruct-GGUF deepseek-coder-v2:16b qwen2.5-coder:14b qwen2.5-coder:3b)
+    :models '(qwen2.5-coder:14b gemma3n:e4b-it-fp16 qwen3:14b gemma3:12b-it-qat hf.co/mradermacher/Llama-Poro-2-8B-Instruct-GGUF qwen2.5-coder:3b)
 	)
 
-  (gptel-make-ollama "x13"
-    :host "mx-x13:11434"
+  (gptel-make-ollama "p14s"
+    :host "mx-p14s:11434"
     :stream t
-    :models '(qwen3:32b gemma3:27b)
+    :models '(qwen3-coder qwen3:32b gemma3:27b hf.co/mradermacher/Llama-Poro-2-70B-Instruct-GGUF)
 	)
 
   ;; Default / Openrouter
@@ -608,6 +611,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
           :stream t
           :key (getenv "OPENROUTER_API_KEY")
           :models '(deepseek/deepseek-chat-v3-0324:free
+					qwen/qwen3-coder
 					deepseek/deepseek-r1-0528:free
 					moonshotai/kimi-dev-72b:free
 					openrouter/google/gemini-2.5-pro-preview)))
