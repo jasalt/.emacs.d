@@ -1,5 +1,11 @@
 ;; Interactive Phel development config influenced by Emacs Cider
 
+;; DEPRECATED VERSION, SEE UPDATES AT:
+
+;; - https://codeberg.org/jasalt/phel-mode
+;; - https://github.com/jasalt/phel-mode
+
+
 ;; Status: mostly works with some rough edges and testing setup is in progress,
 ;;         see TODO items
 
@@ -159,6 +165,8 @@
   (with-temp-buffer
     (insert code)
 	;;(print-buffer-to-messages "at input")
+
+	;; TODO remove most workarounds https://github.com/phel-lang/phel-lang/pull/820 fixes
 
     ;; Remove (ns ...) form around require-statements
 	;; Workaround for https://github.com/phel-lang/phel-lang/issues/766
