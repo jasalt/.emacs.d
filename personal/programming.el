@@ -88,6 +88,9 @@
 
 (use-package logview)
 
+;; https://github.com/prettier/prettier-emacs
+(use-package prettier-js)
+
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setenv "LSP_USE_PLISTS" "true")
 
