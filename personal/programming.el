@@ -1,6 +1,8 @@
 ;; Programming related config
 
-(load-file (expand-file-name "personal/phel.el" user-emacs-directory))
+
+(load-file (expand-file-name "personal/phel-mode/phel.el" user-emacs-directory)) ;; jasalt/phel-mode
+
 (load-file (expand-file-name "personal/php.el" user-emacs-directory))
 (load-file (expand-file-name "personal/rust.el" user-emacs-directory))
 
