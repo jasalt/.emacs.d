@@ -610,8 +610,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
           :endpoint "/api/v1/chat/completions"
           :stream t
           :key (getenv "OPENROUTER_API_KEY")
-          :models '(deepseek/deepseek-chat-v3-0324:free
-					qwen/qwen3-coder
+          :models '(qwen/qwen3-coder
+					qwen/qwen3-coder:free
+					openai/gpt-5
 					deepseek/deepseek-r1-0528:free
 					moonshotai/kimi-dev-72b:free
 					openrouter/google/gemini-2.5-pro-preview)))
@@ -658,7 +659,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    (make-llm-openai-compatible
     :key (getenv "OPENROUTER_API_KEY")
     :url "https://openrouter.ai/api/v1/"
-    :chat-model "deepseek/deepseek-chat-v3-0324:free")))
+    :chat-model "qwen/qwen3-coder openai/gpt-5")))
 
 (use-package aider
   :straight (:host github :repo "tninja/aider.el")
