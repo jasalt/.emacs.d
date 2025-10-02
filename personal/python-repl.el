@@ -31,21 +31,28 @@
     process-target))
 
 (defun python-send-text-to-process (text)
-  "Send TEXT to the REPL process, using terminal bracketed paste to preserve indentation in IPython/MisTTY and ensuring a blank line to terminate blocks."
+  "Send TEXT to the REPL process. Detect IPython in MisTTY and use terminal bracketed paste there; otherwise send plain text with a terminating blank line to end blocks."
   (python-get-or-set-process-target nil)
   (let* ((buf-name (car (last (split-string process-target " " t))))
-         (payload
-          (if (string= buf-name "*mistty*")
-              ;; Use bracketed paste to avoid IPython auto-indentation issues.
-              (let ((clean text))
-                (unless (string-match-p "\n\\'" clean)
-                  (setq clean (concat clean "\n")))
-                (concat "\e[200~" clean "\n\e[201~"))
-            ;; Fallback: ensure a terminating blank line.
-            (let ((clean text))
-              (unless (string-match-p "\n\\'" clean)
-                (setq clean (concat clean "\n")))
-              (concat clean "\n")))))
+         (is-mistty (string= buf-name "*mistty*"))
+         (clean text)
+         (use-bracketed-paste
+          (and is-mistty
+               (with-current-buffer buf-name
+                 (save-excursion
+                   (goto-char (point-max))
+                   (let ((line (buffer-substring-no-properties
+                                (line-beginning-position) (line-end-position))))
+                     (string-match-p "^In \\[[0-9]+\\]:" line))))))
+         payload)
+    ;; Ensure trailing newline; in non-bracketed mode add a blank line to terminate blocks.
+    (unless (string-match-p "\n\\'" clean)
+      (setq clean (concat clean "\n")))
+    (if use-bracketed-paste
+        ;; IPython: bracketed paste prevents auto-indentation; send an extra newline inside paste.
+        (setq payload (concat "\e[200~" clean "\n\e[201~"))
+      ;; Regular Python (>>>): do not use bracketed paste; send an extra newline to close blocks.
+      (setq payload (concat clean "\n")))
     (process-send-string process-target payload)))
 
 (defun python-send-region-or-buffer-to-process (arg &optional beg end)
