@@ -53,7 +53,10 @@
         (setq payload (concat "\e[200~" clean "\n\e[201~"))
       ;; Regular Python (>>>): do not use bracketed paste; send an extra newline to close blocks.
       (setq payload (concat clean "\n")))
-    (process-send-string process-target payload)))
+    (process-send-string process-target payload)
+    (when (string= buf-name "*mistty*")
+      (with-current-buffer buf-name
+        (call-interactively 'mistty-send-command)))))
 
 (defun python-send-region-or-buffer-to-process (arg &optional beg end)
   "Send the current buffer or region to a process buffer. The first time it's
