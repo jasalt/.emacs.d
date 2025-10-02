@@ -31,15 +31,22 @@
     process-target))
 
 (defun python-send-text-to-process (text)
-  "Send the given text to the process buffer. Phel code being sent to REPL
-  should be processed beforehand to avoid some quirks."
+  "Send TEXT to the REPL process, using terminal bracketed paste to preserve indentation in IPython/MisTTY and ensuring a blank line to terminate blocks."
   (python-get-or-set-process-target nil)
-  (process-send-string process-target text)
-
-  (let ((buf-name (car (last (split-string process-target " " t)))))
-    (when (string= buf-name "*mistty*")
-      (with-current-buffer buf-name
-        (call-interactively 'mistty-send-command)))))
+  (let* ((buf-name (car (last (split-string process-target " " t))))
+         (payload
+          (if (string= buf-name "*mistty*")
+              ;; Use bracketed paste to avoid IPython auto-indentation issues.
+              (let ((clean text))
+                (unless (string-match-p "\n\\'" clean)
+                  (setq clean (concat clean "\n")))
+                (concat "\e[200~" clean "\n\e[201~"))
+            ;; Fallback: ensure a terminating blank line.
+            (let ((clean text))
+              (unless (string-match-p "\n\\'" clean)
+                (setq clean (concat clean "\n")))
+              (concat clean "\n")))))
+    (process-send-string process-target payload)))
 
 (defun python-send-region-or-buffer-to-process (arg &optional beg end)
   "Send the current buffer or region to a process buffer. The first time it's
