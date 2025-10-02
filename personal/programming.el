@@ -220,9 +220,12 @@
 (use-package emacs
   :hook (python-ts-mode . lsp-deferred))
 
+;; https://emacs-lsp.github.io/lsp-pyright/#usage-notes
+;; https://docs.basedpyright.com/latest/installation/command-line-and-language-server/
 (use-package lsp-pyright	; https://emacs-lsp.github.io/lsp-pyright/
   ;; :init
   ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
+  :custom (lsp-pyright-langserver-command "basedpyright")
   :config
   (setq lsp-pyright-disable-organize-imports t)	; ruff does this
   ;; (setq lsp-pyright-auto-import-completions nil)  ; ruff does this too?
@@ -231,6 +234,7 @@
   ;;                        (require 'lsp-pyright)
   ;;                        (lsp)))
   )
+
 ;; or lsp-deferred
 ;; (require 'dap-python)
 
