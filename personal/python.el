@@ -64,32 +64,28 @@
     process-target))
 
 (defun python-send-text-to-process (text)
-  "Send TEXT to the REPL process. Detect IPython in MisTTY and use terminal bracketed paste there; otherwise send plain text with a terminating blank line to end blocks."
+  "Send TEXT to the REPL process. Detect IPython in MisTTY and use terminal bracketed paste to send the entire block at once; otherwise send plain text with a terminating blank line (two newlines) to end blocks."
   (python-get-or-set-process-target nil)
   (let* ((buf-name (car (last (split-string process-target " " t))))
-         (is-mistty (string= buf-name "*mistty*"))
+         (is-mistty (and buf-name (string-prefix-p "*mistty*" buf-name)))
          (clean text)
          (use-bracketed-paste
           (and is-mistty
                (with-current-buffer buf-name
                  (save-excursion
                    (goto-char (point-max))
-                   (let ((line (buffer-substring-no-properties
-                                (line-beginning-position) (line-end-position))))
-                     (string-match-p "^In \\[[0-9]+\\]:" line))))))
-         payload)
-    ;; Ensure trailing newline; in non-bracketed mode add a blank line to terminate blocks.
-    (unless (string-match-p "\n\\'" clean)
-      (setq clean (concat clean "\n")))
-    (if use-bracketed-paste
-        ;; IPython: bracketed paste prevents auto-indentation; send an extra newline inside paste.
-        (setq payload (concat "\e[200~" clean "\n\e[201~"))
-      ;; Regular Python (>>>): do not use bracketed paste; send an extra newline to close blocks.
-      (setq payload (concat clean "\n")))
-    (process-send-string process-target payload)
-    (when (string= buf-name "*mistty*")
-      (with-current-buffer buf-name
-        (call-interactively 'mistty-send-command)))))
+                   (re-search-backward "^In \\[[0-9]+\\]:" (max (point-min) (- (point-max) 2000)) t))))))
+    ;; Ensure exactly two trailing newlines so compound statements are executed
+    (while (string-match-p "\n\\'" clean)
+      (setq clean (substring clean 0 -1)))
+    (setq clean (concat clean "\n\n"))
+    (let ((payload (if use-bracketed-paste
+                       (concat "\e[200~" clean "\e[201~")
+                     clean)))
+      (process-send-string process-target payload)
+	  (when is-mistty
+		(with-current-buffer buf-name
+		  (call-interactively 'mistty-send-command))))))
 
 (defun python-send-region-or-buffer-to-process (arg &optional beg end)
   "Send the current buffer or region to a process buffer. The first time it's
