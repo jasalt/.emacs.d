@@ -1,17 +1,39 @@
 ;; Python specific config
 
-(use-package emacs
-  :hook (python-ts-mode . lsp-deferred))
-
 ;; https://emacs-lsp.github.io/lsp-pyright/
 ;; https://docs.basedpyright.com/latest/installation/command-line-and-language-server/
-(use-package lsp-pyright
-  ;; :init
-  ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
-  :custom (lsp-pyright-langserver-command "basedpyright")
-  :config
-  (setq lsp-pyright-disable-organize-imports t)	; ruff does this
+;; (use-package lsp-pyright
+;;   ;; :init
+;;   ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
+;;   :custom (lsp-pyright-langserver-command "basedpyright")
+;;   :config
+;;   (setq lsp-pyright-disable-organize-imports t)	; ruff does this
+;;   :hook
+;;   (python-ts-mode . (lambda ()
+;; 					  (require 'lsp-pyright)
+;; 					  (lsp-deferred)))
+;;   )
+
+(use-package flycheck
+  :diminish flycheck-mode
+  :init
+  (setq flycheck-check-syntax-automatically '(save new-line)
+        flycheck-idle-change-delay 5.0
+        flycheck-display-errors-delay 0.9
+        flycheck-highlighting-mode 'symbols
+        flycheck-indication-mode 'left-fringe
+        flycheck-standard-error-navigation t
+        flycheck-deferred-syntax-check nil)
   )
+
+
+(use-package no-littering)
+
+;; no-littering doesn't set this by default so we must place
+;; auto save files in the same path as it uses for sessions
+(setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
 
 ;; (require 'dap-python)
 

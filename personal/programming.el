@@ -111,16 +111,23 @@
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
 	gc-cons-threshold (* 100 1024 1024))
-  :hook (
-		 ;; (yaml-ts-mode . lsp-mode)
-		 (lsp-mode . lsp-enable-which-key-integration))
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  ;; (lsp-diagnostics-provider :capf)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  (lsp-disabled-clients '((python-mode . pyls)))
   :commands lsp)
 
 ;; Optionally
-(use-package lsp-ui :hook (lsp-mode . lsp-ui-mode)
-  ;;:init (lsp-ui-sideline-toggle-symbols-info)
-  ;; :config (setq lsp-ui-doc-position 'bottom)
-  ;; :commands lsp-ui-mode
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :after lsp-mode
+  :custom
+  (lsp-ui-doc-show-with-cursor nil)
+  :config
+  (setq lsp-ui-doc-position 'bottom)
   )
 
 ;; TODO if startup is slow, defer with eg.
@@ -131,7 +138,8 @@
 
 (global-unset-key (kbd "<f10>")) ; unbind useless menu key, could be mode local
 
-(use-package dap-mode
+(comment
+ (use-package dap-mode
   :init
   (setq dap-auto-configure-features '(locals controls tooltip sessions expressions breakpoints)) ; repl
   :config (dap-ui-mode 1)
@@ -183,7 +191,7 @@
   :custom (dap-ui-controls-screen-position 'posframe-poshandler-frame-bottom-right-corner)
   (dap-ui-locals-expand-depth t)  ; TODO not working?
   ;; (setq dap-print-io t) ; print debug info into *Messages*
-  )
+  ))
 
 
 
