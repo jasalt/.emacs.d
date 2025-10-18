@@ -590,16 +590,16 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
     :stream t
     :models '(qwen3-coder gemma3:4b-it-qat))
 
-  (gptel-make-ollama "mbp14"
-    :host "js-mbp14:11434"
-    :stream t
-    :models '(qwen2.5-coder:14b gemma3n:e4b-it-fp16 qwen3:14b gemma3:12b-it-qat hf.co/mradermacher/Llama-Poro-2-8B-Instruct-GGUF qwen2.5-coder:3b)
-	)
-
   (gptel-make-ollama "p14s"
     :host "mx-p14s:11434"
     :stream t
     :models '(qwen3-coder qwen3:32b gemma3:27b hf.co/mradermacher/Llama-Poro-2-70B-Instruct-GGUF)
+	)
+
+  (gptel-make-ollama "mbp14"
+    :host "js-mbp14:11434"
+    :stream t
+    :models '(qwen2.5-coder:14b qwen3:14b gemma3n:e4b-it-fp16 gemma3:12b-it-qat hf.co/mradermacher/Llama-Poro-2-8B-Instruct-GGUF qwen2.5-coder:3b)
 	)
 
   ;; Default / Openrouter
@@ -613,6 +613,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
           :models '(qwen/qwen3-coder
 					qwen/qwen3-coder:free
 					openai/gpt-5
+					deepseek/deepseek-chat-v3.1:free
+					deepseek/deepseek-chat-v3.1
 					deepseek/deepseek-r1-0528:free
 					moonshotai/kimi-dev-72b:free
 					openrouter/google/gemini-2.5-pro-preview)))
@@ -687,13 +689,16 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
   ;; power. Once you have a reliable estimate of your local computing power,
   ;; you should adjust the context window to a larger value.
   (setq minuet-context-window 512)
+  ;;(plist-put minuet-openai-fim-compatible-options :end-point "http://js-mbp14:11434/v1/completions")
   (plist-put minuet-openai-fim-compatible-options :end-point "http://js-mbp14:11434/v1/completions")
   ;; an arbitrary non-null environment variable as placeholder.
   ;; For Windows users, TERM may not be present in environment variables.
   ;; Consider using APPDATA instead.
   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
-  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b") ;; 14b
+  ;;(plist-put minuet-openai-fim-compatible-options :model "qwen3:14b") ;; 14b
+  ;; (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b") ;; 14b
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:14b") ;; 14b
 
 
   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56)
