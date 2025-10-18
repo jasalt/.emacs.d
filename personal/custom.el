@@ -574,6 +574,9 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 			  (add-to-list 'exec-path-from-shell-variables var))
 			(exec-path-from-shell-initialize)))
 
+;; This for some reason doesn't get loaded with exec-path-from-shell
+;;(when (file-directory-p "~/.local/bin")
+;;  (setenv "PATH" (concat (getenv "HOME") "/.local/bin:" (getenv "PATH"))))
 
 (use-package gptel ; https://github.com/karthink/gptel
   :straight t
@@ -779,7 +782,8 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 
 ;; TODO startup dir is stubbornly ~
 
-(use-package treemacs
+(comment
+ (use-package treemacs
   ;;  :defer t
   :init
   (progn
@@ -881,7 +885,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
    ("C-x t C-t" . treemacs-find-file)
    ("C-x t M-t" . treemacs-find-tag)
    )
-  )
+  ))
 
 (comment
 
