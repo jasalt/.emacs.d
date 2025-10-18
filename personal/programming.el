@@ -4,6 +4,7 @@
 (load-file (expand-file-name "personal/phel-mode/phel.el" user-emacs-directory)) ;; jasalt/phel-mode
 
 (load-file (expand-file-name "personal/php.el" user-emacs-directory))
+(load-file (expand-file-name "personal/python.el" user-emacs-directory))
 (load-file (expand-file-name "personal/rust.el" user-emacs-directory))
 
 
@@ -110,16 +111,23 @@
 	;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 	read-process-output-max (* 1024 1024)
 	gc-cons-threshold (* 100 1024 1024))
-  :hook (
-		 ;; (yaml-ts-mode . lsp-mode)
-		 (lsp-mode . lsp-enable-which-key-integration))
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  ;; (lsp-diagnostics-provider :capf)
+  (lsp-headerline-breadcrumb-enable t)
+  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-lens-enable nil)
+  (lsp-disabled-clients '((python-mode . pyls)))
   :commands lsp)
 
 ;; Optionally
-(use-package lsp-ui :hook (lsp-mode . lsp-ui-mode)
-  ;;:init (lsp-ui-sideline-toggle-symbols-info)
-  ;; :config (setq lsp-ui-doc-position 'bottom)
-  ;; :commands lsp-ui-mode
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :after lsp-mode
+  :custom
+  (lsp-ui-doc-show-with-cursor nil)
+  :config
+  (setq lsp-ui-doc-position 'bottom)
   )
 
 ;; TODO if startup is slow, defer with eg.
@@ -130,7 +138,8 @@
 
 (global-unset-key (kbd "<f10>")) ; unbind useless menu key, could be mode local
 
-(use-package dap-mode
+(comment
+ (use-package dap-mode
   :init
   (setq dap-auto-configure-features '(locals controls tooltip sessions expressions breakpoints)) ; repl
   :config (dap-ui-mode 1)
@@ -182,100 +191,8 @@
   :custom (dap-ui-controls-screen-position 'posframe-poshandler-frame-bottom-right-corner)
   (dap-ui-locals-expand-depth t)  ; TODO not working?
   ;; (setq dap-print-io t) ; print debug info into *Messages*
-  )
+  ))
 
-
-;; PYTHON
-;; sudo npm install --global pyright  ; TODO needed at all? Should auto-install.
-;; pipx install ruff ruff-lsp
-
-(comment
- "Making (python-shell-send-region) work with Django manage.py"
-
- ;; Working static setting
- (setq python-shell-interpreter "/home/user/dev/django-toybox/.venv/bin/ipython"
-       python-shell-interpreter-args "--simple-prompt -i /home/user/dev/django-toybox/manage.py shell_plus")
- )
-
-(defun set-django-root-for-python-shell ()
-   "Ask user for Django project root having manage.py and .venv to use with
-    (run-python). Experimental but initially working. WIP...
-
-    Expects .venv to be in project dir, eg. with poetry requires:
-    poetry config virtualenvs.in-project true"
-   ;; - TODO (automate) recursively search upwards for manage.py to decide dir automatically,
-   ;; - TODO (automate) check if ipython exists and use python if not
-   ;; - TODO (hook) python-ts-mode :init (?)
-   (interactive)
-   (let ((abs-dir-name (expand-file-name (read-directory-name "Select Django root directory (with manage.py): "))))
-     (message "Selected: %s" abs-dir-name)
-     (setq python-shell-interpreter (concat abs-dir-name ".venv/bin/" "ipython")
-	   python-shell-interpreter-args (concat "--simple-prompt -i " (concat abs-dir-name "manage.py") " shell_plus"))))
-
-;; Fix unreadable ipython term traceback colors in global ipython profile settings
-;; Run `ipython profile create', then set in : ~/.ipython/profile_default/ipython_config.py:
-;; c.InteractiveShell.colors = 'nocolor'
-;; -- https://jsstevenson.github.io/blog/2022/custom-ipython-colors/
-
-(use-package emacs
-  :hook (python-ts-mode . lsp-deferred))
-
-(use-package lsp-pyright	; https://emacs-lsp.github.io/lsp-pyright/
-  ;; :init
-  ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
-  :config
-  (setq lsp-pyright-disable-organize-imports t)	; ruff does this
-  ;; (setq lsp-pyright-auto-import-completions nil)  ; ruff does this too?
-  ;; (setq lsp-pyright-typechecking-mode "strict") ; defaults to basic
-  ;; :hook (python-mode . (lambda ()
-  ;;                        (require 'lsp-pyright)
-  ;;                        (lsp)))
-  )
-;; or lsp-deferred
-;; (require 'dap-python)
-
-
-;; NOTE if fails at start with type errors, go to ~/.emacs.d/elpa and run:
-;; find . -type f -name '*.elc' -delete
-
-
-;; Pyright requires config file per project.
-;; Does Neovim assist pyright to check the .venv dir automatically?
-;; -> When NeoVim is started in activated venv, pyright ran by it finds correct python
-
-(defun pyrightconfig-write (virtualenv)
-  "Helper function that attempts to create pyright config file.
-   Copied from somewhere..."
-  (interactive "DEnv: ")
-
-  (let* (;; file-truename and tramp-file-local-name ensure that neither `~' nor
-	 ;; the Tramp prefix (e.g. "/ssh:my-host:") wind up in the final
-	 ;; absolute directory path.
-	 (venv-dir (tramp-file-local-name (file-truename virtualenv)))
-
-	 ;; Given something like /path/to/.venv/, this strips off the trailing `/'.
-	 (venv-file-name (directory-file-name venv-dir))
-
-	 ;; Naming convention for venvPath matches the field for
-	 ;; pyrightconfig.json.  `file-name-directory' gets us the parent path
-	 ;; (one above .venv).
-	 (venvPath (file-name-directory venv-file-name))
-
-	 ;; Grabs just the `.venv' off the end of the venv-file-name.
-	 (venv (file-name-base venv-file-name))
-
-	 ;; Eglot demands that `pyrightconfig.json' is in the project root
-	 ;; folder.
-	 (base-dir (vc-git-root default-directory))
-	 (out-file (expand-file-name "pyrightconfig.json" base-dir))
-
-	 ;; Finally, get a string with the JSON payload.
-	 (out-contents (json-encode (list :venvPath venvPath :venv venv))))
-
-    ;; Emacs uses buffers for everything.  This creates a temp buffer, inserts
-    ;; the JSON payload, then flushes that content to final `pyrightconfig.json'
-    ;; location
-    (with-temp-file out-file (insert out-contents))))
 
 
 (use-package iedit)
