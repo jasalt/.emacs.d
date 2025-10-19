@@ -312,6 +312,13 @@
   (require 'lsp-mode)  ;; Set LSP language IDs before LSP starts
   (add-to-list 'lsp-language-id-configuration '("\\.djhtml\\'" . "html"))
   (add-to-list 'lsp-language-id-configuration '("\\.twig\\'" . "html"))
+
+  (require 'treemacs-icons-dired)  ;; Add treemacs icon for .djhtml files
+  (treemacs-modify-theme "Default"
+	:config
+	(progn
+      (treemacs-create-icon :file "vsc/django.png" :extensions ("djt" "django-html" "django-txt" "djhtml"))))
+
   (setq lsp-html-hover-documentation nil)
   (setq lsp-html-hover-references nil)
 
