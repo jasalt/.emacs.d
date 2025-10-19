@@ -10,7 +10,7 @@
 
 (setq lsp-headerline-breadcrumb-enable-diagnostics t)
 (setq lsp-headerline-breadcrumb-segments '(symbols))
-(setq lsp-headerline-breadcrumb-path-face)
+
 (setq lsp-headerline-breadcrumb-icons-enable nil)
 
 ;; Flashing evaluated region (elisp)
