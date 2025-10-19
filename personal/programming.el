@@ -315,6 +315,10 @@
   (setq lsp-html-hover-documentation nil)
   (setq lsp-html-hover-references nil)
 
+  ;; Make sure to use web-mode features for these
+  (setq lsp-html-auto-closing-tags nil)
+  (setq lsp-html-format-enable nil)
+
   :hook
   (web-mode . (lambda () (electric-pair-mode -1)))
   (web-mode . lsp-deferred))
