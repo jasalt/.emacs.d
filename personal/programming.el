@@ -302,7 +302,7 @@
    ("\\.mustache\\'" . web-mode)
    ("\\.djhtml\\'" . web-mode))
   :config
-    ;; Set LSP language IDs before LSP starts
+  ;; Set LSP language IDs before LSP starts
   (require 'lsp-mode)
   (add-to-list 'lsp-language-id-configuration '("\\.djhtml\\'" . "html"))
   (add-to-list 'lsp-language-id-configuration '("\\.twig\\'" . "html"))
@@ -311,17 +311,15 @@
 	'(("django"    . "\\.djhtml\\'")
       ("twig"  . "\\.twig\\.")))
 
+  (setq web-mode-enable-front-matter-block t)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 4)
+  (setq web-mode-code-indent-offset 4)
+
   (setq web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
 
-  :hook (web-mode . (lambda ()
-					  (electric-pair-mode -1)
-					  (setq web-mode-enable-front-matter-block t)
-					  (setq web-mode-markup-indent-offset 2)
-					  (setq web-mode-css-indent-offset 4)
-					  (setq web-mode-code-indent-offset 4)
-					  (add-to-list 'lsp-language-id-configuration '("\\.djhtml" . "html"))
-					  (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
-					  ))
+  :hook
+  (web-mode . (lambda () (electric-pair-mode -1)))
   (web-mode . lsp-deferred))
 ;; Javascript
 
