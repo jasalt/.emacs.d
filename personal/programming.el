@@ -311,26 +311,14 @@
    ("\\.djhtml\\'" . web-mode))
   :config
   (setq web-mode-engines-alist
-		'(("django"    . "\\.djhtml\\'")
+	'(("django"    . "\\.djhtml\\'")
           ("twig"  . "\\.twig\\."))
-		)
+	)
+  (setq web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
+
   :hook (web-mode . (lambda ()
+		      (setq electric-pair-mode -1)
                       (setq web-mode-markup-indent-offset 2))))
-
-(comment ; disabled, indent was not compatible with template tags
- (use-package mhtml-mode
-  :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . mhtml-mode))
-  :hook ((mhtml-mode . yas-minor-mode)(mhtml-mode . lsp-deferred))
-  :config
-  ;; Remove overlapping of some personal bindings
-  (define-key mhtml-mode-map (kbd "C-c 1") nil)
-  (define-key mhtml-mode-map (kbd "C-c 2") nil)
-  (define-key mhtml-mode-map (kbd "C-c 3") nil)
-  (define-key mhtml-mode-map (kbd "C-c 4") nil)
-  ))
-
-
-
 ;; Javascript
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
