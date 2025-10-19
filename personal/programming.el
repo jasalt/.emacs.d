@@ -303,7 +303,8 @@
   :custom
   (web-mode-engines-alist
 	'(("django"    . "\\.djhtml\\'")
-      ("twig"  . "\\.twig\\.")))
+      ("twig"  . "\\.twig\\.")
+      ("astro"  . "\\.astro\\.")))
 
   (web-mode-enable-front-matter-block t)
   (web-mode-markup-indent-offset 2)
