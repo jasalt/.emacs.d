@@ -115,9 +115,9 @@
   :custom
   ;; (lsp-headerline-breadcrumb-enable-diagnostics t)
   ;; (lsp-diagnostics-provider :capf)
-  (lsp-headerline-breadcrumb-icons-enable nil)
+  (lsp-headerline-breadcrumb-icons-enable t)
   (lsp-headerline-breadcrumb-enable t)
-  (lsp-headerline-breadcrumb-segments '(symbols))
+  (lsp-headerline-breadcrumb-segments '(file symbols))
   (lsp-lens-enable nil)
   (lsp-disabled-clients '((python-mode . pyls)))
   :commands lsp)
