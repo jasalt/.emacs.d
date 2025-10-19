@@ -287,17 +287,11 @@
 ;; Using web-mode, and lsp-mode with html-lsp and emmet-ls
 
 ;; (use-package web-mode
-;;   ;; TODO incompatibility with lsp-mode possible
-;;   ;; lsp-format does not handle {% %} {{ }} template tags
-;;   :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 ;;   :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
 ;;   :config
-
 ;;   )
 
-
 (use-package web-mode
-  ;; :after (lsp-mode)
   :mode
   (("\\.phtml\\'" . web-mode)
    ("\\.php\\'" . web-mode)
@@ -320,13 +314,14 @@
   (setq web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
 
   :hook (web-mode . (lambda ()
-		      (electric-pair-mode -1)
-              (setq web-mode-markup-indent-offset 2)
-			  (setq web-mode-css-indent-offset 4)
-			  (setq web-mode-code-indent-offset 4)
-			  (add-to-list 'lsp-language-id-configuration '("\\.djhtml" . "html"))
-			  (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
-			  ))
+					  (electric-pair-mode -1)
+					  (setq web-mode-enable-front-matter-block t)
+					  (setq web-mode-markup-indent-offset 2)
+					  (setq web-mode-css-indent-offset 4)
+					  (setq web-mode-code-indent-offset 4)
+					  (add-to-list 'lsp-language-id-configuration '("\\.djhtml" . "html"))
+					  (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+					  ))
   (web-mode . lsp-deferred))
 ;; Javascript
 
