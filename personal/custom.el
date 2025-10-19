@@ -196,6 +196,8 @@
 (setq scroll-conservatively 101)  ; avoid recentering when moving cursor
 (setq scroll-margin 0)  ; TODO would be nice to set as a mode specific setting
 
+(use-package no-littering)
+
 (size-indication-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
