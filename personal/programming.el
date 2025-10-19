@@ -288,7 +288,8 @@
 
 (use-package web-mode
   :mode
-  (("\\.phtml\\'" . web-mode)
+  (("\\.html\\'" . web-mode)
+   ("\\.phtml\\'" . web-mode)
    ("\\.php\\'" . web-mode)
    ("\\.tpl\\'" . web-mode)
    ("\\.[agj]sp\\'" . web-mode)
