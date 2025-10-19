@@ -8,11 +8,6 @@
 (load-file (expand-file-name "personal/rust.el" user-emacs-directory))
 
 
-(setq lsp-headerline-breadcrumb-enable-diagnostics t)
-(setq lsp-headerline-breadcrumb-segments '(symbols))
-
-(setq lsp-headerline-breadcrumb-icons-enable nil)
-
 ;; Flashing evaluated region (elisp)
 ;; Partially generated code warning
 
@@ -118,9 +113,11 @@
 	gc-cons-threshold (* 100 1024 1024))
   :hook ((lsp-mode . lsp-enable-which-key-integration))
   :custom
+  ;; (lsp-headerline-breadcrumb-enable-diagnostics t)
   ;; (lsp-diagnostics-provider :capf)
+  (lsp-headerline-breadcrumb-icons-enable nil)
   (lsp-headerline-breadcrumb-enable t)
-  (lsp-headerline-breadcrumb-segments '(project file symbols))
+  (lsp-headerline-breadcrumb-segments '(symbols))
   (lsp-lens-enable nil)
   (lsp-disabled-clients '((python-mode . pyls)))
   :commands lsp)
@@ -295,11 +292,12 @@
 ;;   :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
 ;;   :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
 ;;   :config
-;;   (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+
 ;;   )
 
 
 (use-package web-mode
+  ;; :after (lsp-mode)
   :mode
   (("\\.phtml\\'" . web-mode)
    ("\\.php\\'" . web-mode)
@@ -310,15 +308,26 @@
    ("\\.mustache\\'" . web-mode)
    ("\\.djhtml\\'" . web-mode))
   :config
+    ;; Set LSP language IDs before LSP starts
+  (require 'lsp-mode)
+  (add-to-list 'lsp-language-id-configuration '("\\.djhtml\\'" . "html"))
+  (add-to-list 'lsp-language-id-configuration '("\\.twig\\'" . "html"))
+
   (setq web-mode-engines-alist
 	'(("django"    . "\\.djhtml\\'")
-          ("twig"  . "\\.twig\\."))
-	)
+      ("twig"  . "\\.twig\\.")))
+
   (setq web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
 
   :hook (web-mode . (lambda ()
-		      (setq electric-pair-mode -1)
-                      (setq web-mode-markup-indent-offset 2))))
+		      (electric-pair-mode -1)
+              (setq web-mode-markup-indent-offset 2)
+			  (setq web-mode-css-indent-offset 4)
+			  (setq web-mode-code-indent-offset 4)
+			  (add-to-list 'lsp-language-id-configuration '("\\.djhtml" . "html"))
+			  (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+			  ))
+  (web-mode . lsp-deferred))
 ;; Javascript
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
