@@ -606,7 +606,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 	)
 
   ;; Default / Openrouter
-  (setq gptel-model 'qwen/qwen3-coder:free
+  (setq gptel-model 'qwen/qwen3-coder
 		gptel-backend
 		(gptel-make-openai "OpenRouter"
           :host "openrouter.ai"
