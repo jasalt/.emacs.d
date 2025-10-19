@@ -297,7 +297,8 @@
    ("\\.erb\\'" . web-mode)
    ("\\.mustache\\'" . web-mode)
    ("\\.astro\\'" . web-mode)  ; npm install -g @astrojs/language-server
-   ("\\.djhtml\\'" . web-mode))
+   ("\\.djhtml\\'" . web-mode)
+   ("\\.twig\\'" . web-mode))
 
   :custom
   (web-mode-engines-alist
