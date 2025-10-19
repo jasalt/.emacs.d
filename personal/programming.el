@@ -313,6 +313,7 @@
   (add-to-list 'lsp-language-id-configuration '("\\.djhtml\\'" . "html"))
   (add-to-list 'lsp-language-id-configuration '("\\.twig\\'" . "html"))
   (setq lsp-html-hover-documentation nil)
+  (setq lsp-html-hover-references nil)
 
   :hook
   (web-mode . (lambda () (electric-pair-mode -1)))
