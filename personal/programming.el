@@ -8,7 +8,7 @@
 (load-file (expand-file-name "personal/rust.el" user-emacs-directory))
 
 
-;; (setq lsp-headerline-breadcrumb-enable-diagnostics t)
+(setq lsp-headerline-breadcrumb-enable-diagnostics t)
 (setq lsp-headerline-breadcrumb-segments '(symbols))
 (setq lsp-headerline-breadcrumb-path-face)
 (setq lsp-headerline-breadcrumb-icons-enable nil)
@@ -291,15 +291,33 @@
 
 ;; Using web-mode, and lsp-mode with html-lsp and emmet-ls
 
+;; (use-package web-mode
+;;   ;; TODO incompatibility with lsp-mode possible
+;;   ;; lsp-format does not handle {% %} {{ }} template tags
+;;   :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
+;;   :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
+;;   :config
+;;   (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
+;;   )
+
+
 (use-package web-mode
-  ;; TODO incompatibility with lsp-mode possible
-  ;; lsp-format does not handle {% %} {{ }} template tags
-  :init (add-to-list 'auto-mode-alist '("\\.twig\\'" . web-mode))
-  :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
+  :mode
+  (("\\.phtml\\'" . web-mode)
+   ("\\.php\\'" . web-mode)
+   ("\\.tpl\\'" . web-mode)
+   ("\\.[agj]sp\\'" . web-mode)
+   ("\\.as[cp]x\\'" . web-mode)
+   ("\\.erb\\'" . web-mode)
+   ("\\.mustache\\'" . web-mode)
+   ("\\.djhtml\\'" . web-mode))
   :config
-  (add-to-list 'lsp-language-id-configuration '("\\.twig" . "html"))
-  ;; (setq sgml-basic-offset 4)
-  )
+  (setq web-mode-engines-alist
+		'(("django"    . "\\.djhtml\\'")
+          ("twig"  . "\\.twig\\."))
+		)
+  :hook (web-mode . (lambda ()
+                      (setq web-mode-markup-indent-offset 2))))
 
 (comment ; disabled, indent was not compatible with template tags
  (use-package mhtml-mode
