@@ -322,6 +322,7 @@
       (treemacs-create-icon :file "vsc/django.png" :extensions ("djt" "django-html" "django-txt" "djhtml"))))
 
   (treemacs-define-custom-icon "👨‍🚀 " "astro")  ;; Add treemacs icon for .astro
+  (treemacs-define-custom-icon "🌱‍ " "twig")  ;; Add treemacs icon for .astro
 
   (setq lsp-html-hover-documentation nil)
   (setq lsp-html-hover-references nil)
