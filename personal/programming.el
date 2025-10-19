@@ -283,13 +283,8 @@
 
 
 ;;;;; HTML editing
-
-;; Using web-mode, and lsp-mode with html-lsp and emmet-ls
-
-;; (use-package web-mode
-;;   :hook ((web-mode . yas-minor-mode) (web-mode . lsp-deferred))
-;;   :config
-;;   )
+;; https://web-mode.org/
+;; https://emacs-lsp.github.io/lsp-mode/page/lsp-html/
 
 (use-package web-mode
   :mode
@@ -301,30 +296,31 @@
    ("\\.erb\\'" . web-mode)
    ("\\.mustache\\'" . web-mode)
    ("\\.djhtml\\'" . web-mode))
-  :config
-  ;; Set LSP language IDs before LSP starts
-  (require 'lsp-mode)
-  (add-to-list 'lsp-language-id-configuration '("\\.djhtml\\'" . "html"))
-  (add-to-list 'lsp-language-id-configuration '("\\.twig\\'" . "html"))
 
-  (setq web-mode-engines-alist
+  :custom
+  (web-mode-engines-alist
 	'(("django"    . "\\.djhtml\\'")
       ("twig"  . "\\.twig\\.")))
 
-  (setq web-mode-enable-front-matter-block t)
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 4)
-  (setq web-mode-code-indent-offset 4)
+  (web-mode-enable-front-matter-block t)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 4)
+  (web-mode-code-indent-offset 4)
+  (web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
 
-  (setq web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
+  :config
+  (require 'lsp-mode)  ;; Set LSP language IDs before LSP starts
+  (add-to-list 'lsp-language-id-configuration '("\\.djhtml\\'" . "html"))
+  (add-to-list 'lsp-language-id-configuration '("\\.twig\\'" . "html"))
+  (setq lsp-html-hover-documentation nil)
 
   :hook
   (web-mode . (lambda () (electric-pair-mode -1)))
   (web-mode . lsp-deferred))
+
 ;; Javascript
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
-
 
 (comment
  ;; Subscription on hold
