@@ -217,3 +217,12 @@
 ;        org-roam-ui-follow t
 ;        org-roam-ui-update-on-save t
 ;        org-roam-ui-open-on-start t))
+
+
+;;; Custom (not from Bedrock)
+
+;; Fix continuously appearing tab-width error in certain situation
+;; "Tab width in Org files must be 8, not 2.  Please adjust your ‘tab-width’ settings for Org mode"
+
+(add-hook 'org-mode-hook
+          (lambda () (setq-local tab-width 8)))
