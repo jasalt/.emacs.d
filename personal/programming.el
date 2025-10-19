@@ -8,6 +8,11 @@
 (load-file (expand-file-name "personal/rust.el" user-emacs-directory))
 
 
+;; (setq lsp-headerline-breadcrumb-enable-diagnostics t)
+(setq lsp-headerline-breadcrumb-segments '(symbols))
+(setq lsp-headerline-breadcrumb-path-face)
+(setq lsp-headerline-breadcrumb-icons-enable nil)
+
 ;; Flashing evaluated region (elisp)
 ;; Partially generated code warning
 
