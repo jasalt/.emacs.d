@@ -334,7 +334,9 @@
   (setq lsp-html-format-enable nil)
 
   :hook
-  (web-mode . (lambda () (electric-pair-mode -1)))
+  (web-mode . (lambda ()
+				(electric-pair-mode -1)
+				(display-line-numbers-mode -1)))
   (web-mode . lsp-deferred))
 
 ;; Javascript
