@@ -308,8 +308,8 @@
 
   (web-mode-enable-front-matter-block t)
   (web-mode-markup-indent-offset 2)
+  (web-mode-code-indent-offset 2)
   (web-mode-css-indent-offset 4)
-  (web-mode-code-indent-offset 4)
   (web-mode-enable-auto-pairing t)  ;; NOTE: electric-pair-mode conflicts
 
   :config
