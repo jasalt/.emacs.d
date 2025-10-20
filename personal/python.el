@@ -1,17 +1,25 @@
 ;; Python specific config
 
+;; Pyright disabled as it hangs Emacs when saving some files in Django project
+
 ;; https://emacs-lsp.github.io/lsp-pyright/
 ;; https://docs.basedpyright.com/latest/installation/command-line-and-language-server/
-(use-package lsp-pyright  ;; uv tool install basedpyright
-  ;; :init
-  ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
-  :custom (lsp-pyright-langserver-command "basedpyright")
-  :config
-  (setq lsp-pyright-disable-organize-imports t)	; ruff does this
-  :hook
-  (python-ts-mode . (lambda ()
-					  (require 'lsp-pyright)
-					  (lsp-deferred))))
+;; (use-package lsp-pyright  ;; uv tool install basedpyright
+;;   ;; :init
+;;   ;; (setq dap-python-debugger 'debugpy)  ;; TODO, no response
+;;   :custom (lsp-pyright-langserver-command "basedpyright")
+;;   :config
+;;   (setq lsp-pyright-disable-organize-imports t)	; ruff does this
+;;   :hook
+;;   (python-ts-mode . (lambda ()
+;; 					  (require 'lsp-pyright)
+;; 					  (lsp-deferred))))
+
+(require 'lsp-mode)
+(add-hook 'python-ts-mode-hook
+          (lambda ()
+            (setq lsp-disabled-clients '(pyright))
+			(lsp-deferred)))
 
 (use-package flycheck
   :diminish flycheck-mode
